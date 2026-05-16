@@ -1,0 +1,151 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'El ecosistema digital de cuidado personal en Venezuela.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <title>{title} | CHIKILUKY</title>
+    <link rel="icon" href="/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Stitch Design System Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;600;700&family=Urbanist:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  </head>
+  <body class="h-full min-h-screen flex flex-col antialiased">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Stitch Design Tokens */
+    --gold:        #BA8F57;
+    --gold-light:  #d4a96a;
+    --gold-dark:   #8a6535;
+    --pure-black:  #000000;
+    --app-black:   #111111;
+    --card-black:  #141414;
+    --pure-white:  #FFFFFF;
+    --slate-900:   #0F172A;
+    --text-muted:  rgba(255,255,255,0.6);
+
+    /* Legacy compat */
+    --color-matte-black: #111111;
+    --color-rich-gold:   #BA8F57;
+    --color-gold-light:  #d4a96a;
+    --color-gold-dark:   #8a6535;
+  }
+
+  html, body {
+    background-color: var(--pure-black);
+    color: var(--pure-white);
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Stitch type scale */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  button, .btn {
+    font-family: 'Hanken Grotesk', sans-serif;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .label-caps {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  /* Material Symbols */
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  ::selection {
+    background: var(--gold);
+    color: #000;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dark); }
+
+  /* Shared utility classes */
+  .gold { color: var(--gold); }
+  .bg-app { background: var(--app-black); }
+  .border-gold { border-color: rgba(186,143,87,0.3); }
+
+  /* Nav link style */
+  .nav-link {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--pure-white);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--gold); }
+  .nav-link.active { color: var(--gold); }
+
+  /* Stitch button variants */
+  .btn-gold {
+    padding: 0.75rem 2rem;
+    background: var(--gold);
+    color: #000;
+    border: 1px solid var(--gold);
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-gold:hover { background: transparent; color: var(--gold); }
+
+  .btn-outline {
+    padding: 0.75rem 2rem;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { background: var(--gold); color: #000; }
+</style>

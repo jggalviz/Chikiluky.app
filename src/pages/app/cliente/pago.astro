@@ -1,0 +1,248 @@
+---
+import LayoutBase from '../../../layouts/LayoutBase.astro';
+import { createClient } from '@supabase/supabase-js';
+import { getSession } from '../../../lib/session.js';
+
+const { user } = await getSession(Astro.request);
+if (!user) return Astro.redirect('/');
+
+const p              = Astro.url.searchParams;
+const negocioId      = p.get('negocioId')      ?? '';
+const servicioNombre = p.get('servicioNombre') ?? '';
+const precioUsd      = parseFloat(p.get('precioUsd') ?? '0');
+const precioBs       = parseFloat(p.get('precioBs')  ?? '0');
+const startTime      = p.get('startTime') ?? '';
+const endTime        = p.get('endTime')   ?? '';
+const duracion       = p.get('duracion')  ?? '60';
+
+if (!negocioId || !startTime) return Astro.redirect('/app/cliente/buscar');
+
+const sb = createClient(
+  import.meta.env.SUPABASE_URL ?? import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.SUPABASE_ANON_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+);
+
+const { data: negocio } = await sb.from('negocios')
+  .select('id, name, address, telefono, owner_id, config')
+  .eq('id', negocioId).single();
+
+const pagos        = negocio?.config?.pagos ?? {};
+const sinPago      = pagos.reserva_sin_pago?.activo ?? false;
+const metodosActivos = Object.entries(pagos).filter(([k,v]) =>
+  k !== 'reserva_sin_pago' && v?.activo
+);
+
+let formExito = false;
+let formError = '';
+
+if (Astro.request.method === 'POST') {
+  const f             = await Astro.request.formData();
+  const referencia    = String(f.get('referencia')  ?? '').trim();
+  const fechaPago     = String(f.get('fecha_pago')  ?? '').trim();
+  const monto         = String(f.get('monto')       ?? '').trim();
+  const moneda        = String(f.get('moneda')      ?? 'bs');
+  const metodoElegido = String(f.get('metodo')      ?? '');
+  const cuenta        = String(f.get('cuenta')      ?? 'principal');
+
+  if (!sinPago && !referencia) {
+    formError = 'El número de referencia es obligatorio.';
+  } else {
+    const { error } = await sb.from('citas').insert({
+      client_id:              user.id,
+      business_id:            negocioId,
+      expert_id:              negocio?.owner_id ?? null,
+      servicio:               servicioNombre,
+      start_time:             startTime,
+      end_time:               endTime,
+      status:                 sinPago && !referencia ? 'pendiente' : 'pendiente_pago',
+      price_usd:              precioUsd,
+      price_bs:               precioBs,
+      comprobante_referencia: referencia || null,
+      comprobante_fecha:      fechaPago  || null,
+      notas: referencia ? `Método: ${metodoElegido} (${cuenta}) · Monto: ${monto} ${moneda}` : null,
+    });
+    if (error) { formError = 'No se pudo registrar. Intenta de nuevo.'; }
+    else formExito = true;
+  }
+}
+
+const fechaCita = startTime ? new Date(startTime).toLocaleDateString('es-VE',{ weekday:'long', day:'numeric', month:'long' }) : '';
+const horaCita  = startTime ? new Date(startTime).toLocaleTimeString('es-VE',{ hour:'2-digit', minute:'2-digit', hour12:true }) : '';
+
+const LABELS: Record<string,string> = {
+  pago_movil:'📱 Pago Móvil', efectivo:'💵 Efectivo',
+  zelle:'💚 Zelle', paypal:'🅿️ PayPal', zinli:'🔵 Zinli', binance_pay:'🟡 Binance Pay',
+};
+
+function dato(m: string, sub: string, k: string) {
+  return (pagos as any)[m]?.[sub]?.[k] ?? '';
+}
+---
+
+<LayoutBase title="Confirmar Pago" description="Paga y confirma tu reserva en CHIKILUKY.">
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(17,17,17,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(186,143,87,0.15)">
+    <a href="javascript:history.back()" style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#ba8f57;text-decoration:none">← Volver</a>
+    <span style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.1rem;color:#ba8f57">CHIKILUKY</span>
+    <a href="/api/auth/logout" style="font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none;font-family:'Urbanist',sans-serif">Salir</a>
+  </header>
+
+  <main style="padding:2rem 1.5rem 5rem;background:#1a1a1a;flex:1;min-height:100vh">
+  <div style="max-width:520px;margin:0 auto">
+
+  {formExito ? (
+    <div style="text-align:center;padding:3rem 1rem">
+      <div style="font-size:3.5rem;margin-bottom:1rem">🎉</div>
+      <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.6rem;color:#fff;margin-bottom:0.5rem">¡Reserva enviada!</h1>
+      <p style="font-family:'Lato',sans-serif;font-size:0.88rem;color:#888;margin-bottom:2rem">{sinPago ? 'Tu cita quedó registrada. El profesional la confirmará pronto.' : 'Tu comprobante está siendo verificado por el profesional.'}</p>
+      <a href="/app/cliente/buscar" style="display:inline-block;padding:0.75rem 2rem;background:#ba8f57;color:#1a1a1a;border-radius:9999px;text-decoration:none;font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem">Buscar otro salón</a>
+    </div>
+  ) : (
+    <>
+      <div style="margin-bottom:1.5rem">
+        <p style="font-size:0.7rem;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Paso final</p>
+        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.3rem,4vw,1.8rem);color:#fff;margin:0">{sinPago ? 'Confirmar reserva' : 'Elige cómo pagar'}</h1>
+      </div>
+
+      <!-- Resumen -->
+      <section style="background:#111;border:1px solid rgba(186,143,87,0.2);border-radius:1rem;padding:1.25rem;margin-bottom:1.5rem">
+        <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1rem;color:#fff;margin:0">{servicioNombre}</p>
+        <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#888;margin:0.3rem 0;text-transform:capitalize">{negocio?.name} · {fechaCita} · {horaCita}</p>
+        <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#ba8f57;margin:0.5rem 0 0">${precioUsd.toFixed(2)} USD · Bs {precioBs.toLocaleString('es-VE',{maximumFractionDigits:2})}</p>
+      </section>
+
+      {formError && <p style="font-family:'Lato',sans-serif;font-size:0.82rem;color:#f87171;background:rgba(248,113,113,0.08);border-left:2px solid #f87171;padding:0.6rem 0.9rem;border-radius:0.4rem;margin-bottom:1rem">{formError}</p>}
+
+      <form method="POST" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:1rem">
+
+        {/* Métodos activos — tabs de selección */}
+        {!sinPago && metodosActivos.length > 0 && (
+          <section style="background:#111;border:1px solid rgba(186,143,87,0.2);border-radius:1rem;padding:1.25rem">
+            <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#555;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 0.85rem">Selecciona método de pago</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.25rem" id="metodo-list">
+              {metodosActivos.map(([mid]) => (
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1rem;background:#1a1a1a;border:1px solid rgba(186,143,87,0.18);border-radius:0.6rem;cursor:pointer" class="metodo-label">
+                  <input type="radio" name="metodo" value={mid} required style="accent-color:#ba8f57" onchange="mostrarDatos(this.value)"/>
+                  <span style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.9rem;color:#fff">{LABELS[mid] ?? mid}</span>
+                </label>
+              ))}
+            </div>
+
+            {/* Datos dinámicos por método */}
+            {metodosActivos.map(([mid, cfg]) => {
+              const c = cfg as any;
+              const fields: [string,string,string][] = mid === 'pago_movil'
+                ? [['banco','Banco',''],['telefono','Teléfono',''],['cedula','Cédula/RIF',''],['nombre','Nombre','']]
+                : mid === 'efectivo'
+                  ? []
+                  : mid === 'binance_pay'
+                    ? [['pay_id','Pay ID',''],['nombre','Nombre','']]
+                    : [['email','Email / Usuario',''],['nombre','Nombre','']];
+              if (mid === 'efectivo') return (
+                <div id={`datos-${mid}`} style="display:none;background:rgba(186,143,87,0.04);border:1px solid rgba(186,143,87,0.18);border-radius:0.75rem;padding:1rem">
+                  <p style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#aaa">
+                    {c.acepta_usd && '✅ Dólares (USD)  '}{c.acepta_bs && '✅ Bolívares (Bs)'}
+                  </p>
+                  <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin-top:0.5rem">Paga directamente al profesional en tu cita.</p>
+                </div>
+              );
+              return (
+                <div id={`datos-${mid}`} style="display:none">
+                  {['Principal','Secundaria'].map((titulo, ti) => {
+                    const sub = ti === 0 ? 'principal' : 'secundario';
+                    const hasData = fields.some(([k]) => dato(mid, sub, k));
+                    if (!hasData && ti === 1) return null;
+                    return (
+                      <div style="margin-bottom:0.85rem">
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:0.6rem">
+                          <input type="radio" name="cuenta" value={sub} style="accent-color:#ba8f57" {ti === 0 ? 'checked' : ''}/>
+                          <span style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#ba8f57;letter-spacing:0.08em;text-transform:uppercase">Cuenta {titulo}</span>
+                        </label>
+                        <div style="background:rgba(0,0,0,0.3);border-radius:0.6rem;padding:0.75rem;display:grid;gap:0.4rem">
+                          {fields.map(([k,l]) => dato(mid,sub,k) && (
+                            <div style="display:flex;justify-content:space-between">
+                              <span style="font-family:'Lato',sans-serif;font-size:0.75rem;color:#555">{l}</span>
+                              <span style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.82rem;color:#fff">{dato(mid,sub,k)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </section>
+        )}
+
+        {/* Formulario de comprobante — solo si no es sin pago ni efectivo */}
+        {!sinPago && (
+          <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem" id="form-comprobante">
+            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.92rem;color:#fff;margin:0 0 1rem">🧾 Comprobante de pago</p>
+
+            <div style="display:flex;flex-direction:column;gap:0.85rem">
+              <div>
+                <label style="font-family:'Lato',sans-serif;font-size:0.75rem;color:#888;display:block;margin-bottom:0.3rem;letter-spacing:0.04em">NÚMERO DE REFERENCIA *</label>
+                <input type="text" name="referencia" required placeholder="Ej: 00293847561"
+                  style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;padding:0.7rem 0.9rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.88rem;outline:none;box-sizing:border-box"
+                  onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+                <div>
+                  <label style="font-family:'Lato',sans-serif;font-size:0.75rem;color:#888;display:block;margin-bottom:0.3rem;letter-spacing:0.04em">FECHA DEL PAGO *</label>
+                  <input type="date" name="fecha_pago" required style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;padding:0.7rem 0.9rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.88rem;outline:none;box-sizing:border-box;color-scheme:dark"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+                </div>
+                <div>
+                  <label style="font-family:'Lato',sans-serif;font-size:0.75rem;color:#888;display:block;margin-bottom:0.3rem;letter-spacing:0.04em">MONTO</label>
+                  <div style="display:flex;gap:0.4rem">
+                    <input type="number" name="monto" step="0.01" placeholder="0.00"
+                      style="flex:1;background:#1a1a1a;border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;padding:0.7rem 0.6rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.88rem;outline:none;box-sizing:border-box"
+                      onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+                    <select name="moneda" style="background:#1a1a1a;border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;padding:0 0.5rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.82rem;outline:none">
+                      <option value="bs">Bs</option>
+                      <option value="usd">USD</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-family:'Lato',sans-serif;font-size:0.75rem;color:#888;display:block;margin-bottom:0.3rem;letter-spacing:0.04em">CAPTURA DE PANTALLA</label>
+                <label style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;border:1px dashed rgba(186,143,87,0.35);border-radius:0.75rem;padding:1.5rem;cursor:pointer;background:#1a1a1a">
+                  <span id="file-icon" style="font-size:1.8rem">📎</span>
+                  <span id="file-text" style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#555;text-align:center">Toca para subir captura · JPG / PNG</span>
+                  <input type="file" name="captura" accept="image/*" style="display:none"
+                    onchange="document.getElementById('file-icon').textContent='✅';document.getElementById('file-text').textContent=this.files[0]?.name??''"/>
+                </label>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <button type="submit"
+          style="width:100%;padding:0.95rem;background:#ba8f57;color:#1a1a1a;font-family:'Urbanist',sans-serif;font-weight:800;font-size:1rem;border-radius:9999px;border:none;cursor:pointer;letter-spacing:0.03em">
+          {sinPago ? '✅ Confirmar reserva' : 'Enviar comprobante →'}
+        </button>
+      </form>
+    </>
+  )}
+  </div>
+  </main>
+</LayoutBase>
+
+<script>
+  function mostrarDatos(metodo) {
+    document.querySelectorAll('[id^="datos-"]').forEach(el => {
+      (el as HTMLElement).style.display = 'none';
+    });
+    const target = document.getElementById('datos-' + metodo);
+    if (target) (target as HTMLElement).style.display = 'block';
+
+    const comprobante = document.getElementById('form-comprobante');
+    if (comprobante) {
+      (comprobante as HTMLElement).style.display = metodo === 'efectivo' ? 'none' : 'block';
+    }
+  }
+  window.mostrarDatos = mostrarDatos;
+</script>

@@ -1,0 +1,316 @@
+---
+import LayoutBase from '../../../layouts/LayoutBase.astro';
+import { supabase } from '../../../lib/supabase.js';
+import { getSession } from '../../../lib/session.js';
+
+const { user, perfil } = await getSession(Astro.request);
+if (!user) return Astro.redirect('/');
+
+// ── Consulta SSR: todos los negocios ─────────────────────────────────────────
+const { data: negocios, error: negociosError } = await supabase
+  .from('negocios')
+  .select('id, name, descripcion, address, categoria')
+  .order('name', { ascending: true });
+
+const categorias = [
+  'Todos',
+  'Peluquería',
+  'Barbería',
+  'Uñas',
+  'Estética y Cejas',
+  'Masajes y Spa',
+  'Maquillaje',
+  'Tatuajes',
+  'Depilación',
+  'Podología',
+];
+
+const iconoCategoria: Record<string, string> = {
+  'Peluquería':     '💇',
+  'Barbería':       '✂️',
+  'Uñas':           '💅',
+  'Estética y Cejas':'👁️',
+  'Masajes y Spa':  '🧖',
+  'Maquillaje':     '💄',
+  'Tatuajes':       '🖋️',
+  'Depilación':     '✨',
+  'Podología':      '🦶',
+};
+---
+
+<LayoutBase
+  title="Buscar Salón"
+  description="Encuentra y agenda tu cita en barberías y salones de Caracas."
+>
+
+  <!-- ═══════════════════════════════════════
+       HEADER DE NAVEGACIÓN
+  ════════════════════════════════════════ -->
+  <header style="
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0.9rem 1.5rem;
+    background:rgba(17,17,17,0.92);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(186,143,87,0.15);
+  ">
+    <!-- Isotipo -->
+    <a href="/app/cliente/buscar" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">
+      <span style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.2rem;color:#ba8f57;letter-spacing:0.05em">CHIKILUKY</span>
+      <span style="font-size:0.6rem;color:#666;letter-spacing:0.12em;text-transform:uppercase">.app</span>
+    </a>
+
+    <nav style="display:flex;align-items:center;gap:0.5rem">
+      <a href="/app/cliente/buscar" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.7rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Buscar</a>
+      <span style="color:#2a2a2a">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       HERO DE BÚSQUEDA
+  ════════════════════════════════════════ -->
+  <section style="padding:3rem 1.5rem 2rem;text-align:center;background:#1a1a1a">
+    <p style="font-size:0.7rem;letter-spacing:0.18em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.6rem">Disponible ahora</p>
+    <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.4rem);color:#fff;margin-bottom:2rem">
+      ¿A qué salón vas hoy?
+    </h1>
+
+    <!-- Barra de búsqueda + filtro de categoría -->
+    <div style="display:flex;flex-direction:column;gap:0.75rem;max-width:580px;margin:0 auto" class="search-bar">
+      <div style="position:relative">
+        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#ba8f57;font-size:1rem;pointer-events:none">🔍</span>
+        <input
+          id="input-busqueda"
+          type="search"
+          placeholder="Busca por nombre o dirección…"
+          oninput="filtrarNegocios()"
+          style="
+            width:100%;padding:0.8rem 1rem 0.8rem 2.6rem;
+            background:#111;
+            border:1px solid rgba(186,143,87,0.3);
+            border-radius:0.6rem;
+            color:#fff;
+            font-family:'Lato',sans-serif;font-size:0.95rem;
+            outline:none;box-sizing:border-box;
+          "
+          onfocus="this.style.borderColor='#ba8f57'"
+          onblur="this.style.borderColor='rgba(186,143,87,0.3)'"
+        />
+      </div>
+
+      <!-- Filtros de categoría — scroll horizontal en móvil -->
+      <div class="filtros-wrapper">
+        <div id="filtros-cat" class="filtros-scroll">
+          {categorias.map((cat) => (
+            <button
+              data-cat={cat}
+              onclick="seleccionarCategoria(this)"
+              style={`
+                flex-shrink:0;
+                font-family:'Urbanist',sans-serif;font-weight:600;font-size:0.8rem;
+                padding:0.45rem 1.1rem;border-radius:9999px;cursor:pointer;
+                letter-spacing:0.04em;transition:all 0.2s;white-space:nowrap;
+                ${cat === 'Todos'
+                  ? 'background:#ba8f57;color:#1a1a1a;border:1px solid #ba8f57'
+                  : 'background:transparent;color:#ba8f57;border:1px solid rgba(186,143,87,0.4)'}
+              `}>
+              {cat !== 'Todos' ? (iconoCategoria[cat] ?? '') + ' ' : ''}{cat}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       GRID DE NEGOCIOS (SSR)
+  ════════════════════════════════════════ -->
+  <main style="padding:2rem 1.5rem 4rem;background:#1a1a1a;flex:1">
+    <div class="max-w-6xl mx-auto">
+
+      {negociosError && (
+        <p style="text-align:center;color:#f87171;font-size:0.9rem;padding:2rem">
+          Error al cargar los salones. Intenta de nuevo más tarde.
+        </p>
+      )}
+
+      {(!negocios || negocios.length === 0) && !negociosError && (
+        <div style="text-align:center;padding:4rem 1rem">
+          <p style="font-size:2rem;margin-bottom:1rem">🏪</p>
+          <p style="font-family:'Urbanist',sans-serif;font-size:1.1rem;color:#666">
+            Aún no hay salones registrados 
+          </p>
+          <p style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#444;margin-top:0.4rem">
+            ¿Tienes un negocio? <a href="/" style="color:#ba8f57;text-decoration:none">Regístralo aquí</a>
+          </p>
+        </div>
+      )}
+
+      <!-- Grid de tarjetas -->
+      <div id="grid-negocios" style="
+        display:grid;
+        grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+        gap:1.25rem;
+      ">
+        {negocios?.map((negocio) => (
+          <article
+            data-nombre={negocio.name.toLowerCase()}
+            data-cat={negocio.categoria ?? 'Otros'}
+            style="
+              background:#111;
+              border:1px solid rgba(186,143,87,0.18);
+              border-radius:1rem;
+              padding:1.5rem;
+              display:flex;flex-direction:column;gap:0.75rem;
+              transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+              cursor:default;
+            "
+            onmouseover="this.style.borderColor='rgba(186,143,87,0.55)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(186,143,87,0.08)'"
+            onmouseout="this.style.borderColor='rgba(186,143,87,0.18)';this.style.transform='none';this.style.boxShadow='none'"
+          >
+            <!-- Badge de categoría -->
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span style="
+                font-family:'Urbanist',sans-serif;font-size:0.7rem;font-weight:700;
+                letter-spacing:0.1em;text-transform:uppercase;
+                color:#ba8f57;background:rgba(186,143,87,0.1);
+                padding:0.2rem 0.6rem;border-radius:9999px;
+              ">
+                {iconoCategoria[negocio.categoria] ?? '🏪'} {negocio.categoria ?? 'Salón'}
+              </span>
+              <span style="font-size:0.72rem;color:#555;font-family:'Lato',sans-serif">📍 Caracas</span>
+            </div>
+
+            <!-- Nombre -->
+            <h2 style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;line-height:1.25;margin:0">
+              {negocio.name}
+            </h2>
+
+            <!-- Descripción (truncada) -->
+            {negocio.descripcion && (
+              <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#777;line-height:1.55;margin:0;
+                         display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">
+                {negocio.descripcion}
+              </p>
+            )}
+
+            <!-- Dirección -->
+            {negocio.address && (
+              <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0;display:flex;align-items:center;gap:0.3rem">
+                <span style="color:#ba8f57">📌</span> {negocio.address}
+              </p>
+            )}
+
+            <!-- CTA -->
+            <a
+              href={`/app/cliente/reservar?id=${negocio.id}`}
+              style="
+                display:block;margin-top:auto;
+                background:#ba8f57;color:#1a1a1a;
+                font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.88rem;
+                padding:0.65rem 1rem;border-radius:9999px;
+                text-align:center;text-decoration:none;letter-spacing:0.04em;
+                transition:background 0.18s;
+              "
+              onmouseover="this.style.background='#d4a96a'"
+              onmouseout="this.style.background='#ba8f57'"
+            >
+              Ver Agenda →
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <!-- Mensaje sin resultados de búsqueda (JS) -->
+      <p id="sin-resultados" style="display:none;text-align:center;color:#555;font-family:'Lato',sans-serif;font-size:0.9rem;padding:3rem">
+        No se encontraron salones con ese criterio.
+      </p>
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════
+       SCRIPT: Filtro cliente (< 1 KB)
+  ════════════════════════════════════════ -->
+  <script>
+    let catActiva = 'Todos';
+
+    window.seleccionarCategoria = function(btn) {
+      catActiva = btn.dataset.cat;
+      document.querySelectorAll('#filtros-cat button').forEach(b => {
+        const activo = b === btn;
+        b.style.background   = activo ? '#ba8f57' : 'transparent';
+        b.style.color        = activo ? '#1a1a1a' : '#ba8f57';
+        b.style.borderColor  = activo ? '#ba8f57' : 'rgba(186,143,87,0.4)';
+      });
+      filtrarNegocios();
+    };
+
+    window.filtrarNegocios = function() {
+      const q       = document.getElementById('input-busqueda').value.toLowerCase();
+      const tarjetas = document.querySelectorAll('#grid-negocios article');
+      let visibles  = 0;
+
+      tarjetas.forEach(card => {
+        const nombre  = card.dataset.nombre ?? '';
+        const cat     = card.dataset.cat    ?? '';
+        const matchQ  = nombre.includes(q);
+        const matchC  = catActiva === 'Todos' || cat === catActiva;
+        const visible = matchQ && matchC;
+        card.style.display = visible ? '' : 'none';
+        if (visible) visibles++;
+      });
+
+      document.getElementById('sin-resultados').style.display = visibles === 0 ? 'block' : 'none';
+    };
+  </script>
+
+</LayoutBase>
+
+<style>
+  @media (min-width: 640px) {
+    .sm-show { display: inline !important; }
+  }
+
+  /* ── Filtros: scroll horizontal suave ─────────────── */
+  .filtros-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  /* Fades laterales indicando que hay más contenido */
+  .filtros-wrapper::before,
+  .filtros-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .filtros-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, #1a1a1a, transparent);
+  }
+  .filtros-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, #1a1a1a, transparent);
+  }
+
+  .filtros-scroll {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.25rem 2rem;       /* espacio para los fades */
+    scrollbar-width: none;       /* Firefox */
+  }
+  .filtros-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+</style>
+
+
+

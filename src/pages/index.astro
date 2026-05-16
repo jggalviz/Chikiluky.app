@@ -1,0 +1,167 @@
+---
+import LayoutBase from '../layouts/LayoutBase.astro';
+---
+<LayoutBase title="CHIKILUKY — El Ecosistema Digital de Belleza" description="Reserva tu cita de belleza en Caracas. Sin WhatsApp, sin esperas.">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;width:100%;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 5%;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(186,143,87,0.2)">
+    <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none">
+      <img src="/logo.svg" alt="CHIKILUKY" style="height:38px;width:38px;object-fit:contain"/>
+      <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
+    </a>
+    <div style="display:flex;gap:0.75rem">
+      <button onclick="abrirModal();showTab('login')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.5rem 1.25rem;border:1px solid #BA8F57;color:#fff;background:transparent;cursor:pointer" onmouseover="this.style.background='#BA8F57';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#fff'">INICIAR SESION</button>
+      <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.5rem 1.25rem;border:1px solid #BA8F57;color:#000;background:#BA8F57;cursor:pointer" onmouseover="this.style.background='transparent';this.style.color='#BA8F57'" onmouseout="this.style.background='#BA8F57';this.style.color='#000'">REGISTRARSE</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section style="min-height:100vh;padding:8rem 5% 5rem;background:#000;display:flex;align-items:center">
+    <div style="max-width:700px">
+      <p style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;margin-bottom:1.25rem">EL ECOSISTEMA DIGITAL DE CUIDADO PERSONAL</p>
+      <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2.8rem,5vw,4.5rem);line-height:1.05;text-transform:uppercase;color:#fff;margin-bottom:1.75rem">
+        El ecosistema<br/>digital de <span style="color:#BA8F57">cuidado personal</span>
+      </h1>
+      <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;color:rgba(255,255,255,0.7);max-width:500px;line-height:1.75;margin-bottom:2.5rem">
+        Reserva tu cita en menos de 60 segundos. Sin llamadas, sin WhatsApp, sin esperas.
+      </p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap">
+        <button onclick="abrirModal();showTab('login')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:1rem 2.5rem;border:1px solid #BA8F57;color:#BA8F57;background:transparent;cursor:pointer" onmouseover="this.style.background='#BA8F57';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#BA8F57'">INICIAR SESION</button>
+        <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:1rem 2.5rem;border:1px solid #BA8F57;color:#000;background:#BA8F57;cursor:pointer" onmouseover="this.style.background='transparent';this.style.color='#BA8F57'" onmouseout="this.style.background='#BA8F57';this.style.color='#000'">REGISTRARSE</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section style="padding:6rem 5%;background:#fff">
+    <div style="max-width:1280px;margin:0 auto;text-align:center;margin-bottom:4rem">
+      <h2 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:2.2rem;text-transform:uppercase;letter-spacing:0.08em;color:#0F172A;margin-bottom:1rem">Servicios Profesionales</h2>
+      <div style="height:3px;width:80px;background:#BA8F57;margin:0 auto"></div>
+    </div>
+    <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem">
+      <div style="padding:3rem 2.5rem;border:1px solid #0F172A;text-align:center" onmouseover="this.style.borderColor='#BA8F57'" onmouseout="this.style.borderColor='#0F172A'">
+        <span class="material-symbols-outlined" style="font-size:3rem;color:#BA8F57;margin-bottom:1.5rem;display:block">dashboard_customize</span>
+        <h3 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:1.4rem;text-transform:uppercase;color:#0F172A;margin-bottom:1rem">Maximiza tu Ocupacion</h3>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:rgba(15,23,42,0.7);line-height:1.6">Dashboard visual para control total de tu agenda y citas.</p>
+      </div>
+      <div style="padding:3rem 2.5rem;border:1px solid #0F172A;text-align:center" onmouseover="this.style.borderColor='#BA8F57'" onmouseout="this.style.borderColor='#0F172A'">
+        <span class="material-symbols-outlined" style="font-size:3rem;color:#BA8F57;margin-bottom:1.5rem;display:block">currency_exchange</span>
+        <h3 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:1.4rem;text-transform:uppercase;color:#0F172A;margin-bottom:1rem">Tasa Bimonetaria</h3>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:rgba(15,23,42,0.7);line-height:1.6">Precios en USD y Bs con tasa BCV actualizada dinamicamente.</p>
+      </div>
+      <div style="padding:3rem 2.5rem;border:1px solid #0F172A;text-align:center" onmouseover="this.style.borderColor='#BA8F57'" onmouseout="this.style.borderColor='#0F172A'">
+        <span class="material-symbols-outlined" style="font-size:3rem;color:#BA8F57;margin-bottom:1.5rem;display:block">notifications_active</span>
+        <h3 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:1.4rem;text-transform:uppercase;color:#0F172A;margin-bottom:1rem">Reduce No-Shows</h3>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:rgba(15,23,42,0.7);line-height:1.6">Recordatorios automaticos para que cada cita sea una visita real.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIAS -->
+  <section style="padding:6rem 5%;background:#111">
+    <div style="max-width:1280px;margin:0 auto">
+      <h2 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:2rem;text-transform:uppercase;color:#fff;margin-bottom:3rem">Explora por Categoria</h2>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem">
+        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
+          <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&q=80" alt="Peluqueria" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Peluqueria</span></div>
+        </a>
+        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
+          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt="Barberia" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Barberia</span></div>
+        </a>
+        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
+          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80" alt="Unas" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Unas</span></div>
+        </a>
+        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80" alt="Estetica" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Estetica</span></div>
+        </a>
+        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
+          <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80" alt="Tatuajes" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Tatuajes</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA PROFESIONAL -->
+  <section style="padding:6rem 5%;background:#000;text-align:center">
+    <div style="max-width:800px;margin:0 auto;border:1px solid rgba(186,143,87,0.25);padding:5rem 3rem;position:relative">
+      <div style="position:absolute;top:0;left:0;width:100%;height:3px;background:#BA8F57"></div>
+      <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:2.5rem;text-transform:uppercase;color:#fff;margin-bottom:1.5rem">Eres un profesional de la belleza?</h2>
+      <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;color:rgba(255,255,255,0.65);margin-bottom:2.5rem">Unete al ecosistema mas exclusivo y lleva tu negocio al siguiente nivel.</p>
+      <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:1.1rem 3rem;background:#BA8F57;color:#000;border:none;cursor:pointer" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#BA8F57'">REGISTRA TU SALON AHORA</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="width:100%;padding:3rem 5%;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2rem;background:#000;border-top:1px solid #BA8F57">
+    <div style="display:flex;align-items:center;gap:0.75rem">
+      <img src="/logo.svg" alt="CHIKILUKY" style="height:40px;width:auto"/>
+      <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.1rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
+    </div>
+    <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:rgba(255,255,255,0.4)">&copy; {new Date().getFullYear()} CHIKILUKY. Caracas, Venezuela.</p>
+  </footer>
+
+  <!-- MODAL -->
+  <div id="modal-acceso" style="display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)" onclick="if(event.target===this)cerrarModal()">
+    <div style="background:#111;border:1px solid rgba(186,143,87,0.4);padding:2.5rem;width:100%;max-width:420px;position:relative">
+      <button onclick="cerrarModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer" aria-label="Cerrar">&times;</button>
+      <p style="font-family:'Oswald',sans-serif;color:#BA8F57;font-size:1.4rem;text-align:center;margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em">CHIKILUKY</p>
+      <p style="font-family:'Plus Jakarta Sans',sans-serif;color:#666;text-align:center;margin-bottom:2rem;font-size:0.85rem">Accede o crea tu cuenta</p>
+      <div style="display:flex;border-bottom:1px solid rgba(186,143,87,0.2);margin-bottom:1.5rem">
+        <button id="tab-login" onclick="showTab('login')" style="flex:1;padding:0.6rem;background:none;border:none;cursor:pointer;color:#BA8F57;border-bottom:2px solid #BA8F57;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.08em">INICIAR SESION</button>
+        <button id="tab-registro" onclick="showTab('registro')" style="flex:1;padding:0.6rem;background:none;border:none;cursor:pointer;color:#555;border-bottom:2px solid transparent;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.08em">CREAR CUENTA</button>
+      </div>
+      <form id="form-login" action="/api/auth/login" method="POST" style="display:flex;flex-direction:column;gap:1rem">
+        <input type="email" name="email" placeholder="Correo electronico" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <input type="password" name="password" placeholder="Contrasena" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <button type="submit" style="background:#BA8F57;color:#000;border:none;padding:0.8rem;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer">ENTRAR</button>
+      </form>
+      <form id="form-registro" action="/api/auth/registro" method="POST" style="display:none;flex-direction:column;gap:1rem">
+        <input type="text" name="full_name" placeholder="Nombre completo" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <input type="email" name="email" placeholder="Correo electronico" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <input type="password" name="password" placeholder="Contrasena (min 8 caracteres)" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <select name="role" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box">
+          <option value="cliente">Cliente — busco servicios</option>
+          <option value="experto">Profesional — gestiono un negocio</option>
+        </select>
+        <button type="submit" style="background:#BA8F57;color:#000;border:none;padding:0.8rem;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer">CREAR CUENTA</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    window.abrirModal = function() { var m = document.getElementById('modal-acceso'); m.style.display = 'flex'; document.body.style.overflow = 'hidden'; };
+    window.cerrarModal = function() { var m = document.getElementById('modal-acceso'); m.style.display = 'none'; document.body.style.overflow = ''; };
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') cerrarModal(); });
+    window.showTab = function(t) {
+      var l = t === 'login';
+      document.getElementById('form-login').style.display = l ? 'flex' : 'none';
+      document.getElementById('form-registro').style.display = l ? 'none' : 'flex';
+      document.getElementById('tab-login').style.color = l ? '#BA8F57' : '#555';
+      document.getElementById('tab-login').style.borderBottomColor = l ? '#BA8F57' : 'transparent';
+      document.getElementById('tab-registro').style.color = l ? '#555' : '#BA8F57';
+      document.getElementById('tab-registro').style.borderBottomColor = l ? 'transparent' : '#BA8F57';
+    };
+    function setLoading(b, l) { b.disabled = l; b.textContent = l ? 'Procesando...' : b.dataset.label; b.style.opacity = l ? '0.6' : '1'; }
+    function showError(id, msg) { var el = document.getElementById(id + '-err'); if (!el) { el = document.createElement('p'); el.id = id + '-err'; el.style.cssText = 'font-size:.8rem;color:#f87171;text-align:center;margin:0'; document.getElementById(id).prepend(el); } el.textContent = msg; }
+    document.getElementById('form-login').addEventListener('submit', async function(e) {
+      e.preventDefault(); var b = e.target.querySelector('button[type=submit]'); b.dataset.label = b.textContent; setLoading(b, true);
+      var r = await fetch('/api/auth/login', { method: 'POST', body: new FormData(e.target) }); var d = await r.json();
+      if (!r.ok) { showError('form-login', d.error); setLoading(b, false); return; }
+      window.location.href = d.redirectTo;
+    });
+    document.getElementById('form-registro').addEventListener('submit', async function(e) {
+      e.preventDefault(); var b = e.target.querySelector('button[type=submit]'); b.dataset.label = b.textContent; setLoading(b, true);
+      var r = await fetch('/api/auth/registro', { method: 'POST', body: new FormData(e.target) }); var d = await r.json();
+      if (!r.ok) { showError('form-registro', d.error); setLoading(b, false); return; }
+      if (d.autoLogin && d.redirectTo) { window.location.href = d.redirectTo; return; }
+      showError('form-registro', 'Cuenta creada. Revisa tu email e inicia sesion.');
+      e.target.reset(); setTimeout(function() { window.showTab('login'); }, 2200); setLoading(b, false);
+    });
+  </script>
+
+</LayoutBase>
