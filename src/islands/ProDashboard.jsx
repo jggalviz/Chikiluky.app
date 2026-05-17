@@ -2,6 +2,15 @@ import { useState, useEffect } from 'preact/hooks';
 import { createClient } from '@supabase/supabase-js';
 import { convertirRefABs } from '../utils/currency.js';
 
+function formatFechaDDMM(fechaStr) {
+  if (!fechaStr) return '';
+  const parts = fechaStr.split('-');
+  if (parts.length === 3) {
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  }
+  return fechaStr;
+}
+
 export default function ProDashboard({ negocio, profesionalId, servicios, tasaBcvInicial, fullName, token }) {
   const supabase = createClient(
     import.meta.env.PUBLIC_SUPABASE_URL,
@@ -21,6 +30,7 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
   
   // Modal de registro manual
   const [showModalManual, setShowModalManual] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
   const [nombreCliente, setNombreCliente] = useState('');
   const [servicioSeleccionado, setServicioSeleccionado] = useState(servicios[0]?.id || '');
   const [metodoPagoManual, setMetodoPagoManual] = useState('efectivo');
@@ -112,9 +122,11 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
           listadoUnificado.push({
             id: r.id,
             hora: r.hora_inicio.slice(0, 5),
+            fecha: r.fecha,
             clienteName: r.cliente?.full_name || 'Cliente de la Calle',
             clienteId: r.cliente_id,
             servicioName: r.servicio?.nombre || 'Servicio Desconocido',
+            servicioId: r.servicio_id,
             precioUsd: parseFloat(r.servicio?.precio_usd || 0),
             pagoMetodo: r.pago_metodo,
             pagoReferencia: r.pago_referencia,
@@ -131,6 +143,7 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
         dataCitas.forEach(c => {
           const t = new Date(c.start_time);
           const horaStr = `${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`;
+          const fechaStr = c.start_time.split('T')[0];
           
           // Evitar colisión si ya existe la reserva equivalente
           const duplicada = listadoUnificado.some(r => r.hora === horaStr && r.servicioName === c.servicio);
@@ -138,9 +151,11 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
             listadoUnificado.push({
               id: c.id,
               hora: horaStr,
+              fecha: fechaStr,
               clienteName: c.client?.full_name || 'Cliente Registrado',
               clienteId: c.client_id,
               servicioName: c.servicio,
+              servicioId: null,
               precioUsd: parseFloat(c.price_usd || 0),
               pagoMetodo: c.comprobante_referencia ? 'pago_movil' : 'efectivo',
               pagoReferencia: c.comprobante_referencia,
@@ -271,7 +286,56 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
     }
   }
 
-  // Guardar Turno Manual ("Clientes de la Calle")
+  // Iniciar Edición de Turno
+  function iniciarEdicion(r) {
+    setEditingItem(r);
+    
+    // Si es offline, tratar de recuperar el nombre
+    setNombreCliente(r.clienteId ? '' : (r.clienteName === 'Cliente de la Calle' ? '' : r.clienteName));
+    
+    // Buscar servicioId
+    const serv = servicios.find(s => s.nombre === r.servicioName || s.id === r.servicioId);
+    setServicioSeleccionado(serv?.id || servicios[0]?.id || '');
+    
+    setMetodoPagoManual(r.pagoMetodo || 'efectivo');
+    setFechaManual(r.fecha || fechaFiltro);
+    setHoraManual(r.hora || '12:00');
+    
+    setShowModalManual(true);
+  }
+
+  // Eliminar Turno
+  async function eliminarTurno(id, source) {
+    if (!confirm('¿Seguro que deseas eliminar este turno? Esta acción no se puede deshacer.')) return;
+    setErrorMsg('');
+    setExitoMsg('');
+
+    try {
+      if (source === 'reserva') {
+        const { error } = await supabase
+          .from('reservas')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('citas')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+      }
+
+      setExitoMsg('Turno eliminado con éxito.');
+      setReservas(prev => prev.filter(r => r.id !== id));
+    } catch (err) {
+      console.error('Error al eliminar turno:', err);
+      setErrorMsg('No se pudo eliminar el turno.');
+    }
+  }
+
+  // Guardar Turno (Creación o Edición)
   async function guardarTurnoManual(e) {
     e.preventDefault();
     setErrorMsg('');
@@ -286,84 +350,135 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
     try {
       const hoyStr = fechaManual;
       const horaStr = `${horaManual}:00`;
-
-      // Mapeamos 'punto' a 'efectivo' para evitar violar la restricción CHECK de pago_metodo en 'reservas'
       const checkPagoMetodo = (metodoPagoManual === 'punto') ? 'efectivo' : metodoPagoManual;
 
-      // 1. Guardar en 'reservas'
-      const { data: newRes, error: errRes } = await supabase
-        .from('reservas')
-        .insert([{
-          cliente_id: null, // Offline
-          profesional_id: profesionalId,
-          servicio_id: serv.id,
-          fecha: hoyStr,
-          hora_inicio: horaStr,
-          estado: 'completada',
-          pago_metodo: checkPagoMetodo,
-          pago_referencia: `REGISTRO MANUAL (OFFLINE) - ${metodoPagoManual.toUpperCase()}`,
-          pago_estado: 'verificado'
-        }])
-        .select()
-        .single();
+      if (editingItem) {
+        // --- MODO EDICIÓN ---
+        const { id, source } = editingItem;
 
-      if (errRes) throw errRes;
+        if (source === 'reserva') {
+          // 1. Actualizar en 'reservas'
+          const { error: errRes } = await supabase
+            .from('reservas')
+            .update({
+              servicio_id: serv.id,
+              fecha: hoyStr,
+              hora_inicio: horaStr,
+              pago_metodo: checkPagoMetodo,
+              pago_referencia: `REGISTRO MANUAL (EDITADO) - ${metodoPagoManual.toUpperCase()}`
+            })
+            .eq('id', id);
 
-      // 2. Guardar compatible en legacy 'citas'
-      const [shh, smm] = horaManual.split(':').map(Number);
-      const startTimeDate = new Date(fechaManual);
-      startTimeDate.setHours(shh, smm, 0, 0);
+          if (errRes) throw errRes;
+        } else {
+          // 2. Actualizar compatible en legacy 'citas'
+          const [shh, smm] = horaManual.split(':').map(Number);
+          const startTimeDate = new Date(fechaManual);
+          startTimeDate.setHours(shh, smm, 0, 0);
 
-      const endTimeDate = new Date(startTimeDate);
-      endTimeDate.setMinutes(endTimeDate.getMinutes() + 60);
+          const endTimeDate = new Date(startTimeDate);
+          endTimeDate.setMinutes(endTimeDate.getMinutes() + 60);
 
-      const { error: errCita } = await supabase.from('citas').insert([{
-        client_id: null,
-        business_id: negocio.id,
-        expert_id: profesionalId,
-        servicio: serv.nombre,
-        start_time: startTimeDate.toISOString(),
-        end_time: endTimeDate.toISOString(),
-        status: 'completada',
-        price_usd: parseFloat(serv.precio_usd),
-        price_bs: Math.round(parseFloat(serv.precio_usd) * tasaBcv * 100) / 100,
-        comprobante_referencia: 'REGISTRO MANUAL',
-        notas: `Turno manual offline: ${nombreCliente || 'Cliente de la Calle'} · Método: ${metodoPagoManual.toUpperCase()}`
-      }]);
+          const { error: errCita } = await supabase
+            .from('citas')
+            .update({
+              servicio: serv.nombre,
+              start_time: startTimeDate.toISOString(),
+              end_time: endTimeDate.toISOString(),
+              price_usd: parseFloat(serv.precio_usd),
+              price_bs: Math.round(parseFloat(serv.precio_usd) * tasaBcv * 100) / 100,
+              notas: `Turno manual offline: ${nombreCliente || 'Cliente de la Calle'} · Método: ${metodoPagoManual.toUpperCase()} (Editado)`
+            })
+            .eq('id', id);
 
-      if (errCita) throw errCita;
+          if (errCita) throw errCita;
+        }
 
-      setExitoMsg('Turno offline registrado con éxito.');
-      setShowModalManual(false);
+        setExitoMsg('Turno actualizado con éxito.');
+        setShowModalManual(false);
+        setEditingItem(null);
+        cargarAgenda(); // Recargar agenda
 
-      // Añadir reactivamente al listado local si coincide con la fecha filtrada
-      if (fechaManual === fechaFiltro) {
-        const nuevoItem = {
-          id: newRes.id,
-          hora: horaStr.slice(0, 5),
-          clienteName: nombreCliente.trim() || 'Cliente de la Calle',
-          clienteId: null,
-          servicioName: serv.nombre,
-          precioUsd: parseFloat(serv.precio_usd),
-          pagoMetodo: metodoPagoManual,
-          pagoReferencia: 'REGISTRO MANUAL',
-          pagoBancoEmisor: null,
-          pagoEstado: 'verificado',
-          estado: 'completada',
-          source: 'reserva'
-        };
+      } else {
+        // --- MODO CREACIÓN ---
+        // 1. Guardar en 'reservas'
+        const { data: newRes, error: errRes } = await supabase
+          .from('reservas')
+          .insert([{
+            cliente_id: null, // Offline
+            profesional_id: profesionalId,
+            servicio_id: serv.id,
+            fecha: hoyStr,
+            hora_inicio: horaStr,
+            estado: 'completada',
+            pago_metodo: checkPagoMetodo,
+            pago_referencia: `REGISTRO MANUAL (OFFLINE) - ${metodoPagoManual.toUpperCase()}`,
+            pago_estado: 'verificado'
+          }])
+          .select()
+          .single();
 
-        setReservas(prev => [...prev, nuevoItem].sort((a, b) => a.hora.localeCompare(b.hora)));
+        if (errRes) throw errRes;
+
+        // 2. Guardar compatible en legacy 'citas'
+        const [shh, smm] = horaManual.split(':').map(Number);
+        const startTimeDate = new Date(fechaManual);
+        startTimeDate.setHours(shh, smm, 0, 0);
+
+        const endTimeDate = new Date(startTimeDate);
+        endTimeDate.setMinutes(endTimeDate.getMinutes() + 60);
+
+        const { error: errCita } = await supabase.from('citas').insert([{
+          client_id: null,
+          business_id: negocio.id,
+          expert_id: profesionalId,
+          servicio: serv.nombre,
+          start_time: startTimeDate.toISOString(),
+          end_time: endTimeDate.toISOString(),
+          status: 'completada',
+          price_usd: parseFloat(serv.precio_usd),
+          price_bs: Math.round(parseFloat(serv.precio_usd) * tasaBcv * 100) / 100,
+          comprobante_referencia: 'REGISTRO MANUAL',
+          notas: `Turno manual offline: ${nombreCliente || 'Cliente de la Calle'} · Método: ${metodoPagoManual.toUpperCase()}`
+        }]);
+
+        if (errCita) throw errCita;
+
+        setExitoMsg('Turno offline registrado con éxito.');
+        setShowModalManual(false);
+
+        // Añadir reactivamente al listado local si coincide con la fecha filtrada
+        if (fechaManual === fechaFiltro) {
+          const nuevoItem = {
+            id: newRes.id,
+            hora: horaStr.slice(0, 5),
+            fecha: hoyStr,
+            clienteName: nombreCliente.trim() || 'Cliente de la Calle',
+            clienteId: null,
+            servicioName: serv.nombre,
+            servicioId: serv.id,
+            precioUsd: parseFloat(serv.precio_usd),
+            pagoMetodo: metodoPagoManual,
+            pagoReferencia: 'REGISTRO MANUAL',
+            pagoBancoEmisor: null,
+            pagoEstado: 'verificado',
+            estado: 'completada',
+            source: 'reserva'
+          };
+
+          setReservas(prev => [...prev, nuevoItem].sort((a, b) => a.hora.localeCompare(b.hora)));
+        }
       }
 
       // Resetear campos
       setNombreCliente('');
       setFechaManual(new Date().toISOString().split('T')[0]);
       setHoraManual(`${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`);
+      setEditingItem(null);
     } catch (err) {
-      console.error('Error al guardar turno manual:', err);
+      console.error('Error al guardar turno:', err);
       const errMsg = err.message || err.details || JSON.stringify(err);
-      setErrorMsg(`Error al registrar el turno en Supabase: ${errMsg}. Asegúrate de haber ejecutado el archivo de migración SQL rls_manual_bookings.sql provisto para configurar los permisos RLS.`);
+      setErrorMsg(`Error al registrar el turno en Supabase: ${errMsg}.`);
     }
   }
 
@@ -529,13 +644,13 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: '0.5rem' }}>
                     <div>
-                      {/* Hora */}
+                      {/* Hora y Fecha */}
                       <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '0.95rem', color: '#ba8f57', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.3rem' }}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                           <circle cx="12" cy="12" r="10"></circle>
                           <polyline points="12 6 12 12 16 14"></polyline>
                         </svg>
-                        {r.hora}
+                        {r.hora} <span style={{ color: '#555', margin: '0 0.25rem' }}>·</span> <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: '700' }}>{formatFechaDDMM(r.fecha)}</span>
                       </span>
                       
                       {/* Cliente */}
@@ -630,28 +745,71 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                     </div>
                   )}
 
-                  {/* Acciones generales: CHAT */}
-                  {r.clienteId && (
-                    <div style={{ marginTop: '0.75rem', textAlign: 'right', paddingLeft: '0.5rem' }}>
+                  {/* Acciones de la Ficha (Editar, Eliminar, Chat) */}
+                  <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '1rem', paddingLeft: '0.5rem', flexWrap: 'wrap' }}>
+                    {/* Botón de Editar */}
+                    <button
+                      onClick={() => iniciarEdicion(r)}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        fontFamily: "'Urbanist', sans-serif", fontSize: '0.68rem', fontWeight: '700',
+                        color: '#ba8f57', background: 'transparent', border: '1px solid rgba(186,143,87,0.2)',
+                        padding: '0.35rem 0.75rem', borderRadius: '0px', textTransform: 'uppercase', letterSpacing: '0.04em',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                      onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ba8f57'; e.currentTarget.style.background = 'rgba(186,143,87,0.05)'; }}
+                      onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(186,143,87,0.2)'; e.currentTarget.style.background = 'transparent'; }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                      Editar
+                    </button>
+
+                    {/* Botón de Eliminar */}
+                    <button
+                      onClick={() => eliminarTurno(r.id, r.source)}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                        fontFamily: "'Urbanist', sans-serif", fontSize: '0.68rem', fontWeight: '700',
+                        color: '#ef4444', background: 'transparent', border: '1px solid rgba(239,68,68,0.2)',
+                        padding: '0.35rem 0.75rem', borderRadius: '0px', textTransform: 'uppercase', letterSpacing: '0.04em',
+                        cursor: 'pointer', transition: 'all 0.2s'
+                      }}
+                      onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ef4444'; e.currentTarget.style.background = 'rgba(239,68,68,0.05)'; }}
+                      onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(239,68,68,0.2)'; e.currentTarget.style.background = 'transparent'; }}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                      Eliminar
+                    </button>
+
+                    {/* Botón de Chat con Cliente */}
+                    {r.clienteId && (
                       <a
                         href="/app/experto/soporte"
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
                           fontFamily: "'Urbanist', sans-serif", fontSize: '0.68rem', fontWeight: '700',
-                          color: '#ba8f57', textDecoration: 'none', border: '1px solid rgba(186,143,87,0.2)',
+                          color: '#a3a3a3', textDecoration: 'none', border: '1px solid rgba(163,163,163,0.2)',
                           padding: '0.35rem 0.75rem', borderRadius: '0px', textTransform: 'uppercase', letterSpacing: '0.04em',
                           transition: 'all 0.2s'
                         }}
-                        onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ba8f57'; e.currentTarget.style.background = 'rgba(186,143,87,0.05)'; }}
-                        onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(186,143,87,0.2)'; e.currentTarget.style.background = 'transparent'; }}
+                        onMouseOver={(e) => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(163,163,163,0.2)'; e.currentTarget.style.color = '#a3a3a3'; e.currentTarget.style.background = 'transparent'; }}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                         </svg>
-                        Chat con Cliente
+                        Chat
                       </a>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               );
             })}
@@ -665,9 +823,11 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
           <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', width: '100%', maxWidth: '420px', padding: '2rem', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.1rem', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Registrar Turno Manual</h3>
+              <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.1rem', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                {editingItem ? 'Editar Turno' : 'Registrar Turno Manual'}
+              </h3>
               <button
-                onClick={() => setShowModalManual(false)}
+                onClick={() => { setShowModalManual(false); setEditingItem(null); }}
                 style={{ background: 'transparent', border: 'none', color: '#666', fontSize: '1.5rem', cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem' }}
                 onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
                 onMouseOut={(e) => e.currentTarget.style.color = '#666'}
@@ -747,7 +907,7 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
                 <button
                   type="button"
-                  onClick={() => setShowModalManual(false)}
+                  onClick={() => { setShowModalManual(false); setEditingItem(null); }}
                   style={{
                     flex: 1, padding: '0.75rem', background: 'transparent', border: '1px solid #262626',
                     borderRadius: '0px', color: '#a3a3a3', fontSize: '0.74rem', fontWeight: 'bold', cursor: 'pointer',
@@ -767,7 +927,7 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                     textTransform: 'uppercase', letterSpacing: '0.05em'
                   }}
                 >
-                  Guardar Turno
+                  {editingItem ? 'Guardar Cambios' : 'Guardar Turno'}
                 </button>
               </div>
             </form>
