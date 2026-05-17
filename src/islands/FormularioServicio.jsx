@@ -66,26 +66,30 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
 
   return (
     <section style={{
-      background: 'rgba(17, 17, 17, 0.95)',
-      border: '1px solid rgba(186, 143, 87, 0.22)',
-      borderRadius: '1rem',
+      background: '#0a0a0a',
+      border: '1px solid #1a1a1a',
+      borderRadius: '0px',
       padding: '1.75rem',
       marginBottom: '2rem',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
+      boxShadow: 'none',
+      fontFamily: "'Urbanist', sans-serif"
     }}>
       <h2 style={{
         fontFamily: "'Urbanist', sans-serif",
-        fontWeight: '800',
-        fontSize: '1.05rem',
+        fontWeight: '900',
+        fontSize: '1rem',
         color: '#fff',
         margin: '0 0 1.25rem',
         display: 'flex',
         alignItems: 'center',
         gap: '0.6rem',
-        letterSpacing: '0.02em'
+        textTransform: 'uppercase',
+        letterSpacing: '0.04em'
       }}>
-        <span style={{ color: '#ba8f57', fontSize: '1.2rem', fontWeight: 'bold' }}>＋</span> 
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
         Añadir nuevo servicio
       </h2>
 
@@ -118,9 +122,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
             placeholder="Ej: Corte de Cabello, Balayage, Manicure Semipermanente…"
             style={{
               width: '100%',
-              background: '#0a0a0a',
-              border: '1px solid rgba(186, 143, 87, 0.2)',
-              borderRadius: '8px',
+              background: '#0d0d0d',
+              border: '1px solid #262626',
+              borderRadius: '0px',
               padding: '0.8rem 1rem',
               color: '#fff',
               fontSize: '13.5px',
@@ -130,11 +134,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
             }}
             onFocus={(e) => {
               e.currentTarget.style.borderColor = '#ba8f57';
-              e.currentTarget.style.boxShadow = '0 0 8px rgba(186, 143, 87, 0.15)';
             }}
             onBlur={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(186, 143, 87, 0.2)';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.borderColor = '#262626';
             }}
           />
         </div>
@@ -166,9 +168,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
               onChange={(e) => setDuracion(parseInt(e.target.value) || 60)}
               style={{
                 width: '100%',
-                background: '#0a0a0a',
-                border: '1px solid rgba(186, 143, 87, 0.2)',
-                borderRadius: '8px',
+                background: '#0d0d0d',
+                border: '1px solid #262626',
+                borderRadius: '0px',
                 padding: '0.8rem 1rem',
                 color: '#fff',
                 fontSize: '13.5px',
@@ -178,11 +180,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
               }}
               onFocus={(e) => {
                 e.currentTarget.style.borderColor = '#ba8f57';
-                e.currentTarget.style.boxShadow = '0 0 8px rgba(186, 143, 87, 0.15)';
               }}
               onBlur={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(186, 143, 87, 0.2)';
-                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.borderColor = '#262626';
               }}
             />
           </div>
@@ -222,9 +222,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
                 placeholder="0.00"
                 style={{
                   width: '100%',
-                  background: '#0a0a0a',
-                  border: '1px solid rgba(186, 143, 87, 0.2)',
-                  borderRadius: '8px',
+                  background: '#0d0d0d',
+                  border: '1px solid #262626',
+                  borderRadius: '0px',
                   padding: '0.8rem 1rem 0.8rem 1.8rem',
                   color: '#fff',
                   fontSize: '13.5px',
@@ -234,23 +234,21 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#ba8f57';
-                  e.currentTarget.style.boxShadow = '0 0 8px rgba(186, 143, 87, 0.15)';
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(186, 143, 87, 0.2)';
-                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = '#262626';
                 }}
               />
             </div>
           </div>
         </div>
 
-        {/* Badge Dinámico Glassmorphic de Equivalencia en Bolívares */}
+        {/* Badge Dinámico Equivalencia en Bolívares */}
         {precioUsd && parseFloat(precioUsd) > 0 && (
           <div style={{
-            background: 'rgba(186, 143, 87, 0.05)',
-            border: '1px solid rgba(186, 143, 87, 0.2)',
-            borderRadius: '10px',
+            background: 'rgba(186, 143, 87, 0.04)',
+            border: '1px solid rgba(186, 143, 87, 0.15)',
+            borderRadius: '0px',
             padding: '0.9rem 1.2rem',
             display: 'flex',
             alignItems: 'center',
@@ -263,9 +261,9 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
                 Equivalencia BCV Oficial
               </span>
               <span style={{
-                fontFamily: "'Oswald', sans-serif",
-                fontSize: '1.25rem',
-                fontWeight: '700',
+                fontFamily: "'Urbanist', sans-serif",
+                fontSize: '1.2rem',
+                fontWeight: '900',
                 color: '#fff',
                 letterSpacing: '0.02em'
               }}>
@@ -290,28 +288,26 @@ export default function FormularioServicio({ tasaBcvInicial = 40.00 }) {
             background: '#ba8f57',
             color: '#000',
             fontFamily: "'Urbanist', sans-serif",
-            fontWeight: '800',
-            fontSize: '12px',
+            fontWeight: '900',
+            fontSize: '11px',
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
             padding: '0.9rem',
-            borderRadius: '8px',
+            borderRadius: '0px',
             border: 'none',
             cursor: 'pointer',
             marginTop: '0.5rem',
             transition: 'all 0.2s',
-            boxShadow: '0 4px 12px rgba(186, 143, 87, 0.2)'
+            boxShadow: 'none'
           }}
           onMouseOver={(e) => {
             e.currentTarget.style.background = '#fff';
-            e.currentTarget.style.transform = 'translateY(-1px)';
           }}
           onMouseOut={(e) => {
             e.currentTarget.style.background = '#ba8f57';
-            e.currentTarget.style.transform = 'translateY(0)';
           }}
         >
-          Guardar servicio →
+          Guardar servicio
         </button>
       </form>
 

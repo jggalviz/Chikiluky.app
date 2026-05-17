@@ -105,187 +105,221 @@ function get(m, sub, k) { return pagos[m]?.[sub]?.[k] ?? ''; }
 function isOn(m) { return pagos[m]?.activo ?? false; }
 ---
 
-<LayoutBase title="Métodos de Pago" description="Configura cómo recibes pagos en CHIKILUKY.">
+<LayoutBase title="Métodos de Pago — CHIKILUKY Pro" description="Configura cómo recibes pagos en CHIKILUKY.">
 
-  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(17,17,17,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(186,143,87,0.15)">
-    <a href="/app/experto/escritorio" style="text-decoration:none"><span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.pro</span></a>
-    <nav style="display:flex;align-items:center;gap:0.5rem">
-      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Escritorio</a>
-      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Agenda</a>
-      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Tarifas</a>
-      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.6rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Pagos</a>
-      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Soporte</a>
-      <span style="color:#2a2a2a">|</span>
-      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
+    <a href="/app/experto/escritorio" style="text-decoration:none">
+      <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
+      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.pro</span>
+    </a>
+    <nav style="display:flex;align-items:center;gap:0.4rem">
+      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Escritorio</a>
+      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Agenda</a>
+      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Tarifas</a>
+      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Pagos</a>
+      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Soporte</a>
+      <span style="color:#262626;margin:0 0.2rem">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.76rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.25);padding:0.35rem 0.9rem;border-radius:0px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.06)'" onmouseout="this.style.background='transparent'">Salir</a>
     </nav>
   </header>
 
-  <main style="padding:2rem 1.5rem 5rem;background:#1a1a1a;flex:1">
+  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;flex:1">
   <div style="max-width:620px;margin:0 auto">
 
-    <div style="margin-bottom:2rem">
-      <p style="font-size:0.7rem;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Control Multimoneda</p>
-      <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.3rem,4vw,1.8rem);color:#fff;margin:0">Métodos de Pago</h1>
-      <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#555;margin-top:0.3rem">{negocio?.name}</p>
+    <div style="margin-bottom:2.5rem">
+      <p style="font-size:0.68rem;font-family:'Urbanist',sans-serif;font-weight:bold;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Control Multimoneda</p>
+      <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.3rem,4vw,1.8rem);color:#fff;margin:0 0 0.25rem 0;letter-spacing:-0.02em">Métodos de Pago</h1>
+      <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#737373;margin:0">{negocio?.name}</p>
     </div>
 
-     {ok && <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#4ade80">✅ Método actualizado correctamente.</div>}
-     {formError && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error: {formError}</div>}
-     {!negocio && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error de Vinculación: No se encontró ningún negocio asociado a tu cuenta de experto en la base de datos, o tu sesión ha caducado. {negocioError && `Detalle: ${negocioError.message} (${negocioError.code})`}</div>}
-
-    <!-- ══ Macro para bloque de método ══════════════════════════════════════ -->
-    <!-- Usamos inline para evitar un componente extra -->
+     {ok && <div style="background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.3);border-radius:0px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.8rem;color:#4ade80;text-transform:uppercase;letter-spacing:0.02em">✅ Método actualizado correctamente.</div>}
+     {formError && <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.3);border-radius:0px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.8rem;color:#ef4444;text-transform:uppercase;letter-spacing:0.02em">⚠️ Error: {formError}</div>}
+     {!negocio && <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.3);border-radius:0px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.8rem;color:#ef4444;text-transform:uppercase;letter-spacing:0.02em">⚠️ Error de Vinculación: No se encontró ningún negocio asociado a tu cuenta de experto en la base de datos.</div>}
 
     <!-- 1. RESERVA SIN PAGO PREVIO -->
-    <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem;margin-bottom:1rem">
+    <section style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.5rem;margin-bottom:1.25rem">
       <form method="POST">
         <input type="hidden" name="_metodo" value="reserva_sin_pago"/>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
           <div>
-            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">🗓️ Reserva sin pago previo</p>
-            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">El cliente reserva sin necesidad de enviar comprobante.</p>
+            <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:0.5rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="0" ry="0"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Reserva sin pago previo
+            </p>
+            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#737373;margin:0.35rem 0 0">El cliente reserva directamente desde el catálogo sin enviar comprobantes.</p>
           </div>
           <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
             <input type="checkbox" name="activo" value="on" style="display:none" id="tog-rsp" checked={isOn('reserva_sin_pago')}/>
-            <div id="pill-rsp" onclick="togglePill('rsp')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('reserva_sin_pago') ? '#ba8f57' : '#333'};position:relative`}>
-              <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('reserva_sin_pago') ? '23px' : '3px'}`}></div>
+            <div id="pill-rsp" onclick="togglePill('rsp')" style={`width:44px;height:24px;border-radius:0px;cursor:pointer;border:1px solid #404040;transition:background 0.2s;background:${isOn('reserva_sin_pago') ? '#ba8f57' : '#262626'};position:relative`}>
+              <div style={`position:absolute;top:2px;width:18px;height:18px;background:#fff;border-radius:0px;transition:left 0.2s;left:${isOn('reserva_sin_pago') ? '22px' : '2px'}`}></div>
             </div>
           </div>
         </div>
-        <button type="submit" style="margin-top:1rem;width:100%;padding:0.6rem;background:rgba(186,143,87,0.12);border:1px solid rgba(186,143,87,0.3);border-radius:0.5rem;color:#ba8f57;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer">Guardar cambio</button>
+        <button type="submit" style="margin-top:1.25rem;width:100%;padding:0.75rem;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.3);border-radius:0px;color:#ba8f57;font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer" onmouseover="this.style.background='rgba(186,143,87,0.12)'" onmouseout="this.style.background='rgba(186,143,87,0.06)'">Guardar cambio</button>
       </form>
     </section>
 
     <!-- 2. EFECTIVO -->
-    <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem;margin-bottom:1rem">
+    <section style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.5rem;margin-bottom:1.25rem">
       <form method="POST">
         <input type="hidden" name="_metodo" value="efectivo"/>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
           <div>
-            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">💵 Efectivo</p>
-            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Acepta pagos en físico.</p>
+            <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:0.5rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="0" ry="0"></rect>
+                <circle cx="12" cy="12" r="2"></circle>
+                <line x1="6" y1="12" x2="6.01" y2="12"></line>
+                <line x1="18" y1="12" x2="18.01" y2="12"></line>
+              </svg>
+              Efectivo
+            </p>
+            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#737373;margin:0.35rem 0 0">Permite a los clientes pagar en el establecimiento.</p>
           </div>
           <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
             <input type="checkbox" name="activo" value="on" style="display:none" id="tog-ef" checked={isOn('efectivo')}/>
-            <div id="pill-ef" onclick="togglePill('ef')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('efectivo') ? '#ba8f57' : '#333'};position:relative`}>
-              <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('efectivo') ? '23px' : '3px'}`}></div>
+            <div id="pill-ef" onclick="togglePill('ef')" style={`width:44px;height:24px;border-radius:0px;cursor:pointer;border:1px solid #404040;transition:background 0.2s;background:${isOn('efectivo') ? '#ba8f57' : '#262626'};position:relative`}>
+              <div style={`position:absolute;top:2px;width:18px;height:18px;background:#fff;border-radius:0px;transition:left 0.2s;left:${isOn('efectivo') ? '22px' : '2px'}`}></div>
             </div>
           </div>
         </div>
-        <div style="display:flex;gap:1rem">
+        <div style="display:flex;gap:1.5rem">
           {[['acepta_usd','Dólares (USD)', pagos.efectivo?.acepta_usd ?? true], ['acepta_bs','Bolívares (Bs)', pagos.efectivo?.acepta_bs ?? true]].map(([n,l,v]) => (
             <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer">
-              <input type="checkbox" name={n} {v ? 'checked' : ''} style="accent-color:#ba8f57;width:16px;height:16px"/>
-              <span style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#aaa">{l}</span>
+              <input type="checkbox" name={n} {v ? 'checked' : ''} style="accent-color:#ba8f57;width:15px;height:15px"/>
+              <span style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#a3a3a3">{l}</span>
             </label>
           ))}
         </div>
-        <button type="submit" style="margin-top:1rem;width:100%;padding:0.6rem;background:rgba(186,143,87,0.12);border:1px solid rgba(186,143,87,0.3);border-radius:0.5rem;color:#ba8f57;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer">Guardar cambio</button>
+        <button type="submit" style="margin-top:1.25rem;width:100%;padding:0.75rem;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.3);border-radius:0px;color:#ba8f57;font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer" onmouseover="this.style.background='rgba(186,143,87,0.12)'" onmouseout="this.style.background='rgba(186,143,87,0.06)'">Guardar cambio</button>
       </form>
     </section>
 
     <!-- 3. PAGO MÓVIL -->
-    <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem;margin-bottom:1rem">
+    <section style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.5rem;margin-bottom:1.25rem">
       <form method="POST">
         <input type="hidden" name="_metodo" value="pago_movil"/>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem">
           <div>
-            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">📱 Pago Móvil</p>
-            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Con verificación de referencia.</p>
+            <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:0.5rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="0" ry="0"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              Pago Móvil
+            </p>
+            <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#737373;margin:0.35rem 0 0">Verificación manual de referencia interbancaria.</p>
           </div>
           <div style="display:flex;align-items:center;cursor:pointer;flex-shrink:0">
             <input type="checkbox" name="activo" value="on" style="display:none" id="tog-pm" checked={isOn('pago_movil')}/>
-            <div id="pill-pm" onclick="togglePill('pm')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn('pago_movil') ? '#ba8f57' : '#333'};position:relative`}>
-              <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn('pago_movil') ? '23px' : '3px'}`}></div>
+            <div id="pill-pm" onclick="togglePill('pm')" style={`width:44px;height:24px;border-radius:0px;cursor:pointer;border:1px solid #404040;background:${isOn('pago_movil') ? '#ba8f57' : '#262626'};position:relative`}>
+              <div style={`position:absolute;top:2px;width:18px;height:18px;background:#fff;border-radius:0px;left:${isOn('pago_movil') ? '22px' : '2px'}`}></div>
             </div>
           </div>
         </div>
 
         {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
-          <div style="margin-bottom:1.1rem">
-            <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.6rem">Cuenta {titulo}</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
-              {[['banco','Banco','Ej: Banesco'],['telefono','Teléfono','04120000000'],['cedula','Cédula/RIF','V-00000000'],['nombre','Nombre','A nombre de']].map(([k,l,ph]) => (
+          <div style="margin-bottom:1.25rem">
+            <p style="font-family:'Urbanist',sans-serif;font-size:0.72rem;font-weight:900;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.75rem 0">Cuenta {titulo}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+              {[['banco','Banco','Ej: Banesco'],['telefono','Teléfono','Ej: 04120000000'],['cedula','Cédula/RIF','Ej: V-00000000'],['nombre','Nombre Completo','A nombre de']].map(([k,l,ph]) => (
                 <div>
-                  <label style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#666;display:block;margin-bottom:0.2rem">{l}</label>
+                  <label style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#737373;display:block;margin-bottom:0.3rem;text-transform:uppercase;font-weight:bold">{l}</label>
                   <input type="text" name={prefix+k} placeholder={ph} value={get('pago_movil', prefix==='p_'?'principal':'secundario', k)}
-                    style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.2);border-radius:0.4rem;padding:0.55rem 0.7rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.83rem;outline:none;box-sizing:border-box"
-                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.2)'"/>
+                    style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.65rem 0.8rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.8rem;outline:none;box-sizing:border-box"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='#262626'"/>
                 </div>
               ))}
             </div>
           </div>
         ))}
-        <button type="submit" style="width:100%;padding:0.65rem;background:#ba8f57;border:none;border-radius:0.5rem;color:#1a1a1a;font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">Actualizar Pago Móvil</button>
+        <button type="submit" style="width:100%;padding:0.75rem;background:#ba8f57;border:none;border-radius:0px;color:#000;font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;margin-top:0.5rem">Actualizar Pago Móvil</button>
       </form>
     </section>
 
     <!-- 4. ZELLE + PAYPAL -->
-    {[['zelle','💚 Zelle','email','Email / Usuario','nombre','Nombre completo'],
-      ['paypal','🅿️ PayPal','email','Email de PayPal','nombre','Nombre']].map(([mid,title,f1,ph1,f2,ph2]) => (
-      <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem;margin-bottom:1rem">
+    {[['zelle','Zelle','email','Email / Usuario','nombre','Nombre del Titular'],
+      ['paypal','PayPal','email','Email de PayPal','nombre','Nombre']].map(([mid,title,f1,ph1,f2,ph2]) => (
+      <section style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.5rem;margin-bottom:1.25rem">
         <form method="POST">
           <input type="hidden" name="_metodo" value={mid}/>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
-            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem">
+            <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:0.5rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="0" ry="0"></rect>
+                <line x1="12" y1="10" x2="12.01" y2="10"></line>
+              </svg>
+              {title}
+            </p>
             <div style="cursor:pointer;flex-shrink:0">
               <input type="checkbox" name="activo" value="on" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
-              <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
-                <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
+              <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:0px;cursor:pointer;border:1px solid #404040;background:${isOn(mid) ? '#ba8f57' : '#262626'};position:relative`}>
+                <div style={`position:absolute;top:2px;width:18px;height:18px;background:#fff;border-radius:0px;left:${isOn(mid) ? '22px' : '2px'}`}></div>
               </div>
             </div>
           </div>
           {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
-            <div style="margin-bottom:0.85rem">
-              <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.4rem">Cuenta {titulo}</p>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
-                <div><label style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#666;display:block;margin-bottom:0.2rem">{ph1}</label>
+            <div style="margin-bottom:1rem">
+              <p style="font-family:'Urbanist',sans-serif;font-size:0.72rem;font-weight:900;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.6rem 0">Cuenta {titulo}</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+                <div><label style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#737373;display:block;margin-bottom:0.3rem;text-transform:uppercase;font-weight:bold">{f1 === 'email' ? 'Correo Electrónico' : 'Titular'}</label>
                   <input type="text" name={prefix+f1} value={get(mid, prefix==='p_'?'principal':'secundario', f1)} placeholder={ph1}
-                    style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.2);border-radius:0.4rem;padding:0.55rem 0.7rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.83rem;outline:none;box-sizing:border-box"
-                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.2)'"/></div>
-                <div><label style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#666;display:block;margin-bottom:0.2rem">{ph2}</label>
+                    style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.65rem 0.8rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.8rem;outline:none;box-sizing:border-box"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='#262626'"/></div>
+                <div><label style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#737373;display:block;margin-bottom:0.3rem;text-transform:uppercase;font-weight:bold">{f2 === 'nombre' ? 'Nombre Titular' : 'Nombre'}</label>
                   <input type="text" name={prefix+f2} value={get(mid, prefix==='p_'?'principal':'secundario', f2)} placeholder={ph2}
-                    style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.2);border-radius:0.4rem;padding:0.55rem 0.7rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.83rem;outline:none;box-sizing:border-box"
-                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.2)'"/></div>
+                    style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.65rem 0.8rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.8rem;outline:none;box-sizing:border-box"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='#262626'"/></div>
               </div>
             </div>
           ))}
-          <button type="submit" style="width:100%;padding:0.65rem;background:#ba8f57;border:none;border-radius:0.5rem;color:#1a1a1a;font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">Actualizar {title}</button>
+          <button type="submit" style="width:100%;padding:0.75rem;background:#ba8f57;border:none;border-radius:0px;color:#000;font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;margin-top:0.5rem">Actualizar {title}</button>
         </form>
       </section>
     ))}
 
     <!-- 5. BILLETERAS DIGITALES -->
-    {[['zinli','🔵 Zinli','telefono','Teléfono / Usuario','nombre','Nombre'],
-      ['binance_pay','🟡 Binance Pay','pay_id','Pay ID','nombre','Nombre']].map(([mid,title,f1,ph1,f2,ph2]) => (
-      <section style="background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:1rem;padding:1.25rem;margin-bottom:1rem">
+    {[['zinli','Zinli','telefono','Teléfono / Usuario','nombre','Nombre Titular'],
+      ['binance_pay','Binance Pay','pay_id','Pay ID / Email','nombre','Nombre Titular']].map(([mid,title,f1,ph1,f2,ph2]) => (
+      <section style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.5rem;margin-bottom:1.25rem">
         <form method="POST">
           <input type="hidden" name="_metodo" value={mid}/>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
-            <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.5rem">
+            <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:0.5rem">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="0" ry="0"></rect>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              {title}
+            </p>
             <div style="cursor:pointer;flex-shrink:0">
               <input type="checkbox" name="activo" value="on" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
-              <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
-                <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
+              <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:0px;cursor:pointer;border:1px solid #404040;background:${isOn(mid) ? '#ba8f57' : '#262626'};position:relative`}>
+                <div style={`position:absolute;top:2px;width:18px;height:18px;background:#fff;border-radius:0px;left:${isOn(mid) ? '22px' : '2px'}`}></div>
               </div>
             </div>
           </div>
           {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
-            <div style="margin-bottom:0.85rem">
-              <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.4rem">Cuenta {titulo}</p>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
-                <div><label style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#666;display:block;margin-bottom:0.2rem">{ph1}</label>
+            <div style="margin-bottom:1rem">
+              <p style="font-family:'Urbanist',sans-serif;font-size:0.72rem;font-weight:900;color:#ba8f57;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 0.6rem 0">Cuenta {titulo}</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem">
+                <div><label style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#737373;display:block;margin-bottom:0.3rem;text-transform:uppercase;font-weight:bold">{f1 === 'telefono' ? 'Teléfono / Usuario' : 'Pay ID / Email'}</label>
                   <input type="text" name={prefix+f1} value={get(mid, prefix==='p_'?'principal':'secundario', f1)} placeholder={ph1}
-                    style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.2);border-radius:0.4rem;padding:0.55rem 0.7rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.83rem;outline:none;box-sizing:border-box"
-                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.2)'"/></div>
-                <div><label style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#666;display:block;margin-bottom:0.2rem">{ph2}</label>
+                    style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.65rem 0.8rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.8rem;outline:none;box-sizing:border-box"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='#262626'"/></div>
+                <div><label style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#737373;display:block;margin-bottom:0.3rem;text-transform:uppercase;font-weight:bold">Nombre del Titular</label>
                   <input type="text" name={prefix+f2} value={get(mid, prefix==='p_'?'principal':'secundario', f2)} placeholder={ph2}
-                    style="width:100%;background:#1a1a1a;border:1px solid rgba(186,143,87,0.2);border-radius:0.4rem;padding:0.55rem 0.7rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.83rem;outline:none;box-sizing:border-box"
-                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='rgba(186,143,87,0.2)'"/></div>
+                    style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.65rem 0.8rem;color:#fff;font-family:'Lato',sans-serif;font-size:0.8rem;outline:none;box-sizing:border-box"
+                    onfocus="this.style.borderColor='#ba8f57'" onblur="this.style.borderColor='#262626'"/></div>
               </div>
             </div>
           ))}
-          <button type="submit" style="width:100%;padding:0.65rem;background:#ba8f57;border:none;border-radius:0.5rem;color:#1a1a1a;font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer">Actualizar {title}</button>
+          <button type="submit" style="width:100%;padding:0.75rem;background:#ba8f57;border:none;border-radius:0px;color:#000;font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;margin-top:0.5rem">Actualizar {title}</button>
         </form>
       </section>
     ))}
@@ -294,15 +328,18 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
   </main>
 </LayoutBase>
 
-<script>
+<script is:inline>
   // Toggle visual de los pills (sincroniza el checkbox oculto)
   function togglePill(id) {
     const cb   = document.getElementById('tog-' + id);
     const pill = document.getElementById('pill-' + id);
+    if (!cb || !pill) return;
     const dot  = pill.querySelector('div');
     cb.checked = !cb.checked;
-    pill.style.background = cb.checked ? '#ba8f57' : '#333';
-    dot.style.left        = cb.checked ? '23px' : '3px';
+    pill.style.background = cb.checked ? '#ba8f57' : '#262626';
+    if (dot) {
+      dot.style.left = cb.checked ? '22px' : '2px';
+    }
   }
   window.togglePill = togglePill;
 </script>

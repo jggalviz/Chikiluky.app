@@ -12,31 +12,31 @@ if (!perfil || !['experto','administrador'].includes(perfil.role))
 <LayoutBase title="Bandeja de Soporte — CHIKILUKY Pro" description="Bandeja de entrada central de soporte técnico en tiempo real.">
 
   <!-- CABECERA -->
-  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(17,17,17,0.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(186,143,87,0.15)">
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
     <a href="/app/experto/escritorio" style="text-decoration:none">
       <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
       <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.pro</span>
     </a>
-    <nav style="display:flex;align-items:center;gap:0.5rem">
-      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Escritorio</a>
-      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Agenda</a>
-      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Tarifas</a>
-      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Pagos</a>
-      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.6rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Soporte</a>
-      <span style="color:#2a2a2a">|</span>
-      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>
+    <nav style="display:flex;align-items:center;gap:0.4rem">
+      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Escritorio</a>
+      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Agenda</a>
+      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Tarifas</a>
+      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Pagos</a>
+      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Soporte</a>
+      <span style="color:#262626;margin:0 0.2rem">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.76rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.25);padding:0.35rem 0.9rem;border-radius:0px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.06)'" onmouseout="this.style.background='transparent'">Salir</a>
     </nav>
   </header>
 
   <!-- CUERPO PRINCIPAL -->
-  <main style="padding:2rem;background:#1a1a1a;min-height:calc(100vh - 65px);display:flex;flex-direction:column">
+  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;min-height:calc(100vh - 65px);display:flex;flex-direction:column">
     <div style="max-width:1400px;width:100%;margin:0 auto;flex-grow:1;display:flex;flex-direction:column">
       
       {/* Título de la Sección */}
-      <div style="margin-bottom:1.5rem">
-        <p style="font-size:0.7rem;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.2rem">Centro de Control</p>
-        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);color:#fff;margin:0">
-          Mensajería de Soporte
+      <div style="margin-bottom:2rem">
+        <p style="font-size:0.68rem;font-family:'Urbanist',sans-serif;font-weight:bold;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Centro de Control</p>
+        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);color:#fff;margin:0 0 0.25rem 0;letter-spacing:-0.02em">
+          Bandeja de Soporte
         </h1>
       </div>
 

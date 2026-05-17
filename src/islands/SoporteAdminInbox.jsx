@@ -243,36 +243,36 @@ export default function SoporteAdminInbox() {
       display: 'grid',
       gridTemplateColumns: '320px 1fr',
       height: 'calc(100vh - 120px)',
-      background: '#111',
-      border: '1px solid rgba(186, 143, 87, 0.15)',
-      borderRadius: '16px',
+      background: '#0a0a0a',
+      border: '1px solid #1a1a1a',
+      borderRadius: '0px',
       overflow: 'hidden',
-      fontFamily: "'Plus Jakarta Sans', sans-serif"
+      fontFamily: "'Urbanist', sans-serif"
     }}>
       
       {/* ── BARRA LATERAL (LISTA DE CHATS) ── */}
       <div style={{
-        borderRight: '1px solid rgba(186, 143, 87, 0.15)',
+        borderRight: '1px solid #1a1a1a',
         display: 'flex',
         flexDirection: 'column',
-        background: '#0d0d0d'
+        background: '#080808'
       }}>
         {/* Cabecera Sidebar */}
         <div style={{
           padding: '1.25rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+          borderBottom: '1px solid #1a1a1a',
           background: 'rgba(255, 255, 255, 0.01)'
         }}>
           <h3 style={{
-            fontFamily: "'Oswald', sans-serif",
-            fontSize: '1.15rem',
-            fontWeight: '600',
+            fontFamily: "'Urbanist', sans-serif",
+            fontSize: '1rem',
+            fontWeight: '900',
             textTransform: 'uppercase',
             color: '#fff',
             margin: '0 0 0.25rem',
             letterSpacing: '0.04em'
           }}>Conversaciones</h3>
-          <p style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)', margin: 0 }}>
+          <p style={{ fontSize: '11px', color: '#525252', margin: 0 }}>
             Canales de soporte activos en tiempo real
           </p>
         </div>
@@ -280,13 +280,15 @@ export default function SoporteAdminInbox() {
         {/* Lista de Salas */}
         <div style={{ flexGrow: 1, overflowY: 'auto', padding: '0.5rem' }}>
           {isLoading ? (
-            <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: '13px', marginTop: '2rem' }}>
+            <p style={{ textAlign: 'center', color: '#525252', fontSize: '13px', marginTop: '2rem' }}>
               Cargando bandejas...
             </p>
           ) : rooms.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '2rem 1rem', color: 'rgba(255,255,255,0.3)' }}>
-              <p style={{ fontSize: '1.5rem', margin: '0 0 0.5rem' }}>💬</p>
-              <p style={{ fontSize: '12px', margin: 0 }}>No hay chats de soporte abiertos en este momento.</p>
+            <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#525252' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style={{ margin: '0 auto 0.75rem', display: 'block' }}>
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              <p style={{ fontSize: '12px', margin: 0 }}>No hay chats de soporte abiertos.</p>
             </div>
           ) : (
             rooms.map((room) => {
@@ -299,9 +301,9 @@ export default function SoporteAdminInbox() {
                   onClick={() => setSelectedRoomId(room.id)}
                   style={{
                     padding: '1rem',
-                    borderRadius: '8px',
-                    background: isSelected ? 'rgba(186, 143, 87, 0.08)' : 'transparent',
-                    border: isSelected ? '1px solid rgba(186, 143, 87, 0.3)' : '1px solid transparent',
+                    borderRadius: '0px',
+                    background: isSelected ? 'rgba(186, 143, 87, 0.06)' : 'transparent',
+                    border: isSelected ? '1px solid rgba(186, 143, 87, 0.2)' : '1px solid transparent',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     marginBottom: '0.4rem',
@@ -320,13 +322,15 @@ export default function SoporteAdminInbox() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
                     <span style={{
-                      fontWeight: isSelected || hasNewMessage ? '700' : '500',
-                      color: hasNewMessage ? '#BA8F57' : '#fff',
-                      fontSize: '13px'
+                      fontWeight: isSelected || hasNewMessage ? '900' : '500',
+                      color: hasNewMessage ? '#ba8f57' : '#fff',
+                      fontSize: '13px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.02em'
                     }}>
                       {getRoomTitle(room)}
                     </span>
-                    <span style={{ fontSize: '9px', color: 'rgba(255, 255, 255, 0.3)' }}>
+                    <span style={{ fontSize: '9px', color: '#525252' }}>
                       {room.lastMessage 
                         ? new Date(room.lastMessage.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                         : new Date(room.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -337,7 +341,7 @@ export default function SoporteAdminInbox() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{
                       fontSize: '11px',
-                      color: hasNewMessage ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+                      color: hasNewMessage ? '#fff' : '#737373',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -349,11 +353,10 @@ export default function SoporteAdminInbox() {
                     {/* Badge de No Leído (Mensaje de Usuario) */}
                     {hasNewMessage && (
                       <span style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        background: '#BA8F57',
-                        boxShadow: '0 0 6px #BA8F57'
+                        width: '6px',
+                        height: '6px',
+                        borderRadius: '0px',
+                        background: '#ba8f57'
                       }} />
                     )}
                   </div>
@@ -363,19 +366,19 @@ export default function SoporteAdminInbox() {
           )}
         </div>
       </div>
-
+ 
       {/* ── SECCIÓN DERECHA (MENSAJES) ── */}
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        background: '#070707'
+        background: '#050505'
       }}>
         {selectedRoomId ? (
           <>
             {/* Header del Chat Activo */}
             <div style={{
               padding: '1.25rem 2rem',
-              borderBottom: '1px solid rgba(186, 143, 87, 0.15)',
+              borderBottom: '1px solid #1a1a1a',
               background: 'rgba(255, 255, 255, 0.01)',
               display: 'flex',
               justifyContent: 'space-between',
@@ -383,16 +386,17 @@ export default function SoporteAdminInbox() {
             }}>
               <div>
                 <h4 style={{
-                  fontFamily: "'Oswald', sans-serif",
-                  fontSize: '1.2rem',
-                  fontWeight: '600',
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontSize: '1.1rem',
+                  fontWeight: '900',
                   textTransform: 'uppercase',
                   color: '#fff',
-                  margin: '0 0 0.15rem'
+                  margin: '0 0 0.15rem',
+                  letterSpacing: '0.04em'
                 }}>
                   {selectedRoom && getRoomTitle(selectedRoom)}
                 </h4>
-                <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)', margin: 0 }}>
+                <p style={{ fontSize: '10px', color: '#737373', margin: 0 }}>
                   {selectedRoom && (
                     selectedRoom.sala_type === 'soporte_anonimo' 
                       ? `Visitante temporal sin registro · ID de Sesión: ${selectedRoom.anonimo_session_id}`
@@ -410,7 +414,7 @@ export default function SoporteAdminInbox() {
               display: 'flex',
               flexDirection: 'column',
               gap: '1.2rem',
-              background: 'linear-gradient(to bottom, transparent, rgba(186, 143, 87, 0.005))'
+              background: 'transparent'
             }}>
               {messages.map((msg) => {
                 const isSoporte = msg.sender_type === 'soporte';
@@ -427,13 +431,12 @@ export default function SoporteAdminInbox() {
                   >
                     <div style={{
                       padding: '0.9rem 1.2rem',
-                      borderRadius: isSoporte ? '16px 16px 2px 16px' : '16px 16px 16px 2px',
-                      background: isSoporte ? 'rgba(186, 143, 87, 0.08)' : 'rgba(255, 255, 255, 0.05)',
+                      borderRadius: '0px',
+                      background: isSoporte ? 'rgba(186, 143, 87, 0.04)' : '#0d0d0d',
                       color: '#fff',
                       fontSize: '13.5px',
                       lineHeight: '1.5',
-                      border: isSoporte ? '1px solid rgba(186, 143, 87, 0.35)' : '1px solid rgba(255, 255, 255, 0.06)',
-                      boxShadow: isSoporte ? '0 4px 15px rgba(186, 143, 87, 0.05)' : 'none',
+                      border: isSoporte ? '1px solid rgba(186, 143, 87, 0.25)' : '1px solid #1a1a1a',
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-word'
                     }}>
@@ -441,11 +444,11 @@ export default function SoporteAdminInbox() {
                     </div>
                     <span style={{
                       fontSize: '9px',
-                      color: 'rgba(255, 255, 255, 0.3)',
+                      color: '#525252',
                       marginTop: '0.35rem',
                       padding: '0 0.25rem'
                     }}>
-                      {isSoporte ? 'Tú' : 'Usuario'} · {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {isSoporte ? 'Soporte' : 'Usuario'} · {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 );
@@ -458,7 +461,7 @@ export default function SoporteAdminInbox() {
               onSubmit={handleSendReply}
               style={{
                 padding: '1.25rem 2rem',
-                borderTop: '1px solid rgba(186, 143, 87, 0.15)',
+                borderTop: '1px solid #1a1a1a',
                 background: 'rgba(255, 255, 255, 0.01)',
                 display: 'flex',
                 gap: '1rem',
@@ -473,17 +476,17 @@ export default function SoporteAdminInbox() {
                 disabled={isSending}
                 style={{
                   flexGrow: 1,
-                  background: '#050505',
-                  border: '1px solid rgba(186, 143, 87, 0.2)',
-                  borderRadius: '10px',
+                  background: '#0a0a0a',
+                  border: '1px solid #1a1a1a',
+                  borderRadius: '0px',
                   padding: '1rem 1.25rem',
                   color: '#fff',
                   fontSize: '13.5px',
                   outline: 'none',
                   transition: 'border-color 0.2s'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#BA8F57'}
-                onBlur={(e) => e.target.style.borderColor = 'rgba(186, 143, 87, 0.2)'}
+                onFocus={(e) => e.target.style.borderColor = '#ba8f57'}
+                onBlur={(e) => e.target.style.borderColor = '#1a1a1a'}
               />
               <button
                 type="submit"
@@ -491,12 +494,12 @@ export default function SoporteAdminInbox() {
                 aria-label="Enviar respuesta"
                 style={{
                   padding: '1rem 2rem',
-                  borderRadius: '10px',
-                  background: '#BA8F57',
+                  borderRadius: '0px',
+                  background: '#ba8f57',
                   color: '#000',
-                  fontFamily: "'Hanken Grotesk', sans-serif",
-                  fontSize: '12px',
-                  fontWeight: '700',
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontSize: '11px',
+                  fontWeight: '900',
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
                   border: 'none',
@@ -511,7 +514,7 @@ export default function SoporteAdminInbox() {
                 }}
                 onMouseOut={(e) => {
                   if (!isSending && inputValue.trim()) {
-                    e.currentTarget.style.background = '#BA8F57';
+                    e.currentTarget.style.background = '#ba8f57';
                   }
                 }}
               >
@@ -526,23 +529,23 @@ export default function SoporteAdminInbox() {
             alignItems: 'center',
             justifyContent: 'center',
             flexGrow: 1,
-            color: 'rgba(255, 255, 255, 0.25)',
+            color: '#262626',
             textAlign: 'center',
             padding: '2rem'
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24" style={{ marginBottom: '1.25rem', color: '#BA8F57', opacity: 0.6 }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24" style={{ marginBottom: '1.25rem', color: '#ba8f57', opacity: 0.6 }}>
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
             <h4 style={{
-              fontFamily: "'Oswald', sans-serif",
-              fontSize: '1.25rem',
-              fontWeight: '600',
+              fontFamily: "'Urbanist', sans-serif",
+              fontSize: '1.15rem',
+              fontWeight: '900',
               textTransform: 'uppercase',
               color: '#fff',
               margin: '0 0 0.5rem',
               letterSpacing: '0.04em'
             }}>Bandeja de Entrada</h4>
-            <p style={{ fontSize: '13px', margin: 0, maxWidth: '320px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '13px', margin: 0, maxWidth: '320px', lineHeight: 1.5, color: '#737373' }}>
               Selecciona una conversación del listado de la izquierda para comenzar a chatear en tiempo real.
             </p>
           </div>

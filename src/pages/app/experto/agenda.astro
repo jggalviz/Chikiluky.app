@@ -50,77 +50,56 @@ const totalBs  = citas?.reduce((s, c) => s + (c.price_bs  ?? 0), 0) ?? 0;
 
 const badgeStyle: Record<string, string> = {
   pendiente:  'background:transparent;border:1px solid #ba8f57;color:#ba8f57',
-  confirmada: 'background:rgba(186,143,87,0.18);border:1px solid #ba8f57;color:#d4a96a',
-  completada: 'background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.4);color:#4ade80',
-  cancelada:  'background:transparent;border:1px solid #444;color:#555',
+  confirmada: 'background:rgba(186,143,87,0.06);border:1px solid #ba8f57;color:#d4a96a',
+  completada: 'background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.3);color:#4ade80',
+  cancelada:  'background:transparent;border:1px solid #262626;color:#737373',
 };
 ---
 
 <LayoutBase
-  title="Mi Agenda"
+  title="Mi Agenda — CHIKILUKY Pro"
   description="Panel de gestión de citas para profesionales de CHIKILUKY."
 >
 
-  <!-- ═══════════════════════════════════
-       HEADER DE CONTROL
-  ══════════════════════════════════════ -->
-  <header style="
-    position:sticky;top:0;z-index:40;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0.9rem 1.5rem;
-    background:rgba(17,17,17,0.92);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid rgba(186,143,87,0.15);
-  ">
-    <!-- Isotipo -->
-    <a href="/app/experto/agenda" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">
-      <span class="brand-text" style="font-size:1.2rem;color:#ba8f57">CHIKILUKY</span>
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
+    <a href="/app/experto/escritorio" style="text-decoration:none">
+      <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
       <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.pro</span>
     </a>
-
-    <!-- Estado + acciones -->
-    <div style="display:flex;align-items:center;gap:0.6rem">
-      <span style="width:8px;height:8px;background:#4ade80;border-radius:50%;display:inline-block;box-shadow:0 0 6px #4ade8088"></span>
-
-      <a href="/app/experto/escritorio"
-         style="font-family:'Urbanist',sans-serif;font-size:0.82rem;font-weight:700;color:#ba8f57;text-decoration:none;letter-spacing:0.02em">
-        Escritorio
-      </a>
-
-      <span style="color:#333">|</span>
-
-      <a href="/api/auth/logout"
-         style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none;letter-spacing:0.03em"
-         onmouseover="this.style.background='rgba(186,143,87,0.1)'"
-         onmouseout="this.style.background='transparent'">
-        Salir
-      </a>
-    </div>
+    <nav style="display:flex;align-items:center;gap:0.4rem">
+      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Escritorio</a>
+      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Agenda</a>
+      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Tarifas</a>
+      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Pagos</a>
+      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Soporte</a>
+      <span style="color:#262626;margin:0 0.2rem">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.76rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.25);padding:0.35rem 0.9rem;border-radius:0px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.06)'" onmouseout="this.style.background='transparent'">Salir</a>
+    </nav>
   </header>
 
   <!-- ═══════════════════════════════════
        RESUMEN DEL DÍA
   ══════════════════════════════════════ -->
-  <section style="padding:2rem 1.5rem 1rem;background:#111;border-bottom:1px solid rgba(186,143,87,0.1)">
+  <section style="padding:2.5rem 1.5rem 1.5rem;background:#0a0a0a;border-bottom:1px solid #1f1f1f">
     <div style="max-width:760px;margin:0 auto">
-      <p style="font-size:0.7rem;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Agenda de hoy</p>
-      <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.3rem,3.5vw,1.9rem);color:#fff;margin-bottom:1.5rem;text-transform:capitalize">
+      <p style="font-size:0.68rem;font-family:'Urbanist',sans-serif;font-weight:bold;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">Agenda de hoy</p>
+      <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.3rem,3.5vw,1.9rem);color:#fff;margin:0 0 1.75rem 0;text-transform:capitalize;letter-spacing:-0.02em">
         {formatFecha()}
       </h1>
 
       <!-- Stats rápidas -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem">
-        <div style="background:#1a1a1a;border:1px solid rgba(186,143,87,0.18);border-radius:0.75rem;padding:1rem;text-align:center">
+        <div style="background:#0f0f0f;border:1px solid #262626;border-radius:0px;padding:1.1rem 1rem;text-align:center">
           <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.8rem;color:#ba8f57;margin:0">{citas?.length ?? 0}</p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#666;margin-top:0.2rem">Citas hoy</p>
+          <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#737373;margin:0.2rem 0 0 0;text-transform:uppercase;letter-spacing:0.04em">Citas hoy</p>
         </div>
-        <div style="background:#1a1a1a;border:1px solid rgba(186,143,87,0.18);border-radius:0.75rem;padding:1rem;text-align:center">
-          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.8rem;color:#ba8f57;margin:0">${totalUSD.toFixed(2)}</p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#666;margin-top:0.2rem">Total USD</p>
+        <div style="background:#0f0f0f;border:1px solid #262626;border-radius:0px;padding:1.1rem 1rem;text-align:center">
+          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.8rem;color:#fff;margin:0">${totalUSD.toFixed(2)}</p>
+          <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#737373;margin:0.2rem 0 0 0;text-transform:uppercase;letter-spacing:0.04em">Total USD</p>
         </div>
-        <div style="background:#1a1a1a;border:1px solid rgba(186,143,87,0.18);border-radius:0.75rem;padding:1rem;text-align:center">
-          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.3rem;color:#ba8f57;margin:0">Bs {totalBs.toLocaleString('es-VE', { maximumFractionDigits: 0 })}</p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#666;margin-top:0.2rem">Total Bs</p>
+        <div style="background:#0f0f0f;border:1px solid #262626;border-radius:0px;padding:1.1rem 1rem;text-align:center">
+          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.4rem;color:#4ade80;margin:0.3rem 0 0 0">Bs {totalBs.toLocaleString('es-VE', { maximumFractionDigits: 0 })}</p>
+          <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#737373;margin:0.2rem 0 0 0;text-transform:uppercase;letter-spacing:0.04em">Total Bs</p>
         </div>
       </div>
     </div>
@@ -129,23 +108,28 @@ const badgeStyle: Record<string, string> = {
   <!-- ═══════════════════════════════════
        TIMELINE DE CITAS
   ══════════════════════════════════════ -->
-  <main style="padding:2rem 1.5rem 5rem;background:#1a1a1a;flex:1">
+  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;flex:1">
     <div style="max-width:760px;margin:0 auto">
 
       {citasError && (
-        <p style="text-align:center;color:#f87171;font-size:0.9rem;padding:2rem">
-          Error al cargar la agenda. Intenta de nuevo.
-        </p>
+        <div style="text-align:center;border:1px solid #ef4444;background:rgba(239,68,68,0.05);padding:2rem;color:#ef4444;font-family:'Urbanist',sans-serif;font-size:0.9rem">
+          Error al cargar la agenda de citas. Por favor intenta de nuevo.
+        </div>
       )}
 
       {(!citas || citas.length === 0) && !citasError && (
-        <div style="text-align:center;padding:4rem 1rem">
-          <p style="font-size:2.5rem;margin-bottom:1rem">📅</p>
-          <p style="font-family:'Urbanist',sans-serif;font-size:1.1rem;color:#555">
-            No hay citas programadas para hoy.
+        <div style="text-align:center;padding:5rem 1rem;border:1px solid #1a1a1a;background:#0a0a0a;border-radius:0px">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1.25rem;display:block">
+            <rect x="3" y="4" width="18" height="18" rx="0" ry="0"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#fff;margin:0 0 0.35rem 0;text-transform:uppercase;letter-spacing:0.04em">
+            No hay citas programadas para hoy
           </p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#444;margin-top:0.5rem">
-            Comparte tu link de reserva para recibir citas online.
+          <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#555;margin:0">
+            Comparte tu link de reserva para recibir citas online de tus clientes.
           </p>
         </div>
       )}
@@ -155,9 +139,9 @@ const badgeStyle: Record<string, string> = {
         <ol style="list-style:none;padding:0;margin:0;position:relative">
 
           <!-- Línea vertical continua -->
-          <div style="position:absolute;left:3.2rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(186,143,87,0.4),rgba(186,143,87,0.05));pointer-events:none"></div>
+          <div style="position:absolute;left:3.2rem;top:0;bottom:0;width:1px;background:#262626;pointer-events:none"></div>
 
-          {citas.map((cita, idx) => {
+          {citas.map((cita) => {
             const cliente = Array.isArray(cita.cliente) ? cita.cliente[0] : cita.cliente;
             const waLink  = cliente?.telefono
               ? `https://wa.me/58${cliente.telefono.replace(/\D/g, '').slice(-10)}`
@@ -170,69 +154,72 @@ const badgeStyle: Record<string, string> = {
 
                 <!-- Burbuja de hora -->
                 <div style="flex-shrink:0;width:6rem;text-align:right;padding-top:0.85rem">
-                  <time style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.95rem;color:#ba8f57">
+                  <time style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#ba8f57;letter-spacing:-0.01em">
                     {formatHora(cita.start_time)}
                   </time>
                   {cita.end_time && (
-                    <p style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#444;margin-top:0.1rem">
+                    <p style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#555;margin:0.15rem 0 0 0">
                       → {formatHora(cita.end_time)}
                     </p>
                   )}
                 </div>
 
-                <!-- Nodo del timeline -->
-                <div style="flex-shrink:0;display:flex;align-items:flex-start;padding-top:1rem">
-                  <div style={`width:10px;height:10px;border-radius:50%;border:2px solid #ba8f57;${estado === 'confirmada' ? 'background:#ba8f57' : 'background:#1a1a1a'}`}></div>
+                <!-- Nodo del timeline (cuadrado sharp) -->
+                <div style="flex-shrink:0;display:flex;align-items:flex-start;padding-top:1.05rem;z-index:10">
+                  <div style={`width:8px;height:8px;border-radius:0px;border:2px solid #ba8f57;${estado === 'confirmada' || estado === 'completada' ? 'background:#ba8f57' : 'background:#050505'}`}></div>
                 </div>
 
                 <!-- Tarjeta de la cita -->
-                <div style="flex:1;background:#111;border:1px solid rgba(186,143,87,0.18);border-radius:0.875rem;padding:1.1rem 1.25rem;transition:border-color 0.2s"
-                     onmouseover="this.style.borderColor='rgba(186,143,87,0.45)'"
-                     onmouseout="this.style.borderColor='rgba(186,143,87,0.18)'">
+                <div style="flex:1;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:0px;padding:1.2rem 1.4rem;transition:border-color 0.2s"
+                     onmouseover="this.style.borderColor='#404040'"
+                     onmouseout="this.style.borderColor='#1a1a1a'">
 
                   <!-- Top row: cliente + badge -->
-                  <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.6rem">
-                    <div style="display:flex;align-items:center;gap:0.5rem">
-                      <div style="width:32px;height:32px;background:rgba(186,143,87,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0">
-                        👤
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.75rem">
+                    <div style="display:flex;align-items:center;gap:0.6rem">
+                      <div style="width:32px;height:32px;background:#141414;border:1px solid #262626;border-radius:0px;display:flex;align-items:center;justify-content:center;color:#737373;flex-shrink:0">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
                       </div>
                       <div>
-                        <p style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.95rem;color:#fff;margin:0;line-height:1.2">
-                          {cliente?.full_name ?? 'Cliente'}
+                        <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;line-height:1.2;text-transform:uppercase;letter-spacing:0.02em">
+                          {cliente?.full_name ?? 'Cliente Registrado'}
                         </p>
                         {waLink && (
                           <a href={waLink} target="_blank" rel="noopener"
-                             style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#4ade80;text-decoration:none;display:inline-flex;align-items:center;gap:0.25rem">
-                            💬 WhatsApp
+                             style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#4ade80;text-decoration:none;display:inline-flex;align-items:center;gap:0.25rem;margin-top:0.15rem">
+                            WhatsApp
                           </a>
                         )}
                       </div>
                     </div>
 
                     <!-- Badge de estado -->
-                    <span style={`font-family:'Urbanist',sans-serif;font-size:0.67rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.65rem;border-radius:9999px;${badge}`}>
+                    <span style={`font-family:'Urbanist',sans-serif;font-size:0.62rem;font-weight:900;letter-spacing:0.08em;text-transform:uppercase;padding:0.25rem 0.7rem;border-radius:0px;${badge}`}>
                       {estado}
                     </span>
                   </div>
 
                   <!-- Servicio -->
                   {cita.servicio && (
-                    <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#888;margin:0 0 0.75rem;padding:0.4rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:0.4rem;border-left:2px solid rgba(186,143,87,0.4)">
-                      ✂️ {cita.servicio}
+                    <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#a3a3a3;margin:0 0 0.85rem;padding:0.5rem 0.75rem;background:#0d0d0d;border-radius:0px;border-left:2px solid #ba8f57">
+                      {cita.servicio}
                     </p>
                   )}
 
                   <!-- Montos bimonetarios -->
-                  <div style="display:flex;gap:1rem;flex-wrap:wrap">
+                  <div style="display:flex;gap:1.25rem;flex-wrap:wrap">
                     <div style="display:flex;align-items:center;gap:0.35rem">
-                      <span style="font-size:0.7rem;color:#555;font-family:'Lato',sans-serif">USD</span>
-                      <span style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1.05rem;color:#ba8f57">
+                      <span style="font-size:0.66rem;color:#525252;font-family:'Lato',sans-serif;font-weight:bold;text-transform:uppercase">USD</span>
+                      <span style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.05rem;color:#ba8f57">
                         ${(cita.price_usd ?? 0).toFixed(2)}
                       </span>
                     </div>
                     <div style="display:flex;align-items:center;gap:0.35rem">
-                      <span style="font-size:0.7rem;color:#555;font-family:'Lato',sans-serif">Bs</span>
-                      <span style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.95rem;color:#888">
+                      <span style="font-size:0.66rem;color:#525252;font-family:'Lato',sans-serif;font-weight:bold;text-transform:uppercase">Bs</span>
+                      <span style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.95rem;color:#737373">
                         {(cita.price_bs ?? 0).toLocaleString('es-VE', { maximumFractionDigits: 2 })}
                       </span>
                     </div>
