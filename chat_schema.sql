@@ -117,9 +117,24 @@ CREATE POLICY "Permitir inserción de mensajes" ON public.mensajes_chat
 ALTER TABLE public.salas_chat REPLICA IDENTITY FULL;
 ALTER TABLE public.mensajes_chat REPLICA IDENTITY FULL;
 
--- Agregar tablas a la publicación de tiempo real de Supabase
-BEGIN;
-  -- Remover en caso de que ya estuvieran cargadas para prevenir duplicados
-  ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS public.salas_chat, public.mensajes_chat;
-  ALTER PUBLICATION supabase_realtime ADD TABLE public.salas_chat, public.mensajes_chat;
-COMMIT;
+-- Agregar tablas a la publicación de tiempo real de Supabase de manera segura
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_rel pr 
+        JOIN pg_publication p ON p.oid = pr.prpubid 
+        JOIN pg_class c ON c.oid = pr.prrelid 
+        WHERE p.pubname = 'supabase_realtime' AND c.relname = 'salas_chat'
+    ) THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.salas_chat;
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_rel pr 
+        JOIN pg_publication p ON p.oid = pr.prpubid 
+        JOIN pg_class c ON c.oid = pr.prrelid 
+        WHERE p.pubname = 'supabase_realtime' AND c.relname = 'mensajes_chat'
+    ) THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.mensajes_chat;
+    END IF;
+END $$;
