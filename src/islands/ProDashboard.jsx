@@ -324,13 +324,13 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
   return (
     <div>
       {/* Saludo y Filtro de Fecha */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
         <div>
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.16em', color: '#ba8f57', textTransform: 'uppercase', margin: '0 0 0.2rem 0' }}>Panel Pro</p>
-          <h2 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.35rem', color: '#fff', margin: 0 }}>
-            {fullName ? fullName.split(' ')[0] : 'Administrador'} 👋
+          <p style={{ fontSize: '0.68rem', letterSpacing: '0.2em', color: '#ba8f57', textTransform: 'uppercase', margin: '0 0 0.4rem 0', fontFamily: "'Urbanist', sans-serif", fontWeight: '700' }}>Panel Pro</p>
+          <h2 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.8rem', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+            {fullName ? fullName.split(' ')[0] : 'Administrador'}
           </h2>
-          <span style={{ fontSize: '0.78rem', color: '#555' }}>{negocio.name}</span>
+          <span style={{ fontSize: '0.8rem', color: '#a3a3a3', letterSpacing: '0.02em', marginTop: '0.2rem', display: 'block' }}>{negocio.name}</span>
         </div>
         
         <div>
@@ -339,9 +339,9 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
             value={fechaFiltro}
             onChange={(e) => setFechaFiltro(e.target.value)}
             style={{
-              background: '#111', border: '1px solid rgba(186,143,87,0.25)',
-              borderRadius: '0.5rem', padding: '0.5rem 0.75rem', color: '#fff',
-              fontSize: '0.82rem', fontFamily: "'Lato', sans-serif", outline: 'none'
+              background: '#0d0d0d', border: '1px solid #262626',
+              borderRadius: '0px', padding: '0.6rem 0.9rem', color: '#fff',
+              fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none'
             }}
           />
         </div>
@@ -349,23 +349,27 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
       {/* Alertas de Feedback */}
       {exitoMsg && (
-        <div style={{ background: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.3)', borderRadius: '0.5rem', padding: '0.75rem', color: '#4ade80', fontSize: '0.78rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-          ✅ {exitoMsg}
+        <div style={{ background: 'rgba(74,222,128,0.06)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: '0px', padding: '0.75rem', color: '#4ade80', fontSize: '0.78rem', marginBottom: '1.5rem', textAlign: 'center', fontFamily: "'Lato', sans-serif" }}>
+          {exitoMsg}
         </div>
       )}
       {errorMsg && (
-        <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '0.5rem', padding: '0.75rem', color: '#ef4444', fontSize: '0.78rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-          ⚠️ {errorMsg}
+        <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '0px', padding: '0.75rem', color: '#ef4444', fontSize: '0.78rem', marginBottom: '1.5rem', textAlign: 'center', fontFamily: "'Lato', sans-serif" }}>
+          {errorMsg}
         </div>
       )}
 
       {/* 1. GRID DE MÉTRICAS */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '2rem' }}>
         {/* Balance Total */}
-        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0.85rem', padding: '1rem' }}>
-          <span style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.2rem' }}>💰</span>
-          <span style={{ display: 'block', fontSize: '0.65rem', color: '#666', textTransform: 'uppercase', fontWeight: 'bold' }}>Balance del Día</span>
-          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.2rem', color: '#fff', display: 'block', margin: '0.15rem 0' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', padding: '1.25rem 1rem' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style={{ color: '#737373', marginBottom: '0.6rem', display: 'block' }}>
+            <rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="12" y1="17" x2="12" y2="17"></line>
+            <path d="M12 9a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5z"></path>
+          </svg>
+          <span style={{ display: 'block', fontSize: '0.62rem', color: '#737373', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.05em' }}>Balance del Día</span>
+          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.15rem', color: '#fff', display: 'block', margin: '0.2rem 0' }}>
             ${metricaBalanceUsd.toFixed(0)} USD
           </span>
           <span style={{ fontSize: '0.65rem', color: '#ba8f57', fontWeight: 'bold' }}>
@@ -374,49 +378,88 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
         </div>
 
         {/* Pendientes de verificación */}
-        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0.85rem', padding: '1rem' }}>
-          <span style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.2rem' }}>⏳</span>
-          <span style={{ display: 'block', fontSize: '0.65rem', color: '#666', textTransform: 'uppercase', fontWeight: 'bold' }}>Por Verificar</span>
-          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.45rem', color: metricaPendientes > 0 ? '#60a5fa' : '#fff', display: 'block', margin: '0.15rem 0' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', padding: '1.25rem 1rem' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style={{ color: metricaPendientes > 0 ? '#60a5fa' : '#737373', marginBottom: '0.6rem', display: 'block' }}>
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span style={{ display: 'block', fontSize: '0.62rem', color: '#737373', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.05em' }}>Por Verificar</span>
+          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.4rem', color: metricaPendientes > 0 ? '#60a5fa' : '#fff', display: 'block', margin: '0.2rem 0' }}>
             {metricaPendientes}
           </span>
-          <span style={{ fontSize: '0.65rem', color: '#555' }}>citas pendientes</span>
+          <span style={{ fontSize: '0.65rem', color: '#555', fontFamily: "'Lato', sans-serif" }}>citas pendientes</span>
         </div>
 
         {/* Ocupación */}
-        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0.85rem', padding: '1rem' }}>
-          <span style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.2rem' }}>📅</span>
-          <span style={{ display: 'block', fontSize: '0.65rem', color: '#666', textTransform: 'uppercase', fontWeight: 'bold' }}>Ocupación</span>
-          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.45rem', color: '#4ade80', display: 'block', margin: '0.15rem 0' }}>
+        <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', padding: '1.25rem 1rem' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style={{ color: '#737373', marginBottom: '0.6rem', display: 'block' }}>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span style={{ display: 'block', fontSize: '0.62rem', color: '#737373', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.05em' }}>Ocupación</span>
+          <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.4rem', color: '#4ade80', display: 'block', margin: '0.2rem 0' }}>
             {metricaOcupacion}
           </span>
-          <span style={{ fontSize: '0.65rem', color: '#555' }}>citas agendadas</span>
+          <span style={{ fontSize: '0.65rem', color: '#555', fontFamily: "'Lato', sans-serif" }}>citas agendadas</span>
         </div>
       </div>
 
       {/* Botón flotante para registro manual */}
-      <div style={{ marginBottom: '1.5rem', textAlign: 'right' }}>
+      {/* 2. ACCIONES RÁPIDAS (ACCESO RÁPIDO) */}
+      <div style={{ marginBottom: '2rem' }}>
         <button
           onClick={() => setShowModalManual(true)}
-          class="btn-gold"
-          style={{ padding: '0.65rem 1.25rem', fontSize: '0.78rem', borderRadius: '9999px', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+          style={{
+            width: '100%',
+            padding: '1.25rem',
+            background: '#0a0a0a',
+            border: '1px solid #262626',
+            borderRadius: '0px',
+            color: '#fff',
+            fontFamily: "'Urbanist', sans-serif",
+            fontWeight: 700,
+            fontSize: '0.82rem',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.6rem',
+            transition: 'all 0.2s',
+          }}
+          onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ba8f57'; e.currentTarget.style.color = '#ba8f57'; }}
+          onMouseOut={(e) => { e.currentTarget.style.borderColor = '#262626'; e.currentTarget.style.color = '#fff'; }}
         >
-          <span>➕</span> Registrar Turno Manual
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Registrar Turno Manual (Cita Offline)
         </button>
       </div>
 
-      {/* 2. EL CALENDARIO DIARIO / LISTA DE AGENDA */}
-      <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '1rem', padding: '1.5rem' }}>
-        <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1.25rem', display: 'block' }}>
+      {/* 3. EL CALENDARIO DIARIO / LISTA DE AGENDA */}
+      <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', padding: '1.5rem' }}>
+        <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.68rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1.25rem', display: 'block' }}>
           AGENDA DE CITAS - CRONOGRAMA DIARIO
         </span>
 
         {cargando ? (
           <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.85rem', color: '#555', textAlign: 'center' }}>Cargando agenda del día...</p>
         ) : reservas.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-            <span style={{ fontSize: '2.5rem', display: 'block', marginBottom: '0.5rem' }}>🌴</span>
-            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.83rem', color: '#555', margin: 0 }}>No hay citas agendadas para esta fecha.</p>
+          <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style={{ color: '#444', margin: '0 auto 0.75rem', display: 'block' }}>
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <line x1="10" y1="14" x2="14" y2="18"></line>
+              <line x1="14" y1="14" x2="10" y2="18"></line>
+            </svg>
+            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.8rem', color: '#555', margin: 0, letterSpacing: '0.02em' }}>No hay citas agendadas para esta fecha.</p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -427,8 +470,8 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                 <div
                   key={r.id}
                   style={{
-                    background: '#161616', border: '1px solid rgba(255,255,255,0.03)',
-                    borderRadius: '0.75rem', padding: '1rem', transition: 'all 0.2s',
+                    background: '#0d0d0d', border: '1px solid #1a1a1a',
+                    borderRadius: '0px', padding: '1.25rem 1rem', transition: 'all 0.2s',
                     position: 'relative', overflow: 'hidden'
                   }}
                 >
@@ -441,18 +484,22 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingLeft: '0.5rem' }}>
                     <div>
                       {/* Hora */}
-                      <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1rem', color: '#ba8f57', display: 'block', marginBottom: '0.2rem' }}>
-                        ⏰ {r.hora}
+                      <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '0.95rem', color: '#ba8f57', display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.3rem' }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        {r.hora}
                       </span>
                       
                       {/* Cliente */}
-                      <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 700, fontSize: '0.92rem', color: '#fff', display: 'block' }}>
+                      <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 700, fontSize: '0.9rem', color: '#fff', display: 'block' }}>
                         {r.clienteName}
                       </span>
                       
                       {/* Servicio */}
-                      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.78rem', color: '#888', display: 'block', marginTop: '0.15rem' }}>
-                        Servicio: <strong>{r.servicioName}</strong>
+                      <span style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.76rem', color: '#888', display: 'block', marginTop: '0.15rem' }}>
+                        Servicio: <strong style={{ color: '#aaa' }}>{r.servicioName}</strong>
                       </span>
                     </div>
 
@@ -461,19 +508,19 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                       <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.95rem', color: '#fff', display: 'block' }}>
                         ${r.precioUsd} USD
                       </span>
-                      <span style={{ display: 'block', fontSize: '0.68rem', color: '#666', marginTop: '0.1rem' }}>
+                      <span style={{ display: 'block', fontSize: '0.65rem', color: '#737373', marginTop: '0.1rem', fontWeight: 'bold' }}>
                         {convertirRefABs(r.precioUsd, tasaBcv)}
                       </span>
                       
                       {/* Badge de Pago */}
                       <span
                         style={{
-                          display: 'inline-block', fontSize: '0.65rem', fontWeight: 'bold',
-                          textTransform: 'uppercase', borderRadius: '9999px', padding: '0.2rem 0.5rem',
-                          marginTop: '0.5rem',
-                          background: esPendiente ? 'rgba(96,165,250,0.1)' : (r.pagoEstado === 'rechazado' ? 'rgba(239,68,68,0.1)' : 'rgba(186,143,87,0.15)'),
+                          display: 'inline-block', fontSize: '0.62rem', fontWeight: 'bold',
+                          textTransform: 'uppercase', borderRadius: '0px', padding: '0.2rem 0.5rem',
+                          marginTop: '0.5rem', letterSpacing: '0.05em',
+                          background: esPendiente ? 'rgba(96,165,250,0.06)' : (r.pagoEstado === 'rechazado' ? 'rgba(239,68,68,0.06)' : 'rgba(186,143,87,0.08)'),
                           color: esPendiente ? '#60a5fa' : (r.pagoEstado === 'rechazado' ? '#ef4444' : '#ba8f57'),
-                          border: esPendiente ? '1px solid rgba(96,165,250,0.25)' : (r.pagoEstado === 'rechazado' ? '1px solid rgba(239,68,68,0.25)' : '1px solid rgba(186,143,87,0.35)')
+                          border: esPendiente ? '1px solid rgba(96,165,250,0.2)' : (r.pagoEstado === 'rechazado' ? '1px solid rgba(239,68,68,0.2)' : '1px solid rgba(186,143,87,0.25)')
                         }}
                       >
                         {esPendiente ? 'Por Verificar' : (r.pagoEstado === 'rechazado' ? 'Rechazado' : r.pagoMetodo.replace('_', ' '))}
@@ -483,16 +530,16 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
                   {/* Detalles adicionales para comprobantes por verificar */}
                   {esPendiente && (
-                    <div style={{ background: '#0a0a0a', border: '1px solid rgba(96,165,250,0.15)', borderRadius: '0.5rem', padding: '0.75rem', marginTop: '0.85rem', marginLeft: '0.5rem', fontSize: '0.78rem', color: '#aaa' }}>
-                      <p style={{ margin: '0 0 0.4rem 0', fontWeight: 'bold', color: '#60a5fa', fontSize: '0.7rem', letterSpacing: '0.05em' }}>REPORTADO POR EL CLIENTE:</p>
+                    <div style={{ background: '#070707', border: '1px solid #262626', borderRadius: '0px', padding: '0.85rem', marginTop: '0.85rem', marginLeft: '0.5rem', fontSize: '0.78rem', color: '#a3a3a3', fontFamily: "'Lato', sans-serif" }}>
+                      <p style={{ margin: '0 0 0.4rem 0', fontWeight: 'bold', color: '#60a5fa', fontSize: '0.68rem', letterSpacing: '0.05em' }}>REPORTADO POR EL CLIENTE:</p>
                       {r.pagoMetodo === 'pago_movil' ? (
                         <div>
-                          <span>Banco Emisor: <strong>{r.pagoBancoEmisor || 'No especificado'}</strong></span>
-                          <span style={{ display: 'block', marginTop: '0.15rem' }}>Referencia: <strong>{r.pagoReferencia || 'No reportada'}</strong></span>
+                          <span>Banco Emisor: <strong style={{ color: '#fff' }}>{r.pagoBancoEmisor || 'No especificado'}</strong></span>
+                          <span style={{ display: 'block', marginTop: '0.15rem' }}>Referencia: <strong style={{ color: '#fff' }}>{r.pagoReferencia || 'No reportada'}</strong></span>
                         </div>
                       ) : (
                         <div>
-                          <span>Nombre de Cuenta / Ref: <strong>{r.pagoReferencia || 'No reportado'}</strong></span>
+                          <span>Nombre de Cuenta / Ref: <strong style={{ color: '#fff' }}>{r.pagoReferencia || 'No reportado'}</strong></span>
                         </div>
                       )}
 
@@ -501,9 +548,10 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                         <button
                           onClick={() => rechazarPago(r.id, r.source)}
                           style={{
-                            flex: 1, padding: '0.45rem', background: 'rgba(239,68,68,0.1)',
-                            border: '1px solid rgba(239,68,68,0.3)', borderRadius: '0.4rem',
-                            color: '#ef4444', fontSize: '0.72rem', fontWeight: 'bold', cursor: 'pointer'
+                            flex: 1, padding: '0.55rem', background: 'rgba(239,68,68,0.06)',
+                            border: '1px solid rgba(239,68,68,0.25)', borderRadius: '0px',
+                            color: '#ef4444', fontSize: '0.72rem', fontWeight: 'bold', cursor: 'pointer',
+                            textTransform: 'uppercase', letterSpacing: '0.05em'
                           }}
                         >
                           Rechazar
@@ -512,9 +560,10 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                         <button
                           onClick={() => aprobarPago(r.id, r.source)}
                           style={{
-                            flex: 2, padding: '0.45rem', background: '#ba8f57',
-                            border: 'none', borderRadius: '0.4rem',
-                            color: '#111', fontSize: '0.72rem', fontWeight: 'bold', cursor: 'pointer'
+                            flex: 2, padding: '0.55rem', background: '#ba8f57',
+                            border: 'none', borderRadius: '0px',
+                            color: '#000', fontSize: '0.72rem', fontWeight: 'bold', cursor: 'pointer',
+                            textTransform: 'uppercase', letterSpacing: '0.05em'
                           }}
                         >
                           Aprobar Pago
@@ -525,8 +574,12 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
                   {/* Si es efectivo, recuerda cobrar */}
                   {r.pagoMetodo === 'efectivo' && !esPendiente && (
-                    <div style={{ background: 'rgba(186,143,87,0.06)', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '0.5rem', padding: '0.6rem 0.75rem', marginTop: '0.85rem', marginLeft: '0.5rem', fontSize: '0.75rem', color: '#ccc', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <span>💵</span>
+                    <div style={{ background: 'rgba(186,143,87,0.03)', border: '1px solid rgba(186,143,87,0.12)', borderRadius: '0px', padding: '0.65rem 0.85rem', marginTop: '0.85rem', marginLeft: '0.5rem', fontSize: '0.74rem', color: '#a3a3a3', display: 'flex', alignItems: 'center', gap: '0.45rem', fontFamily: "'Lato', sans-serif" }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style={{ color: '#ba8f57', flexShrink: 0 }}>
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                        <circle cx="12" cy="12" r="2"></circle>
+                        <path d="M6 12h.01M18 12h.01"></path>
+                      </svg>
                       <span><strong>Cobrar en Local:</strong> Pagar en efectivo o tarjeta física antes del servicio.</span>
                     </div>
                   )}
@@ -537,13 +590,19 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                       <a
                         href="/app/experto/soporte"
                         style={{
-                          display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                          fontFamily: "'Urbanist', sans-serif", fontSize: '0.72rem', fontWeight: '700',
-                          color: '#ba8f57', textDecoration: 'none', border: '1px solid rgba(186,143,87,0.25)',
-                          padding: '0.3rem 0.65rem', borderRadius: '9999px'
+                          display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+                          fontFamily: "'Urbanist', sans-serif", fontSize: '0.68rem', fontWeight: '700',
+                          color: '#ba8f57', textDecoration: 'none', border: '1px solid rgba(186,143,87,0.2)',
+                          padding: '0.35rem 0.75rem', borderRadius: '0px', textTransform: 'uppercase', letterSpacing: '0.04em',
+                          transition: 'all 0.2s'
                         }}
+                        onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ba8f57'; e.currentTarget.style.background = 'rgba(186,143,87,0.05)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(186,143,87,0.2)'; e.currentTarget.style.background = 'transparent'; }}
                       >
-                        💬 Chat con Cliente
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Chat con Cliente
                       </a>
                     </div>
                   )}
@@ -556,39 +615,44 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
       {/* 3. MODAL DE REGISTRO MANUAL ("Clientes de la Calle") */}
       {showModalManual && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem' }}>
-          <div style={{ background: '#111', border: '1px solid #ba8f57', borderRadius: '1.25rem', width: '100%', maxWidth: '420px', padding: '1.75rem', boxShadow: '0 20px 40px rgba(0,0,0,0.9)' }}>
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1rem' }}>
+          <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', width: '100%', maxWidth: '420px', padding: '2rem', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}>
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.15rem', color: '#fff', margin: 0 }}>Registrar Turno Manual</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.1rem', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Registrar Turno Manual</h3>
               <button
                 onClick={() => setShowModalManual(false)}
-                style={{ background: 'transparent', border: 'none', color: '#666', fontSize: '1.4rem', cursor: 'pointer', outline: 'none' }}
+                style={{ background: 'transparent', border: 'none', color: '#666', fontSize: '1.5rem', cursor: 'pointer', outline: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem' }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#666'}
               >
-                ×
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
               </button>
             </div>
 
-            <form onSubmit={guardarTurnoManual} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={guardarTurnoManual} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {/* Nombre Cliente */}
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem', fontFamily: "'Lato', sans-serif" }}>Nombre del Cliente (Opcional)</label>
+                <label style={{ display: 'block', fontSize: '0.68rem', color: '#737373', marginBottom: '0.4rem', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Nombre del Cliente (Opcional)</label>
                 <input
                   type="text"
                   placeholder="Ej: Cliente de la Calle / María"
                   value={nombreCliente}
                   onInput={(e) => setNombreCliente(e.target.value)}
-                  style={{ width: '100%', background: '#1a1a1a', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', background: '#0d0d0d', border: '1px solid #262626', borderRadius: '0px', padding: '0.75rem', color: '#fff', fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
 
               {/* Servicio */}
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem', fontFamily: "'Lato', sans-serif" }}>Servicio Solicitado</label>
+                <label style={{ display: 'block', fontSize: '0.68rem', color: '#737373', marginBottom: '0.4rem', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Servicio Solicitado</label>
                 <select
                   value={servicioSeleccionado}
                   onChange={(e) => setServicioSeleccionado(e.target.value)}
-                  style={{ width: '100%', background: '#1a1a1a', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', background: '#0d0d0d', border: '1px solid #262626', borderRadius: '0px', padding: '0.75rem', color: '#fff', fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none', boxSizing: 'border-box' }}
                 >
                   {servicios.map(s => (
                     <option key={s.id} value={s.id}>
@@ -600,26 +664,29 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
 
               {/* Método de Pago */}
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem', fontFamily: "'Lato', sans-serif" }}>Método de Pago</label>
+                <label style={{ display: 'block', fontSize: '0.68rem', color: '#737373', marginBottom: '0.4rem', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Método de Pago</label>
                 <select
                   value={metodoPagoManual}
                   onChange={(e) => setMetodoPagoManual(e.target.value)}
-                  style={{ width: '100%', background: '#1a1a1a', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', background: '#0d0d0d', border: '1px solid #262626', borderRadius: '0px', padding: '0.75rem', color: '#fff', fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none', boxSizing: 'border-box' }}
                 >
-                  <option value="efectivo">💵 Efectivo</option>
-                  <option value="pago_movil">📱 Pago Móvil</option>
-                  <option value="punto">💳 Punto de Venta</option>
+                  <option value="efectivo">Efectivo</option>
+                  <option value="pago_movil">Pago Móvil</option>
+                  <option value="punto">Punto de Venta</option>
                 </select>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem' }}>
                 <button
                   type="button"
                   onClick={() => setShowModalManual(false)}
                   style={{
-                    flex: 1, padding: '0.75rem', background: '#1e1e1e', border: '1px solid rgba(255,255,255,0.05)',
-                    borderRadius: '2rem', color: '#aaa', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'pointer'
+                    flex: 1, padding: '0.75rem', background: 'transparent', border: '1px solid #262626',
+                    borderRadius: '0px', color: '#a3a3a3', fontSize: '0.74rem', fontWeight: 'bold', cursor: 'pointer',
+                    textTransform: 'uppercase', letterSpacing: '0.05em'
                   }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#444'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = '#a3a3a3'; e.currentTarget.style.borderColor = '#262626'; }}
                 >
                   Cancelar
                 </button>
@@ -627,8 +694,9 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                 <button
                   type="submit"
                   style={{
-                    flex: 2, padding: '0.75rem', background: '#ba8f57', border: 'none',
-                    borderRadius: '2rem', color: '#111', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'pointer'
+                    flex: 1.5, padding: '0.75rem', background: '#ba8f57', border: 'none',
+                    borderRadius: '0px', color: '#000', fontSize: '0.74rem', fontWeight: 'bold', cursor: 'pointer',
+                    textTransform: 'uppercase', letterSpacing: '0.05em'
                   }}
                 >
                   Guardar Turno
