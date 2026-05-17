@@ -59,6 +59,12 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
   const [dia, setDia] = useState(null);
   const [hora, setHora] = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
+  const [fechaPago, setFechaPago] = useState(() => {
+    const now = new Date();
+    const tzoffset = now.getTimezoneOffset() * 60000;
+    const localISOTime = (new Date(now.getTime() - tzoffset)).toISOString().slice(0, 16);
+    return localISOTime;
+  });
 
   const tieneVariosEspecialistas = useMemo(() => especialistasList.length > 1, [especialistasList]);
 
@@ -296,6 +302,12 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
       const fechaStr = dia.toISOString().split('T')[0];
       const horaInicioStr = `${hora}:00`;
 
+      // Formatear la fecha del pago para almacenamiento
+      const formattedFechaPago = fechaPago ? fechaPago.replace('T', ' ') : '';
+      const fullReferencia = metodoPago !== 'efectivo' 
+        ? `${referencia} (${formattedFechaPago})` 
+        : null;
+
       // 1. Insertar el registro en la tabla 'reservas'
       const { data: newReserva, error: insertError } = await supabase
         .from('reservas')
@@ -307,7 +319,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
           hora_inicio: horaInicioStr,
           estado: 'confirmada',
           pago_metodo: metodoPago,
-          pago_referencia: metodoPago !== 'efectivo' ? referencia : null,
+          pago_referencia: fullReferencia,
           pago_banco_emisor: metodoPago === 'pago_movil' ? bancoEmisor : null,
           pago_estado: metodoPago === 'efectivo' ? 'verificado' : 'pendiente_verificacion'
         }])
@@ -335,8 +347,8 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
         status: metodoPago === 'efectivo' ? 'confirmada' : 'pendiente_pago',
         price_usd: servicio.precio_usd,
         price_bs: precioBsCalculado,
-        comprobante_referencia: metodoPago !== 'efectivo' ? referencia : null,
-        notas: `Reserva unificada Módulo 2. Pago: ${metodoPago.toUpperCase()}`
+        comprobante_referencia: fullReferencia,
+        notas: `Reserva unificada Módulo 2. Pago: ${metodoPago.toUpperCase()} el ${formattedFechaPago}`
       });
 
       // 3. Inicializar / Obtener la sala de chat privada entre este cliente y el profesional
@@ -677,7 +689,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
           {/* Selector de Pasarela Condicional */}
           <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem' }}>
             <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
-              4 · Selecciona tu Método de Pago
+              4 · Confirmación de Pago
             </span>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '1.5rem' }}>
@@ -753,6 +765,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                 </div>
 
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.7rem', color: '#ba8f57', fontWeight: 'bold', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Confirmación del Pago Realizado</p>
                   <div>
                     <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Banco Emisor</label>
                     <input
@@ -763,15 +776,26 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                     />
                   </div>
-                  <div>
-                    <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Número de Referencia (Últimos 4 o 6 dígitos)</label>
-                    <input
-                      type="text"
-                      placeholder="Ej: 948201"
-                      value={referencia}
-                      onInput={(e) => setReferencia(e.target.value)}
-                      style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
-                    />
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Número de Referencia (4 o 6 dígitos)</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: 948201"
+                        value={referencia}
+                        onInput={(e) => setReferencia(e.target.value)}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Fecha y Hora de Transferencia</label>
+                      <input
+                        type="datetime-local"
+                        value={fechaPago}
+                        onChange={(e) => setFechaPago(e.target.value)}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -793,15 +817,29 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                   </div>
                 </div>
 
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '0.85rem' }}>
-                  <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Nombre de Cuenta o Referencia Zelle</label>
-                  <input
-                    type="text"
-                    placeholder="Ej: John Doe / Ref #849201"
-                    value={referencia}
-                    onInput={(e) => setReferencia(e.target.value)}
-                    style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
-                  />
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '0.85rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.7rem', color: '#ba8f57', fontWeight: 'bold', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Confirmación del Pago Realizado</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Titular de la Cuenta / Referencia</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: John Doe / Ref #849201"
+                        value={referencia}
+                        onInput={(e) => setReferencia(e.target.value)}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Fecha y Hora de Transferencia</label>
+                      <input
+                        type="datetime-local"
+                        value={fechaPago}
+                        onChange={(e) => setFechaPago(e.target.value)}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
