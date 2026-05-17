@@ -6,7 +6,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   <!-- NAV -->
   <nav style="position:fixed;top:0;left:0;width:100%;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 5%;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(186,143,87,0.2)">
     <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none">
-      <img src="/logo.svg" alt="CHIKILUKY" style="height:38px;width:38px;object-fit:contain"/>
+      <img src="/logo.svg" alt="CHIKILUKY" decoding="async" fetchpriority="high" style="height:38px;width:38px;object-fit:contain"/>
       <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
     </a>
     <div style="display:flex;gap:0.75rem">
@@ -63,23 +63,23 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       <h2 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:2rem;text-transform:uppercase;color:#fff;margin-bottom:3rem">Explora por Categoria</h2>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem">
         <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&q=80" alt="Peluqueria" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=220&q=60&fm=webp" alt="Peluqueria" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
           <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Peluqueria</span></div>
         </a>
         <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80" alt="Barberia" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=220&q=60&fm=webp" alt="Barberia" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
           <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Barberia</span></div>
         </a>
         <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&q=80" alt="Unas" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=220&q=60&fm=webp" alt="Unas" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
           <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Unas</span></div>
         </a>
         <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&q=80" alt="Estetica" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=220&q=60&fm=webp" alt="Estetica" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
           <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Estetica</span></div>
         </a>
         <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400&q=80" alt="Tatuajes" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
+          <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=220&q=60&fm=webp" alt="Tatuajes" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
           <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Tatuajes</span></div>
         </a>
       </div>
@@ -99,7 +99,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   <!-- FOOTER -->
   <footer style="width:100%;padding:3rem 5%;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2rem;background:#000;border-top:1px solid #BA8F57">
     <div style="display:flex;align-items:center;gap:0.75rem">
-      <img src="/logo.svg" alt="CHIKILUKY" style="height:40px;width:auto"/>
+      <img src="/logo.svg" alt="CHIKILUKY" loading="lazy" decoding="async" style="height:40px;width:auto"/>
       <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.1rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
     </div>
     <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:rgba(255,255,255,0.4)">&copy; {new Date().getFullYear()} CHIKILUKY. Caracas, Venezuela.</p>
