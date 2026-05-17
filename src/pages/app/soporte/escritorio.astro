@@ -3,10 +3,20 @@ import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { getSession } from '../../../lib/session.js';
 import SoporteAdminInbox from '../../../islands/SoporteAdminInbox.jsx';
 
+console.log("[escritorio.astro] CALLING getSession...");
 const { user, perfil } = await getSession(Astro.request);
-if (!user) return Astro.redirect('/soporte');
-if (!perfil || !['soporte','administrador'].includes(perfil.role))
+
+console.log("[escritorio.astro] user:", user ? user.id : 'null');
+console.log("[escritorio.astro] perfil:", perfil ? JSON.stringify(perfil) : 'null');
+
+if (!user) {
+  console.log("[escritorio.astro] Redirecting to /soporte because user is null!");
   return Astro.redirect('/soporte');
+}
+if (!perfil || !['soporte','administrador'].includes(perfil.role)) {
+  console.log("[escritorio.astro] Redirecting to /soporte because perfil is null or role is invalid!", perfil?.role);
+  return Astro.redirect('/soporte');
+}
 ---
 
 <LayoutBase title="Escritorio de Soporte — CHIKILUKY" description="Bandeja de entrada central para la atención de clientes y visitantes.">
