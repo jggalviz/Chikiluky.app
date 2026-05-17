@@ -104,6 +104,24 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
   const [metodoPago, setMetodoPago] = useState('');
   const [bancoEmisor, setBancoEmisor] = useState('');
   const [referencia, setReferencia] = useState('');
+
+  // Estados de copia
+  const [copiadoTel, setCopiadoTel] = useState(false);
+  const [copiadoCed, setCopiadoCed] = useState(false);
+
+  const copiarTelefono = () => {
+    const tel = pagosConfig?.pago_movil_telefono || '04121112233';
+    navigator.clipboard.writeText(tel);
+    setCopiadoTel(true);
+    setTimeout(() => setCopiadoTel(false), 1500);
+  };
+
+  const copiarCedula = () => {
+    const ced = pagosConfig?.pago_movil_cedula || 'V-11122233';
+    navigator.clipboard.writeText(ced);
+    setCopiadoCed(true);
+    setTimeout(() => setCopiadoCed(false), 1500);
+  };
   
   // Estados de proceso
   const [cargando, setCargando] = useState(false);
@@ -909,11 +927,67 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                   </div>
                   <div>
                     <span style={{ display: 'block', fontSize: '0.65rem', color: '#555' }}>TELÉFONO:</span>
-                    <strong>{pagosConfig.pago_movil_telefono || '04121234567'}</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <strong>{pagosConfig.pago_movil_telefono || '04121234567'}</strong>
+                      <button
+                        onClick={copiarTelefono}
+                        title="Copiar teléfono"
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: '2px',
+                          color: copiadoTel ? '#4ade80' : '#ba8f57',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'color 0.2s'
+                        }}
+                      >
+                        {copiadoTel ? (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        ) : (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                   <div style={{ marginTop: '0.4rem' }}>
                     <span style={{ display: 'block', fontSize: '0.65rem', color: '#555' }}>CÉDULA/RIF:</span>
-                    <strong>{pagosConfig.pago_movil_cedula || 'V-12345678'}</strong>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <strong>{pagosConfig.pago_movil_cedula || 'V-12345678'}</strong>
+                      <button
+                        onClick={copiarCedula}
+                        title="Copiar cédula/RIF"
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: '2px',
+                          color: copiadoCed ? '#4ade80' : '#ba8f57',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          transition: 'color 0.2s'
+                        }}
+                      >
+                        {copiadoCed ? (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        ) : (
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
