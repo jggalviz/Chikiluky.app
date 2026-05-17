@@ -412,39 +412,192 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
   // --- UI RENDER: Pantalla de Éxito ---
   if (reservaExito && detallesReserva) {
     return (
-      <div style={{ background: 'rgba(18, 18, 18, 0.9)', border: '1px solid #ba8f57', borderRadius: '1.25rem', padding: '2.5rem 1.5rem', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.8)' }}>
-        <div style={{ width: '60px', height: '60px', background: 'rgba(186,143,87,0.15)', border: '2px solid #ba8f57', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-          <span style={{ fontSize: '1.75rem' }}>✨</span>
-        </div>
+      <div style={{
+        background: '#111',
+        border: '1px solid rgba(186, 143, 87, 0.3)',
+        borderRadius: '0.85rem',
+        padding: '2.5rem 2rem',
+        textAlign: 'center',
+        boxShadow: '0 20px 50px rgba(0,0,0,0.9)'
+      }}>
         
-        <h2 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 900, fontSize: '1.5rem', color: '#fff', textTransform: 'uppercase', marginBottom: '0.5rem' }}>¡Reserva Confirmada!</h2>
-        <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.88rem', color: '#aaa', marginBottom: '1.75rem' }}>Tu cita se ha agendado con éxito y el canal de comunicación con el especialista ya está abierto.</p>
+        {/* Luxury Typography Accent */}
+        <span style={{
+          display: 'inline-block',
+          fontFamily: "'Urbanist', sans-serif",
+          fontWeight: 800,
+          fontSize: '0.7rem',
+          letterSpacing: '0.2em',
+          textTransform: 'uppercase',
+          color: '#ba8f57',
+          marginBottom: '1rem'
+        }}>
+          CONFIRMACIÓN DE TURNO
+        </span>
+
+        <h2 style={{
+          fontFamily: "'Urbanist', sans-serif",
+          fontWeight: 900,
+          fontSize: '1.75rem',
+          color: '#fff',
+          textTransform: 'uppercase',
+          letterSpacing: '0.02em',
+          margin: '0 0 0.75rem 0',
+          lineHeight: '1.2'
+        }}>
+          ¡Reserva Confirmada!
+        </h2>
         
-        <div style={{ background: '#0a0a0a', border: '1px solid rgba(255,255,255,0.03)', borderRadius: '0.75rem', padding: '1.25rem', marginBottom: '2rem', textAlign: 'left' }}>
-          <p style={{ margin: '0 0 0.5rem 0', fontFamily: "'Lato', sans-serif", fontSize: '0.78rem', color: '#666' }}>DETALLES DEL SERVICIO</p>
-          <p style={{ margin: '0 0 0.85rem 0', fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1.05rem', color: '#fff' }}>{detallesReserva.servicio}</p>
+        <p style={{
+          fontFamily: "'Lato', sans-serif",
+          fontSize: '0.82rem',
+          color: '#777',
+          maxWidth: '400px',
+          margin: '0 auto 2.25rem',
+          lineHeight: '1.5'
+        }}>
+          Tu cita ha sido agendada con éxito. El canal de comunicación privada con tu profesional ya se encuentra activo en tu panel.
+        </p>
+        
+        <div style={{
+          background: '#0a0a0a',
+          border: '1px solid rgba(186, 143, 87, 0.08)',
+          borderRadius: '0.75rem',
+          padding: '1.5rem',
+          marginBottom: '2.25rem',
+          textAlign: 'left'
+        }}>
+          <span style={{
+            display: 'block',
+            fontFamily: "'Urbanist', sans-serif",
+            fontWeight: 800,
+            fontSize: '0.62rem',
+            letterSpacing: '0.12em',
+            color: '#ba8f57',
+            marginBottom: '0.35rem',
+            textTransform: 'uppercase'
+          }}>
+            Servicio Contratado
+          </span>
+          <p style={{
+            margin: '0 0 1rem 0',
+            fontFamily: "'Urbanist', sans-serif",
+            fontWeight: 800,
+            fontSize: '1.15rem',
+            color: '#fff',
+            lineHeight: '1.3'
+          }}>
+            {detallesReserva.servicio}
+          </p>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.85rem' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '1rem',
+            borderTop: '1px solid rgba(255,255,255,0.03)',
+            paddingTop: '1rem'
+          }}>
             <div>
-              <span style={{ display: 'block', fontSize: '0.68rem', color: '#555' }}>FECHA Y HORA</span>
-              <span style={{ fontSize: '0.83rem', color: '#eee', fontWeight: 'bold' }}>{detallesReserva.fecha} · {detallesReserva.hora}</span>
+              <span style={{
+                display: 'block',
+                fontFamily: "'Urbanist', sans-serif",
+                fontWeight: 700,
+                fontSize: '0.6rem',
+                letterSpacing: '0.05em',
+                color: '#555',
+                textTransform: 'uppercase',
+                marginBottom: '0.15rem'
+              }}>
+                Fecha y Hora
+              </span>
+              <span style={{
+                fontFamily: "'Lato', sans-serif",
+                fontSize: '0.85rem',
+                color: '#eee',
+                fontWeight: 'bold'
+              }}>
+                {detallesReserva.fecha} · {detallesReserva.hora}
+              </span>
             </div>
             <div>
-              <span style={{ display: 'block', fontSize: '0.68rem', color: '#555' }}>MÉTODO DE PAGO</span>
-              <span style={{ fontSize: '0.83rem', color: '#ba8f57', fontWeight: 'bold', textTransform: 'uppercase' }}>{detallesReserva.metodo.replace('_', ' ')}</span>
+              <span style={{
+                display: 'block',
+                fontFamily: "'Urbanist', sans-serif",
+                fontWeight: 700,
+                fontSize: '0.6rem',
+                letterSpacing: '0.05em',
+                color: '#555',
+                textTransform: 'uppercase',
+                marginBottom: '0.15rem'
+              }}>
+                Método de Pago
+              </span>
+              <span style={{
+                fontFamily: "'Urbanist', sans-serif",
+                fontSize: '0.85rem',
+                color: '#ba8f57',
+                fontWeight: '800',
+                textTransform: 'uppercase',
+                letterSpacing: '0.03em'
+              }}>
+                {detallesReserva.metodo.replace('_', ' ')}
+              </span>
             </div>
           </div>
 
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '0.85rem', paddingTop: '0.85rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.75rem', color: '#666' }}>PRECIO FINAL</span>
-            <span style={{ fontSize: '1.05rem', color: '#ba8f57', fontWeight: '900', fontFamily: "'Urbanist', sans-serif" }}>
-              ${detallesReserva.precioUsd} USD <span style={{ fontSize: '0.72rem', color: '#aaa', fontWeight: 'normal' }}>({detallesReserva.precioBs} Bs)</span>
+          <div style={{
+            borderTop: '1px solid rgba(255,255,255,0.03)',
+            marginTop: '1rem',
+            paddingTop: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <span style={{
+              fontFamily: "'Urbanist', sans-serif",
+              fontWeight: 800,
+              fontSize: '0.62rem',
+              letterSpacing: '0.12em',
+              color: '#555',
+              textTransform: 'uppercase'
+            }}>
+              Total a Pagar
+            </span>
+            <span style={{
+              fontSize: '1.15rem',
+              color: '#ba8f57',
+              fontWeight: '900',
+              fontFamily: "'Urbanist', sans-serif"
+            }}>
+              ${detallesReserva.precioUsd} USD <span style={{ fontSize: '0.78rem', color: '#888', fontWeight: 'normal', fontFamily: "'Lato', sans-serif" }}>({detallesReserva.precioBs} Bs)</span>
             </span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <a href="/app/cliente/buscar" class="btn-gold" style={{ display: 'block', width: '100%', textDecoration: 'none', borderRadius: '2rem', padding: '0.85rem', fontSize: '0.82rem', textAlign: 'center' }}>
+        <div>
+          <a
+            href="/app/cliente/buscar"
+            style={{
+              display: 'block',
+              width: '100%',
+              background: '#ba8f57',
+              border: 'none',
+              borderRadius: '2rem',
+              padding: '0.9rem',
+              fontSize: '0.85rem',
+              fontFamily: "'Urbanist', sans-serif",
+              fontWeight: 800,
+              color: '#111',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              textDecoration: 'none',
+              textAlign: 'center',
+              transition: 'all 0.2s',
+              cursor: 'pointer'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.background = '#cda56e'}
+            onMouseOut={(e) => e.currentTarget.style.background = '#ba8f57'}
+          >
             Ir a mis Citas
           </a>
         </div>
