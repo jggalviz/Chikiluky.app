@@ -51,6 +51,31 @@ if (Astro.request.method === 'POST' && negocio) {
     .update({ config: { ...cfg, pagos } })
     .eq('id', negocio.id);
 
+  if (!error && ['efectivo', 'pago_movil', 'zelle'].includes(metodo)) {
+    const updateData = { id: user.id };
+    if (metodo === 'efectivo') {
+      updateData.efectivo_activo = activo;
+    } else if (metodo === 'pago_movil') {
+      const pm = pagos.pago_movil ?? {};
+      updateData.pago_movil_activo = activo;
+      updateData.pago_movil_banco = pm.principal?.banco ?? '';
+      updateData.pago_movil_telefono = pm.principal?.telefono ?? '';
+      updateData.pago_movil_cedula = pm.principal?.cedula ?? '';
+    } else if (metodo === 'zelle') {
+      const zl = pagos.zelle ?? {};
+      updateData.zelle_activo = activo;
+      updateData.zelle_correo = zl.principal?.email ?? '';
+      updateData.zelle_titular = zl.principal?.nombre ?? '';
+    }
+
+    const { error: syncError } = await sb
+      .from('perfiles_profesionales')
+      .upsert(updateData);
+    if (syncError) {
+      console.error('Error syncing perfiles_profesionales:', syncError);
+    }
+  }
+
   if (error) formError = error.message;
   else { formExito = metodo; return Astro.redirect('/app/experto/pagos?ok=' + metodo); }
 }
@@ -101,12 +126,12 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">🗓️ Reserva sin pago previo</p>
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">El cliente reserva sin necesidad de enviar comprobante.</p>
           </div>
-          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-rsp" {isOn('reserva_sin_pago') ? 'checked' : ''}/>
+          <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
+            <input type="checkbox" name="activo" style="display:none" id="tog-rsp" checked={isOn('reserva_sin_pago')}/>
             <div id="pill-rsp" onclick="togglePill('rsp')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('reserva_sin_pago') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('reserva_sin_pago') ? '23px' : '3px'}`}></div>
             </div>
-          </label>
+          </div>
         </div>
         <button type="submit" style="margin-top:1rem;width:100%;padding:0.6rem;background:rgba(186,143,87,0.12);border:1px solid rgba(186,143,87,0.3);border-radius:0.5rem;color:#ba8f57;font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer">Guardar cambio</button>
       </form>
@@ -121,12 +146,12 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">💵 Efectivo</p>
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Acepta pagos en físico.</p>
           </div>
-          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-ef" {isOn('efectivo') ? 'checked' : ''}/>
+          <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
+            <input type="checkbox" name="activo" style="display:none" id="tog-ef" checked={isOn('efectivo')}/>
             <div id="pill-ef" onclick="togglePill('ef')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('efectivo') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('efectivo') ? '23px' : '3px'}`}></div>
             </div>
-          </label>
+          </div>
         </div>
         <div style="display:flex;gap:1rem">
           {[['acepta_usd','Dólares (USD)', pagos.efectivo?.acepta_usd ?? true], ['acepta_bs','Bolívares (Bs)', pagos.efectivo?.acepta_bs ?? true]].map(([n,l,v]) => (
@@ -149,12 +174,12 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">📱 Pago Móvil</p>
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Con verificación de referencia.</p>
           </div>
-          <label style="display:flex;align-items:center;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-pm" {isOn('pago_movil') ? 'checked' : ''}/>
+          <div style="display:flex;align-items:center;cursor:pointer;flex-shrink:0">
+            <input type="checkbox" name="activo" style="display:none" id="tog-pm" checked={isOn('pago_movil')}/>
             <div id="pill-pm" onclick="togglePill('pm')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn('pago_movil') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn('pago_movil') ? '23px' : '3px'}`}></div>
             </div>
-          </label>
+          </div>
         </div>
 
         {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
@@ -184,12 +209,12 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
           <input type="hidden" name="_metodo" value={mid}/>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
-            <label style="cursor:pointer;flex-shrink:0">
-              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} {isOn(mid) ? 'checked' : ''}/>
+            <div style="cursor:pointer;flex-shrink:0">
+              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
               <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
                 <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
               </div>
-            </label>
+            </div>
           </div>
           {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
             <div style="margin-bottom:0.85rem">
@@ -219,12 +244,12 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
           <input type="hidden" name="_metodo" value={mid}/>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
-            <label style="cursor:pointer;flex-shrink:0">
-              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} {isOn(mid) ? 'checked' : ''}/>
+            <div style="cursor:pointer;flex-shrink:0">
+              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
               <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
                 <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
               </div>
-            </label>
+            </div>
           </div>
           {[['Principal','p_'],['Secundaria','s_']].map(([titulo, prefix]) => (
             <div style="margin-bottom:0.85rem">
