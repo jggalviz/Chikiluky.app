@@ -16,18 +16,137 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   </nav>
 
   <!-- HERO -->
-  <section style="min-height:100vh;padding:8rem 5% 5rem;background:#000;display:flex;align-items:center">
-    <div style="max-width:700px">
-      <p style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;margin-bottom:1.25rem">EL ECOSISTEMA DIGITAL DE CUIDADO PERSONAL</p>
-      <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2.8rem,5vw,4.5rem);line-height:1.05;text-transform:uppercase;color:#fff;margin-bottom:1.75rem">
-        El ecosistema<br/>digital de <span style="color:#BA8F57">cuidado personal</span>
-      </h1>
-      <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;color:rgba(255,255,255,0.7);max-width:500px;line-height:1.75;margin-bottom:2.5rem">
-        Reserva tu cita en menos de 60 segundos. Sin llamadas, sin WhatsApp, sin esperas.
-      </p>
-      <div style="display:flex;gap:1rem;flex-wrap:wrap">
-        <button onclick="abrirModal();showTab('login')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:1rem 2.5rem;border:1px solid #BA8F57;color:#BA8F57;background:transparent;cursor:pointer" onmouseover="this.style.background='#BA8F57';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#BA8F57'">INICIAR SESION</button>
-        <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:1rem 2.5rem;border:1px solid #BA8F57;color:#000;background:#BA8F57;cursor:pointer" onmouseover="this.style.background='transparent';this.style.color='#BA8F57'" onmouseout="this.style.background='#BA8F57';this.style.color='#000'">REGISTRARSE</button>
+  <section style="min-height:100vh;padding:8rem 5% 5rem;background:#000;display:flex;align-items:center;justify-content:center">
+    <div style="max-width:1280px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr;gap:4rem;align-items:center" class="hero-grid">
+      <!-- Columna izquierda: Contenido -->
+      <div>
+        <p style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;margin-bottom:1.25rem">TODO EL CUIDADO PERSONAL EN UN SOLO LUGAR</p>
+        <h1 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2.5rem,4.5vw,4rem);line-height:1.1;text-transform:uppercase;color:#fff;margin-bottom:1.75rem">
+          ENCUENTRA TU ESTILO.<br/><span style="color:#BA8F57">RESPIRA TU TIEMPO.</span>
+        </h1>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.05rem;color:rgba(255,255,255,0.7);max-width:600px;line-height:1.75;margin-bottom:2.5rem">
+          El primer buscador interactivo que reúne las mejores peluquerías, barberías, estudios de uñas, estudios de tatuajes y estética. Reserva tu turno en segundos y recibe recordatorios automáticos para que jamás pierdas una cita.
+        </p>
+        
+        <!-- Botones de descarga -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <!-- Botón 1 iOS (Dorado macizo) -->
+          <a href="#" style="display:inline-flex;align-items:center;gap:0.75rem;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1rem 2rem;background:#BA8F57;color:#000;border:1px solid #BA8F57;text-decoration:none;cursor:pointer;transition:all 0.3s" onmouseover="this.style.background='transparent';this.style.color='#BA8F57'" onmouseout="this.style.background='#BA8F57';this.style.color='#000'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:block">
+              <path d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516.024.034 1.29.087 2.3-1.066 1.01-1.153.938-2.588.903-2.622M13.522 8.784c.004-2.062 1.688-3.045 1.76-3.09-.015-.05-.443-1.563-1.493-2.327C12.72 2.58 11.666 2.52 11.16 2.52c-1.22 0-2.316.745-2.915.745-.597 0-1.527-.63-2.548-.63-1.34 0-2.56.766-3.25 1.96-1.39 2.41-.355 5.96 1.002 7.92.664.957 1.455 2.025 2.476 1.986.993-.04 1.37-.643 2.573-.643 1.196 0 1.54.643 2.583.62 1.062-.02 1.762-1.066 2.416-2.026.76-1.11 1.074-2.186 1.092-2.242-.022-.01-2.107-.808-2.107-3.216z"/>
+            </svg>
+            Descargar para iOS
+          </a>
+          
+          <!-- Botón 2 Android (Borde Dorado, Transparente) -->
+          <a href="#" style="display:inline-flex;align-items:center;gap:0.75rem;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:1rem 2rem;border:1px solid #BA8F57;color:#BA8F57;background:transparent;text-decoration:none;cursor:pointer;transition:all 0.3s" onmouseover="this.style.background='#BA8F57';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#BA8F57'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:block">
+              <path d="M14.222 9.374c1.037-.61 1.037-2.137 0-2.748L11.528 5.04 8.32 8l3.207 2.96 2.695-1.586Zm-3.592 2.168L7.48 8.682 1.581 14.12a1.3 1.3 0 0 0 1.704.075l7.345-4.653ZM1.581 1.88 7.48 7.318 10.63 4.458 3.285-.195a1.3 1.3 0 0 0-1.704.075ZM.224 2.505a1.41 1.41 0 0 0-.19.673v9.644c0 .248.067.483.19.673L6.85 8 .224 2.505Z"/>
+            </svg>
+            Descargar para Android
+          </a>
+        </div>
+      </div>
+      
+      <!-- Columna derecha: Mockup Smartphone Premium -->
+      <div style="display:flex;justify-content:center;align-items:center;position:relative" class="hero-mockup">
+        <!-- Resplandor de fondo premium -->
+        <div style="position:absolute;width:300px;height:300px;background:rgba(186,143,87,0.15);filter:blur(80px);border-radius:50%;z-index:0"></div>
+        
+        <!-- Smartphone Container -->
+        <div style="width:280px;height:560px;background:#000;border:10px solid #1e293b;border-radius:40px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(186,143,87,0.25);position:relative;z-index:1;overflow:hidden">
+          <!-- Isla Dinámica -->
+          <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:#000;border-radius:15px;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 8px">
+            <div style="width:5px;height:5px;background:#1e293b;border-radius:50%"></div>
+            <div style="width:35px;height:4px;background:#1e293b;border-radius:3px"></div>
+            <div style="width:6px;height:6px;background:#0f172a;border-radius:50%"></div>
+          </div>
+          
+          <!-- Pantalla del celular (App Abierta) -->
+          <div style="width:100%;height:100%;background:#09090b;padding:40px 16px 16px;display:flex;flex-direction:column;gap:1rem;box-sizing:border-box">
+            <!-- Header de la App Mockup -->
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:8px">
+              <div style="display:flex;align-items:center;gap:6px">
+                <img src="/logo.svg" alt="CHIKILUKY" width="20" height="20" style="width:20px;height:20px;object-fit:contain"/>
+                <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:0.8rem;color:#BA8F57;letter-spacing:0.04em">CHIKILUKY</span>
+              </div>
+              <div style="width:8px;height:8px;background:#10b981;border-radius:50%;box-shadow:0 0 8px #10b981"></div>
+            </div>
+            
+            <!-- Buscador Mockup -->
+            <div style="background:#18181b;border:1px solid rgba(186,143,87,0.2);padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" viewBox="0 0 24 24" style="display:block">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.3-4.3"/>
+              </svg>
+              <span style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.4)">¿Qué servicio buscas hoy?</span>
+            </div>
+            
+            <!-- Título de sección Mockup -->
+            <div>
+              <span style="font-family:'Hanken Grotesk',sans-serif;font-size:0.65rem;color:#BA8F57;letter-spacing:0.1em;font-weight:700;text-transform:uppercase">SERVICIOS CERCANOS</span>
+              <h4 style="font-family:'Oswald',sans-serif;color:#fff;font-size:1.1rem;margin-top:2px;text-transform:uppercase">Salones Destacados</h4>
+            </div>
+            
+            <!-- Tarjetas de Salón Mockup -->
+            <div style="display:flex;flex-direction:column;gap:0.75rem;flex:1;overflow:hidden">
+              <!-- Tarjeta 1 -->
+              <div style="background:#18181b;border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;display:flex;flex-direction:column">
+                <div style="height:75px;position:relative;background:#27272a">
+                  <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=280&q=40&fm=webp" alt="Salón" style="width:100%;height:100%;object-fit:cover"/>
+                  <span style="position:absolute;top:6px;right:6px;background:#BA8F57;color:#000;font-family:'Oswald',sans-serif;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:4px">4.9 ★</span>
+                </div>
+                <div style="padding:10px">
+                  <h5 style="font-family:'Oswald',sans-serif;color:#fff;font-size:0.85rem;margin:0;text-transform:uppercase">Studio Barber VIP</h5>
+                  <p style="font-family:'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,0.5);font-size:0.65rem;margin:2px 0 6px">Av. Francisco de Miranda, Chacao</p>
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <span style="font-family:'Oswald',sans-serif;color:#BA8F57;font-size:0.8rem">Desde $15</span>
+                    <span style="background:rgba(186,143,87,0.15);color:#BA8F57;font-family:'Hanken Grotesk',sans-serif;font-size:0.6rem;font-weight:700;padding:3px 8px;border:1px solid rgba(186,143,87,0.3);border-radius:4px">RESERVAR</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tarjeta 2 -->
+              <div style="background:#18181b;border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;opacity:0.65">
+                <div style="height:75px;position:relative;background:#27272a">
+                  <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=280&q=40&fm=webp" alt="Salón 2" style="width:100%;height:100%;object-fit:cover"/>
+                  <span style="position:absolute;top:6px;right:6px;background:#BA8F57;color:#000;font-family:'Oswald',sans-serif;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:4px">4.8 ★</span>
+                </div>
+                <div style="padding:10px">
+                  <h5 style="font-family:'Oswald',sans-serif;color:#fff;font-size:0.85rem;margin:0;text-transform:uppercase">Nails & Lash Premium</h5>
+                  <p style="font-family:'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,0.5);font-size:0.65rem;margin:2px 0 6px">Las Mercedes, Caracas</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Barra de Navegación de la App Mockup -->
+            <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;display:flex;justify-content:space-around;align-items:center">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#BA8F57">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:8px;font-weight:700">Inicio</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,0.4)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:8px;font-weight:700">Citas</span>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:rgba(255,255,255,0.4)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span style="font-family:'Hanken Grotesk',sans-serif;font-size:8px;font-weight:700">Perfil</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -177,5 +296,17 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       e.target.reset(); setTimeout(function() { window.showTab('login'); }, 2200); setLoading(b, false);
     });
   </script>
+
+  <style>
+    @media (min-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1.2fr 0.8fr !important;
+        gap: 2rem !important;
+      }
+      .hero-mockup {
+        justify-content: flex-end !important;
+      }
+    }
+  </style>
 
 </LayoutBase>
