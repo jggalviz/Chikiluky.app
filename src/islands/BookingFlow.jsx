@@ -485,8 +485,8 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                     border: servicio?.id === s.id ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.03)',
                     borderRadius: '0.75rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left'
                   }}
-                  onmouseover="this.style.borderColor='rgba(186,143,87,0.4)'"
-                  onmouseout={servicio?.id === s.id ? '' : "this.style.borderColor='rgba(255,255,255,0.03)'"}
+                  onMouseOver={(e) => e.currentTarget.style.borderColor = 'rgba(186,143,87,0.4)'}
+                  onMouseOut={(e) => e.currentTarget.style.borderColor = servicio?.id === s.id ? '#ba8f57' : 'rgba(255,255,255,0.03)'}
                 >
                   <div>
                     <p style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.95rem', color: '#fff', margin: 0 }}>{s.nombre}</p>
@@ -540,8 +540,8 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       borderRadius: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', width: '100%',
                       outline: 'none'
                     }}
-                    onmouseover="this.style.borderColor='rgba(186,143,87,0.4)'"
-                    onmouseout={activo ? '' : "this.style.borderColor='rgba(255,255,255,0.03)'"}
+                    onMouseOver={(e) => e.currentTarget.style.borderColor = 'rgba(186,143,87,0.4)'}
+                    onMouseOut={(e) => e.currentTarget.style.borderColor = activo ? '#ba8f57' : 'rgba(255,255,255,0.03)'}
                   >
                     <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '2px solid #ba8f57', background: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
                       {esp.avatar_url ? (
