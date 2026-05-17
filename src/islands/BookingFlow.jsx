@@ -331,7 +331,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
       // Formatear la fecha del pago para almacenamiento
       const formattedFechaPago = fechaPago ? fechaPago.replace('T', ' ') : '';
       const fullReferencia = metodoPago !== 'efectivo' 
-        ? `${referencia} (${formattedFechaPago})` 
+        ? (formattedFechaPago ? `${referencia} (${formattedFechaPago})` : referencia)
         : null;
 
       // 1. Insertar el registro en la tabla 'reservas'
@@ -1031,26 +1031,15 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                     />
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Número de Referencia (4 o 6 dígitos)</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: 948201"
-                        value={referencia}
-                        onInput={(e) => setReferencia(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Fecha y Hora de Transferencia</label>
-                      <input
-                        type="datetime-local"
-                        value={fechaPago}
-                        onChange={(e) => setFechaPago(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
-                      />
-                    </div>
+                  <div>
+                    <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.25rem' }}>Número de Referencia (4 o 6 dígitos)</label>
+                    <input
+                      type="text"
+                      placeholder="Ej: 948201"
+                      value={referencia}
+                      onInput={(e) => setReferencia(e.target.value)}
+                      style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                    />
                   </div>
                 </div>
               </div>
@@ -1110,7 +1099,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                         placeholder="Ej: John Doe / Ref #849201"
                         value={referencia}
                         onInput={(e) => setReferencia(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                       />
                     </div>
                     <div>
@@ -1119,7 +1108,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                         type="datetime-local"
                         value={fechaPago}
                         onChange={(e) => setFechaPago(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                       />
                     </div>
                   </div>
