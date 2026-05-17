@@ -8,9 +8,20 @@ if (!user) return Astro.redirect('/');
 if (!perfil || !['experto','administrador'].includes(perfil.role))
   return Astro.redirect('/app/cliente/buscar');
 
+const cookies = Astro.request.headers.get('cookie') ?? '';
+const token   = cookies.match(/sb-access-token=([^;]+)/)?.[1];
+
 const sb = createClient(
   import.meta.env.SUPABASE_URL ?? import.meta.env.PUBLIC_SUPABASE_URL,
   import.meta.env.SUPABASE_ANON_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+  {
+    global: {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    },
+    auth: {
+      persistSession: false,
+    },
+  }
 );
 
 const { data: negocio } = await sb.from('negocios').select('id, name, config')
@@ -113,6 +124,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
     </div>
 
     {ok && <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#4ade80">✅ Método actualizado correctamente.</div>}
+    {formError && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error: {formError}</div>}
 
     <!-- ══ Macro para bloque de método ══════════════════════════════════════ -->
     <!-- Usamos inline para evitar un componente extra -->
