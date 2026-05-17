@@ -109,6 +109,7 @@ if (negocioError || !negocio) return Astro.redirect('/app/cliente/buscar');
         servicios={servicios ?? []}
         tasaBcvInicial={tasaBcv}
         token={token}
+        categoria={negocio.categoria}
       />
     </div>
   </main>

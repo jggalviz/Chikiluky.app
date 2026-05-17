@@ -26,7 +26,21 @@ function generarSlots(inicio = 9, fin = 19, durMin = 60) {
   return slots;
 }
 
-export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvInicial = 40.00, token }) {
+const getEspecialistaLabel = (cat) => {
+  if (!cat) return 'Especialista';
+  const c = cat.toLowerCase();
+  if (c.includes('barber')) return 'Barbero';
+  if (c.includes('peluquer') || c.includes('estilista')) return 'Estilista';
+  if (c.includes('uña') || c.includes('manicur')) return 'Manicurista';
+  if (c.includes('tatuaje') || c.includes('tattoo')) return 'Tatuador';
+  if (c.includes('masaje') || c.includes('spa') || c.includes('terap')) return 'Masajista';
+  if (c.includes('maquillaje') || c.includes('makeup')) return 'Maquillador';
+  if (c.includes('podolog') || c.includes('pie')) return 'Podólogo';
+  if (c.includes('ceja') || c.includes('pestañ') || c.includes('estética') || c.includes('estetica')) return 'Esteticista';
+  return 'Especialista';
+};
+
+export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvInicial = 40.00, token, categoria }) {
   const supabase = createClient(
     import.meta.env.PUBLIC_SUPABASE_URL,
     import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
@@ -41,9 +55,29 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
   const [paso, setPaso] = useState(1);
   const [servicio, setServicio] = useState(null);
   const [especialista, setEspecialista] = useState(null);
+  const [especialistasList, setEspecialistasList] = useState([]);
   const [dia, setDia] = useState(null);
   const [hora, setHora] = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
+
+  const tieneVariosEspecialistas = useMemo(() => especialistasList.length > 1, [especialistasList]);
+
+  const pasosConfig = useMemo(() => {
+    if (tieneVariosEspecialistas) {
+      return [
+        { n: 1, label: 'Servicio' },
+        { n: 2, label: getEspecialistaLabel(categoria) },
+        { n: 3, label: 'Fecha' },
+        { n: 4, label: 'Pago' }
+      ];
+    } else {
+      return [
+        { n: 1, label: 'Servicio' },
+        { n: 3, label: 'Fecha' },
+        { n: 4, label: 'Pago' }
+      ];
+    }
+  }, [tieneVariosEspecialistas, categoria]);
   
   // Métodos de pago activos del profesional
   const [pagosConfig, setPagosConfig] = useState({
@@ -103,6 +137,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
           if (perfilProf) {
             setEspecialista(perfilProf);
+            setEspecialistasList([perfilProf]);
           }
 
           // Consultar tabla 'perfiles_profesionales'
@@ -397,23 +432,23 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
     <div>
       {/* ── Barra de Pasos Secuenciales ── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.75rem' }}>
-        {[1, 2, 3, 4].map(n => (
-          <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: n < 4 ? 1 : 'none' }}>
+        {pasosConfig.map((item, idx) => (
+          <div key={item.n} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: idx < pasosConfig.length - 1 ? 1 : 'none' }}>
             <div style={{
               width: '28px', height: '28px', borderRadius: '50%',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.78rem',
-              background: paso >= n ? '#ba8f57' : '#1e1e1e',
-              color: paso >= n ? '#111' : '#555',
-              border: paso >= n ? '2px solid #ba8f57' : '2px solid #2d2d2d',
+              background: paso >= item.n ? '#ba8f57' : '#1e1e1e',
+              color: paso >= item.n ? '#111' : '#555',
+              border: paso >= item.n ? '2px solid #ba8f57' : '2px solid #2d2d2d',
               transition: 'all 0.2s', flexShrink: 0
             }}>
-              {n}
+              {idx + 1}
             </div>
-            <span style={{ fontFamily: "'Urbanist', sans-serif", fontSize: '0.7rem', fontWeight: '700', color: paso >= n ? '#ba8f57' : '#444', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              {n === 1 ? 'Servicio' : n === 2 ? 'Especialista' : n === 3 ? 'Fecha' : 'Pago'}
+            <span style={{ fontFamily: "'Urbanist', sans-serif", fontSize: '0.7rem', fontWeight: '700', color: paso >= item.n ? '#ba8f57' : '#444', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              {item.label}
             </span>
-            {n < 4 && <div style={{ flex: 1, height: '1px', background: paso > n ? '#ba8f57' : '#222' }} />}
+            {idx < pasosConfig.length - 1 && <div style={{ flex: 1, height: '1px', background: paso > item.n ? '#ba8f57' : '#222' }} />}
           </div>
         ))}
       </div>
@@ -431,7 +466,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
               {servicios.map(s => (
                 <button
                   key={s.id}
-                  onClick={() => { setServicio(s); setPaso(2); }}
+                  onClick={() => { setServicio(s); setPaso(tieneVariosEspecialistas ? 2 : 3); }}
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '1rem', background: servicio?.id === s.id ? 'rgba(186,143,87,0.12)' : '#161616',
@@ -461,8 +496,22 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
       {/* ── PASO 2: Selección de Especialista / Staff ── */}
       {paso === 2 && (
         <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.25rem' }}>
+          <button
+            onClick={() => setPaso(1)}
+            style={{
+              background: 'transparent', border: 'none', color: '#888',
+              fontFamily: "'Urbanist', sans-serif", fontSize: '0.75rem', fontWeight: 'bold',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem',
+              marginBottom: '1.25rem', padding: 0
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#888'}
+          >
+            ← Volver a los Servicios
+          </button>
+          
           <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
-            2 · Elige el Especialista
+            2 · Elige el {getEspecialistaLabel(categoria)}
           </span>
           {especialista ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem', background: '#161616', border: '1px solid rgba(186,143,87,0.1)', borderRadius: '0.85rem', textAlign: 'center' }}>
@@ -475,7 +524,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
               </div>
               
               <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1.15rem', color: '#fff', margin: '0 0 0.25rem 0' }}>{especialista.full_name}</h3>
-              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.75rem', color: '#ba8f57', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem 0' }}>ESTILISTA PROFESIONAL</p>
+              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.75rem', color: '#ba8f57', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem 0' }}>{getEspecialistaLabel(categoria).toUpperCase()} PROFESIONAL</p>
               
               <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.8rem', color: '#777', margin: '0 0 1.5rem 0', maxWidth: '320px', lineHeight: '1.4' }}>
                 {especialista.descripcion || 'Experto dedicado a brindar el mejor servicio de cuidado personal y estilo en la ciudad.'}
@@ -486,11 +535,11 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                 class="btn-gold"
                 style={{ width: '100%', borderRadius: '2rem', padding: '0.8rem', fontSize: '0.82rem' }}
               >
-                Seleccionar Especialista
+                Seleccionar {getEspecialistaLabel(categoria)}
               </button>
             </div>
           ) : (
-            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.85rem', color: '#555' }}>Cargando datos del especialista...</p>
+            <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.85rem', color: '#555' }}>Cargando datos del {getEspecialistaLabel(categoria).toLowerCase()}...</p>
           )}
         </div>
       )}
@@ -498,6 +547,19 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
       {/* ── PASO 3: Calendario y Horas ── */}
       {paso === 3 && (
         <div>
+          <button
+            onClick={() => setPaso(tieneVariosEspecialistas ? 2 : 1)}
+            style={{
+              background: 'transparent', border: 'none', color: '#888',
+              fontFamily: "'Urbanist', sans-serif", fontSize: '0.75rem', fontWeight: 'bold',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.25rem',
+              marginBottom: '1rem', padding: 0
+            }}
+            onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+            onMouseOut={(e) => e.currentTarget.style.color = '#888'}
+          >
+            ← Volver {tieneVariosEspecialistas ? `al ${getEspecialistaLabel(categoria)}` : 'a los Servicios'}
+          </button>
           {/* Calendario horizontal */}
           <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1rem' }}>
             <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
@@ -573,7 +635,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
             <p style={{ margin: '0 0 0.5rem 0', fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>{servicio.nombre}</p>
             
             <p style={{ margin: '0 0 0.75rem 0', fontFamily: "'Lato', sans-serif", fontSize: '0.82rem', color: '#ccc' }}>
-              💈 Con <strong>{especialista.full_name}</strong> · 📅 {dia.getDate()} de {MESES_ES[dia.getMonth()]} · ⏰ {hora}
+              Con el <strong>{getEspecialistaLabel(categoria).toLowerCase()} {especialista.full_name}</strong> · 📅 {dia.getDate()} de {MESES_ES[dia.getMonth()]} · ⏰ {hora}
             </p>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(186,143,87,0.15)', paddingTop: '0.75rem' }}>
