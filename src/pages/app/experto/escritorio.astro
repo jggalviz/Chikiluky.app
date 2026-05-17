@@ -53,11 +53,22 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
           <span style="font-family:'Urbanist',sans-serif;font-size:0.76rem;color:#eee;font-weight:700;letter-spacing:0.02em">{perfil.full_name}</span>
         </div>
       )}
-      <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Escritorio</a>
-      <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Agenda</a>
-      <a href="/app/experto/servicios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Servicios</a>
-      <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Pagos</a>
-      <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Soporte</a>
+      
+      {/* Botón dinámico 'Mi Panel' / Dropdown de Esquinas Rectas */}
+      <div class="dropdown-container">
+        <button class="dropdown-trigger" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15);cursor:pointer">
+          MI PANEL ▼
+        </button>
+        <div class="dropdown-menu">
+          <a href="/app/experto/escritorio" class="dropdown-item">Resumen / Inicio</a>
+          <a href="/app/experto/agenda" class="dropdown-item">Mi Agenda</a>
+          <a href="/app/experto/servicios" class="dropdown-item">Mis Servicios</a>
+          <a href="/app/experto/pagos" class="dropdown-item">Gestión de Pagos</a>
+          <a href="/app/experto/soporte" class="dropdown-item">Soporte Técnico</a>
+          <a href="/app/cliente/buscar" class="dropdown-item" style="border-top:1px solid rgba(186,143,87,0.15);color:#ba8f57">Vista Cliente</a>
+        </div>
+      </div>
+
       <span style="color:#262626;margin:0 0.2rem">|</span>
       <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.76rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.25);padding:0.35rem 0.9rem;border-radius:0px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.06)'" onmouseout="this.style.background='transparent'">Salir</a>
     </nav>
@@ -89,3 +100,51 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
     </div>
   </main>
 </LayoutBase>
+
+<!-- ESTILOS DEL DROPDOWN DE LUJO -->
+<style>
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-trigger:hover {
+    background: rgba(186,143,87,0.12) !important;
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: rgba(10, 10, 10, 0.98);
+    border: 1px solid #ba8f57;
+    min-width: 190px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+    z-index: 50;
+    border-radius: 0px; /* Estilo esquinas rectas */
+    margin-top: 2px;
+    backdrop-filter: blur(8px);
+  }
+  .dropdown-container:hover .dropdown-menu {
+    display: block;
+  }
+  .dropdown-item {
+    color: #a3a3a3;
+    padding: 0.7rem 1.1rem;
+    text-decoration: none;
+    display: block;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+  }
+  .dropdown-item:hover {
+    background: rgba(186, 143, 87, 0.06);
+    color: #ba8f57;
+  }
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+</style>
