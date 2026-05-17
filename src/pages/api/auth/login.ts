@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 const REDIRECT_BY_ROLE: Record<string, string> = {
   cliente:       '/app/cliente/buscar',
   experto:       '/app/experto/escritorio',
-  administrador: '/app/experto/escritorio',
+  administrador: '/app/soporte/escritorio',
   soporte:       '/app/soporte/escritorio',
 };
 
