@@ -1,9 +1,7 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
-const COOKIE_OPTS = 'Path=/; HttpOnly; SameSite=Lax; Max-Age=604800';
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   // Cliente fresco por request — evita contaminación de sesión entre llamadas
   const supabase = createClient(
     import.meta.env.SUPABASE_URL     ?? import.meta.env.PUBLIC_SUPABASE_URL,
@@ -68,24 +66,31 @@ export const POST: APIRoute = async ({ request }) => {
     console.error('[registro] perfil upsert error:', profileError.message);
   }
 
-  // Si Supabase devuelve sesión inmediata (email confirm desactivado) → auto-login
-  const headers = new Headers({ 'Content-Type': 'application/json' });
-
   if (authData.session) {
-    headers.append('Set-Cookie', `sb-access-token=${authData.session.access_token}; ${COOKIE_OPTS}`);
-    headers.append('Set-Cookie', `sb-refresh-token=${authData.session.refresh_token}; ${COOKIE_OPTS}`);
+    cookies.set('sb-access-token', authData.session.access_token, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 604800,
+    });
+    cookies.set('sb-refresh-token', authData.session.refresh_token, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 604800,
+    });
     const redirectTo = rol === 'soporte' || rol === 'administrador'
       ? '/app/soporte/escritorio'
       : (rol === 'experto' ? '/app/experto/agenda' : '/app/cliente/buscar');
     return new Response(
       JSON.stringify({ ok: true, autoLogin: true, redirectTo }),
-      { status: 201, headers }
+      { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   // Email confirmation activado → pedir al usuario que confirme
   return new Response(
     JSON.stringify({ ok: true, autoLogin: false, message: 'Cuenta creada. Revisa tu email para confirmar.' }),
-    { status: 201, headers }
+    { status: 201, headers: { 'Content-Type': 'application/json' } }
   );
 };

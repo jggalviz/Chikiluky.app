@@ -8,9 +8,7 @@ const REDIRECT_BY_ROLE: Record<string, string> = {
   soporte:       '/app/soporte/escritorio',
 };
 
-const COOKIE_OPTS = 'Path=/; HttpOnly; SameSite=Lax; Max-Age=604800';
-
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   // Cliente fresco por request
   const supabase = createClient(
     import.meta.env.SUPABASE_URL     ?? import.meta.env.PUBLIC_SUPABASE_URL,
@@ -48,12 +46,21 @@ export const POST: APIRoute = async ({ request }) => {
   const redirectTo = REDIRECT_BY_ROLE[perfil?.role ?? 'cliente'] ?? '/app/cliente/buscar';
   const { access_token, refresh_token } = authData.session;
 
-  const headers = new Headers({ 'Content-Type': 'application/json' });
-  headers.append('Set-Cookie', `sb-access-token=${access_token}; ${COOKIE_OPTS}`);
-  headers.append('Set-Cookie', `sb-refresh-token=${refresh_token}; ${COOKIE_OPTS}`);
+  cookies.set('sb-access-token', access_token, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 604800,
+  });
+  cookies.set('sb-refresh-token', refresh_token, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 604800,
+  });
 
   return new Response(
     JSON.stringify({ ok: true, rol: perfil?.role, redirectTo }),
-    { status: 200, headers }
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
   );
 };
