@@ -127,53 +127,65 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
           .eq('id', negocioId)
           .single();
 
-        if (negocio?.owner_id) {
-          // Obtener datos del perfil del experto
-          const { data: perfilProf } = await supabase
-            .from('perfiles')
-            .select('id, full_name, avatar_url, descripcion')
-            .eq('id', negocio.owner_id)
-            .single();
+        if (negocio) {
+          if (negocio.config?.specialists && Array.isArray(negocio.config.specialists) && negocio.config.specialists.length > 0) {
+            setEspecialistasList(negocio.config.specialists);
+            setEspecialista(negocio.config.specialists[0]);
+          } else if (negocio.owner_id) {
+            // Obtener datos del perfil del experto
+            const { data: perfilProf } = await supabase
+              .from('perfiles')
+              .select('id, full_name, avatar_url')
+              .eq('id', negocio.owner_id)
+              .single();
 
-          if (perfilProf) {
-            setEspecialista(perfilProf);
-            setEspecialistasList([perfilProf]);
+            const expertData = {
+              id: negocio.owner_id,
+              full_name: perfilProf?.full_name || 'Especialista',
+              avatar_url: perfilProf?.avatar_url || '',
+              descripcion: 'Experto dedicado a brindar el mejor servicio de cuidado personal y estilo en la ciudad.'
+            };
+
+            setEspecialista(expertData);
+            setEspecialistasList([expertData]);
           }
 
-          // Consultar tabla 'perfiles_profesionales'
-          const { data: profPagos } = await supabase
-            .from('perfiles_profesionales')
-            .select('*')
-            .eq('id', negocio.owner_id)
-            .maybeSingle();
+          // Consultar tabla 'perfiles_profesionales' usando el owner_id
+          if (negocio.owner_id) {
+            const { data: profPagos } = await supabase
+              .from('perfiles_profesionales')
+              .select('*')
+              .eq('id', negocio.owner_id)
+              .maybeSingle();
 
-          if (profPagos) {
-            setPagosConfig(profPagos);
-            // Elegir el primer método de pago disponible
-            if (profPagos.pago_movil_activo) setMetodoPago('pago_movil');
-            else if (profPagos.zelle_activo) setMetodoPago('zelle');
-            else setMetodoPago('efectivo');
-          } else {
-            // Fallback a negocio.config.pagos si no está la tabla creada o poblada
-            const jsonPagos = negocio.config?.pagos ?? {};
-            const pm = jsonPagos.pago_movil ?? {};
-            const zl = jsonPagos.zelle ?? {};
-            const ef = jsonPagos.efectivo ?? {};
+            if (profPagos) {
+              setPagosConfig(profPagos);
+              // Elegir el primer método de pago disponible
+              if (profPagos.pago_movil_activo) setMetodoPago('pago_movil');
+              else if (profPagos.zelle_activo) setMetodoPago('zelle');
+              else setMetodoPago('efectivo');
+            } else {
+              // Fallback a negocio.config.pagos si no está la tabla creada o poblada
+              const jsonPagos = negocio.config?.pagos ?? {};
+              const pm = jsonPagos.pago_movil ?? {};
+              const zl = jsonPagos.zelle ?? {};
+              const ef = jsonPagos.efectivo ?? {};
 
-            const cfgFallback = {
-              pago_movil_activo: pm.activo ?? false,
-              pago_movil_banco: pm.principal?.banco ?? '',
-              pago_movil_telefono: pm.principal?.telefono ?? '',
-              pago_movil_cedula: pm.principal?.cedula ?? '',
-              zelle_activo: zl.activo ?? false,
-              zelle_correo: zl.principal?.email ?? '',
-              zelle_titular: zl.principal?.nombre ?? '',
-              efectivo_activo: ef.activo ?? true
-            };
-            setPagosConfig(cfgFallback);
-            if (cfgFallback.pago_movil_activo) setMetodoPago('pago_movil');
-            else if (cfgFallback.zelle_activo) setMetodoPago('zelle');
-            else setMetodoPago('efectivo');
+              const cfgFallback = {
+                pago_movil_activo: pm.activo ?? false,
+                pago_movil_banco: pm.principal?.banco ?? '',
+                pago_movil_telefono: pm.principal?.telefono ?? '',
+                pago_movil_cedula: pm.principal?.cedula ?? '',
+                zelle_activo: zl.activo ?? false,
+                zelle_correo: zl.principal?.email ?? '',
+                zelle_titular: zl.principal?.nombre ?? '',
+                efectivo_activo: ef.activo ?? true
+              };
+              setPagosConfig(cfgFallback);
+              if (cfgFallback.pago_movil_activo) setMetodoPago('pago_movil');
+              else if (cfgFallback.zelle_activo) setMetodoPago('zelle');
+              else setMetodoPago('efectivo');
+            }
           }
         }
       } catch (err) {
@@ -513,30 +525,46 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
           <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
             2 · Elige el {getEspecialistaLabel(categoria)}
           </span>
-          {especialista ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem', background: '#161616', border: '1px solid rgba(186,143,87,0.1)', borderRadius: '0.85rem', textAlign: 'center' }}>
-              <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '2px solid #ba8f57', background: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', marginBottom: '1rem' }}>
-                {especialista.avatar_url ? (
-                  <img src={especialista.avatar_url} alt={especialista.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <span style={{ fontSize: '2.5rem', color: '#666' }}>💈</span>
-                )}
-              </div>
-              
-              <h3 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1.15rem', color: '#fff', margin: '0 0 0.25rem 0' }}>{especialista.full_name}</h3>
-              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.75rem', color: '#ba8f57', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem 0' }}>{getEspecialistaLabel(categoria).toUpperCase()} PROFESIONAL</p>
-              
-              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.8rem', color: '#777', margin: '0 0 1.5rem 0', maxWidth: '320px', lineHeight: '1.4' }}>
-                {especialista.descripcion || 'Experto dedicado a brindar el mejor servicio de cuidado personal y estilo en la ciudad.'}
-              </p>
-
-              <button
-                onClick={() => setPaso(3)}
-                class="btn-gold"
-                style={{ width: '100%', borderRadius: '2rem', padding: '0.8rem', fontSize: '0.82rem' }}
-              >
-                Seleccionar {getEspecialistaLabel(categoria)}
-              </button>
+          {especialistasList.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {especialistasList.map(esp => {
+                const activo = especialista?.id === esp.id;
+                return (
+                  <button
+                    key={esp.id}
+                    onClick={() => { setEspecialista(esp); setPaso(3); }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '1rem',
+                      padding: '1rem', background: activo ? 'rgba(186,143,87,0.12)' : '#161616',
+                      border: activo ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.03)',
+                      borderRadius: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', width: '100%',
+                      outline: 'none'
+                    }}
+                    onmouseover="this.style.borderColor='rgba(186,143,87,0.4)'"
+                    onmouseout={activo ? '' : "this.style.borderColor='rgba(255,255,255,0.03)'"}
+                  >
+                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', border: '2px solid #ba8f57', background: '#222', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                      {esp.avatar_url ? (
+                        <img src={esp.avatar_url} alt={esp.full_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <span style={{ fontSize: '1.8rem', color: '#666' }}>💈</span>
+                      )}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1rem', color: '#fff', margin: 0 }}>{esp.full_name}</h4>
+                      <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.7rem', color: '#ba8f57', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0.15rem 0' }}>
+                        {getEspecialistaLabel(categoria).toUpperCase()} PROFESIONAL
+                      </p>
+                      <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.75rem', color: '#777', margin: 0, lineHeight: '1.3' }}>
+                        {esp.descripcion || 'Experto dedicado a brindar el mejor servicio de cuidado personal y estilo.'}
+                      </p>
+                    </div>
+                    <div style={{ fontSize: '1.25rem', color: '#ba8f57', paddingRight: '0.25rem' }}>
+                      →
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           ) : (
             <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.85rem', color: '#555' }}>Cargando datos del {getEspecialistaLabel(categoria).toLowerCase()}...</p>
