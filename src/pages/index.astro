@@ -303,6 +303,226 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════
+       PLANES Y PRECIOS
+  ════════════════════════════════════════ -->
+  <section id="planes" style="padding:6rem 5%;background:#111;position:relative;overflow:hidden">
+    <!-- Efecto de brillo de fondo sutil -->
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(186,143,87,0.3),transparent)"></div>
+    
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:4rem">
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;display:block;margin-bottom:0.75rem">PRECIOS TRANSPARENTES</span>
+        <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2rem,3vw,2.5rem);text-transform:uppercase;color:#fff;margin:0">Elige el Nivel de tu Negocio</h2>
+        <div style="height:3px;width:60px;background:#BA8F57;margin:1.25rem auto 0"></div>
+      </div>
+
+      <!-- Pricing Grid de Tarjetas -->
+      <div class="pricing-grid">
+        
+        <!-- Tarjeta Esencial -->
+        <div class="pricing-card">
+          <div>
+            <span class="pricing-badge">ESENCIAL</span>
+            <div class="pricing-price">0$<span>/gratis</span></div>
+            <div class="pricing-period">Para empezar</div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.65);margin-bottom:2rem;line-height:1.6">Profesionales independientes que empiezan a digitalizarse.</p>
+            <ul class="pricing-features-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Presencia básica en listado
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Hasta 10 citas al mes
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Caja hasta 500$/mes
+              </li>
+              <li class="disabled">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Marketing con IA (Gemini)
+              </li>
+            </ul>
+          </div>
+          <button onclick="abrirModal();showTab('registro')" class="pricing-btn pricing-btn-secondary">Empezar Gratis</button>
+        </div>
+
+        <!-- Tarjeta PRO (Recomendada) -->
+        <div class="pricing-card popular">
+          <div>
+            <span class="pricing-badge" style="background:#BA8F57;color:#000;border-color:#BA8F57">PRO</span>
+            <div class="pricing-price">15$<span>/30 días</span></div>
+            <div class="pricing-period">AUTOMATIZACIÓN TOTAL</div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.65);margin-bottom:2rem;line-height:1.6">Estudios medianos y barberías en crecimiento que buscan automatización total.</p>
+            <ul class="pricing-features-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Destacado por zona
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Citas 24/7 ILIMITADAS
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Caja híbrida SIN LÍMITES
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Hasta 5 empleados
+              </li>
+            </ul>
+          </div>
+          <button onclick="abrirModal();showTab('registro')" class="pricing-btn pricing-btn-primary">Activar Plan PRO</button>
+        </div>
+
+        <!-- Tarjeta ELITE -->
+        <div class="pricing-card">
+          <div>
+            <span class="pricing-badge">ELITE</span>
+            <div class="pricing-price">30$<span>/30 días</span></div>
+            <div class="pricing-period">DOMINIO TOTAL</div>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.65);margin-bottom:2rem;line-height:1.6">Salones VIP y cadenas que quieren dominar el mercado con IA.</p>
+            <ul class="pricing-features-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Posicionamiento VIP (Top 1)
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Publicidad banner en Top
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Módulo IA (Gemini VIP)
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#BA8F57" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Desarrollo a medida
+              </li>
+            </ul>
+          </div>
+          <button onclick="abrirModal();showTab('registro')" class="pricing-btn pricing-btn-secondary">Unirse a la Élite</button>
+        </div>
+
+      </div>
+
+      <!-- Tabla Comparativa Detallada -->
+      <div style="text-align:center;margin-bottom:2rem">
+        <h3 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:1.5rem;text-transform:uppercase;color:#fff;margin:0 0 0.5rem">Comparativa de Funciones</h3>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.9rem;color:rgba(255,255,255,0.5)">Analiza a fondo cada detalle de lo que obtienes</p>
+      </div>
+
+      <div class="compare-wrapper">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Característica / Función</th>
+              <th class="plan-col">Plan ESENCIAL</th>
+              <th class="plan-col pro-col" style="color:#BA8F57">Plan PRO</th>
+              <th class="plan-col">Plan ELITE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Inversión</td>
+              <td>Gratis</td>
+              <td class="pro-col" style="font-weight:600;color:#fff">15$ por 30 días</td>
+              <td>30$ por 30 días</td>
+            </tr>
+            <tr>
+              <td>Enfoque</td>
+              <td>Profesionales independientes que empiezan a digitalizarse.</td>
+              <td class="pro-col">Estudios medianos y barberías en crecimiento que buscan automatización total.</td>
+              <td>Salones VIP y cadenas que quieren dominar el mercado con IA.</td>
+            </tr>
+            <tr>
+              <td>Presencia en Directorio</td>
+              <td>Presencia básica en el listado</td>
+              <td class="pro-col" style="font-weight:600;color:#fff">Posicionamiento destacado en búsquedas por zona</td>
+              <td>Posicionamiento VIP (Primeros lugares del directorio)</td>
+            </tr>
+            <tr>
+              <td>Publicidad en la App</td>
+              <td><span class="compare-val-cross">❌ No disponible</span></td>
+              <td class="pro-col"><span class="compare-val-cross">❌ No disponible</span></td>
+              <td>Acceso a la subasta semanal de banner en el top del listado</td>
+            </tr>
+            <tr>
+              <td>Agenda de Citas</td>
+              <td>Hasta 10 citas con pre-reservas al mes</td>
+              <td class="pro-col" style="color:#BA8F57;font-weight:600">Automatizadas 24/7 ILIMITADAS</td>
+              <td style="font-weight:600">100% ILIMITADAS (Sedes, empleados y facturación sin restricciones)</td>
+            </tr>
+            <tr>
+              <td>Control de Caja</td>
+              <td>Bimonetario limitado (Hasta 500$/mes)</td>
+              <td class="pro-col" style="font-weight:600;color:#fff">Bimonetario y caja híbrida SIN LÍMITES</td>
+              <td style="font-weight:600">100% ILIMITADO</td>
+            </tr>
+            <tr>
+              <td>Sistemas de Pago</td>
+              <td>Pago Móvil y efectivo estándar</td>
+              <td class="pro-col">Múltiples sistemas de pago y abonos de pre-reserva</td>
+              <td>Múltiples sistemas de pago y abonos de pre-reserva</td>
+            </tr>
+            <tr>
+              <td>Gestión de Comisiones</td>
+              <td>Para 1 solo colaborador</td>
+              <td class="pro-col">Cálculo automático para hasta 5 empleados</td>
+              <td>Empleados y colaboradores ILIMITADOS</td>
+            </tr>
+            <tr>
+              <td>Reportes Contables</td>
+              <td>Exportación a Excel limitada (Últimos 7 días)</td>
+              <td class="pro-col">Exportación completa a Excel (Cualquier rango de fecha)</td>
+              <td>Exportación completa a Excel (Cualquier rango de fecha)</td>
+            </tr>
+            <tr>
+              <td>Chat con Clientes</td>
+              <td>Chat nativo con hasta 10 clientes</td>
+              <td class="pro-col">Hasta 100 clientes con estados de lectura</td>
+              <td>Clientes y chats 100% ILIMITADOS</td>
+            </tr>
+            <tr>
+              <td>Marketing con IA (Gemini)</td>
+              <td><span class="compare-val-cross">❌ No disponible</span></td>
+              <td class="pro-col"><span class="compare-val-cross">❌ No disponible</span></td>
+              <td style="color:#BA8F57;font-weight:600">🚀 Módulo VIP: Análisis de imágenes, copia con IA y publicación en Instagram</td>
+            </tr>
+            <tr>
+              <td>Soporte Técnico</td>
+              <td>Estándar</td>
+              <td class="pro-col">Prioritario</td>
+              <td style="font-weight:600">Prioritario directo con el Desarrollador</td>
+            </tr>
+            <tr>
+              <td>Desarrollo Personalizado</td>
+              <td><span class="compare-val-cross">No disponible</span></td>
+              <td class="pro-col"><span class="compare-val-cross">No disponible</span></td>
+              <td style="font-weight:600">Creación de módulos a medida (Costo según la función)</td>
+            </tr>
+            <tr>
+              <td>Acción</td>
+              <td>
+                <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:0.6rem 1rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:pointer;transition:all 0.2s ease" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='transparent'">Empezar Gratis</button>
+              </td>
+              <td class="pro-col">
+                <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:0.6rem 1.2rem;background:#BA8F57;color:#000;border:none;cursor:pointer;transition:all 0.2s ease" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#BA8F57'">Activar Plan PRO</button>
+              </td>
+              <td>
+                <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:0.6rem 1rem;background:transparent;color:#BA8F57;border:1px solid rgba(186,143,87,0.4);cursor:pointer;transition:all 0.2s ease" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Unirse a la Élite</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -713,6 +933,204 @@ import LayoutBase from '../layouts/LayoutBase.astro';
         font-size: 9px;
         padding: 0.3rem 0.55rem;
       }
+    }
+
+    /* ── Sección de Planes y Precios Premium ── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .pricing-card {
+      background: rgba(17, 17, 17, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    .pricing-card.popular {
+      border: 1px solid #BA8F57;
+      box-shadow: 0 10px 30px rgba(186, 143, 87, 0.15);
+    }
+    .pricing-card.popular::before {
+      content: 'RECOMENDADO';
+      position: absolute;
+      top: 1.25rem;
+      right: -2rem;
+      background: #BA8F57;
+      color: #000;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: 0.35rem 2.5rem;
+      transform: rotate(45deg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .pricing-badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: rgba(186, 143, 87, 0.1);
+      border: 1px solid rgba(186, 143, 87, 0.3);
+      color: #BA8F57;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+    }
+    .pricing-price {
+      font-family: 'Oswald', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+    .pricing-price span {
+      color: #BA8F57;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+    .pricing-period {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pricing-features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2.5rem;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+    .pricing-features-list li {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .pricing-features-list li.disabled {
+      color: rgba(255,255,255,0.3);
+    }
+    .pricing-btn {
+      width: 100%;
+      padding: 1rem;
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .pricing-btn-primary {
+      background: #BA8F57;
+      color: #000;
+      border: 1px solid #BA8F57;
+    }
+    .pricing-btn-primary:hover {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+    .pricing-btn-secondary {
+      background: transparent;
+      color: #BA8F57;
+      border: 1px solid rgba(186, 143, 87, 0.4);
+    }
+    .pricing-btn-secondary:hover {
+      background: rgba(186, 143, 87, 0.1);
+      border-color: #BA8F57;
+    }
+    
+    /* ── Tabla Comparativa Ultra Premium ── */
+    .compare-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      background: rgba(17, 17, 17, 0.6);
+      border: 1px solid rgba(186, 143, 87, 0.15);
+      border-radius: 12px;
+      margin-top: 3rem;
+      scrollbar-width: thin;
+      scrollbar-color: #BA8F57 rgba(255,255,255,0.05);
+    }
+    .compare-wrapper::-webkit-scrollbar {
+      height: 6px;
+    }
+    .compare-wrapper::-webkit-scrollbar-thumb {
+      background: #BA8F57;
+      border-radius: 9999px;
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-width: 800px;
+    }
+    .compare-table th, 
+    .compare-table td {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+    .compare-table th {
+      background: rgba(17, 17, 17, 0.95);
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+    .compare-table tr:hover td {
+      background: rgba(186, 143, 87, 0.03);
+    }
+    .compare-table td:first-child {
+      font-weight: 600;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.2);
+      width: 250px;
+    }
+    .compare-table td.plan-col {
+      width: 180px;
+    }
+    .compare-table td.pro-col {
+      background: rgba(186, 143, 87, 0.03);
+    }
+    .compare-val-check {
+      color: #BA8F57;
+      font-weight: 700;
+    }
+    .compare-val-cross {
+      color: rgba(255, 255, 255, 0.25);
     }
   </style>
 
