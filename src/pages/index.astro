@@ -1,5 +1,6 @@
 ---
 import LayoutBase from '../layouts/LayoutBase.astro';
+import SoporteFlotante from '../islands/SoporteFlotante';
 ---
 <LayoutBase title="CHIKILUKY — El Ecosistema Digital de Belleza" description="Reserva tu cita de belleza en Caracas. Sin WhatsApp, sin esperas.">
 
@@ -1079,5 +1080,8 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       color: rgba(255, 255, 255, 0.25);
     }
   </style>
+
+  <!-- WIDGET DE SOPORTE FLOTANTE REALTIME -->
+  <SoporteFlotante client:only="preact" />
 
 </LayoutBase>
