@@ -1,6 +1,8 @@
 ---
 import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { supabase } from '../../../lib/supabase.js';
+import FormularioServicio from '../../../islands/FormularioServicio.jsx';
+import { convertirRefABs } from '../../../utils/currency.js';
 
 // ── Validación de sesión y rol ────────────────────────────────────────────────
 const authHeader = Astro.request.headers.get('cookie') ?? '';
@@ -81,6 +83,14 @@ const { data: servicios } = negocio
       .eq('negocio_id', negocio.id)
       .order('precio_usd', { ascending: true })
   : { data: [] };
+
+// ── Obtener tasa BCV activa ──────────────────────────────────────────────────
+const { data: configData } = await supabase
+  .from('configuracion_sistema')
+  .select('tasa_bcv')
+  .eq('id', 1)
+  .maybeSingle();
+const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
 ---
 
 <LayoutBase
@@ -115,11 +125,42 @@ const { data: servicios } = negocio
         <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,1.9rem);color:#fff;margin:0">
           Tarifas y Servicios
         </h1>
-        {negocio && (
-          <p style="font-family:'Lato',sans-serif;font-size:0.82rem;color:#555;margin-top:0.3rem">
-            {negocio.name}
-          </p>
-        )}
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-top:0.4rem">
+          {negocio && (
+            <span style="font-family:'Lato',sans-serif;font-size:0.82rem;color:#777">
+              🏢 {negocio.name}
+            </span>
+          )}
+          <span style="color:#333;font-size:0.8rem">|</span>
+          <span style="background:rgba(186,143,87,0.08);border:1px solid rgba(186,143,87,0.2);color:#ba8f57;font-family:'Urbanist',sans-serif;font-size:0.72rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:9999px">
+            💵 BCV Oficial: {tasaBcv.toFixed(2)} Bs/$
+          </span>
+          <span style="color:#333;font-size:0.8rem">|</span>
+          <button
+            id="btn-sync-bcv"
+            title="Sincronizar tasa oficial del BCV en tiempo real"
+            style="
+              background: transparent;
+              border: 1px solid rgba(186, 143, 87, 0.4);
+              color: #ba8f57;
+              font-family: 'Urbanist', sans-serif;
+              font-size: 0.7rem;
+              font-weight: 700;
+              padding: 0.2rem 0.75rem;
+              border-radius: 9999px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              gap: 0.35rem;
+              transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            "
+            onmouseover="this.style.background='rgba(186,143,87,0.1)';this.style.borderColor='#ba8f57'"
+            onmouseout="this.style.background='transparent';this.style.borderColor='rgba(186,143,87,0.4)'"
+          >
+            <span id="sync-icon" style="display:inline-block;transition:transform 0.5s ease">🔄</span>
+            Sincronizar BCV
+          </button>
+        </div>
       </div>
 
       {!negocio && (
@@ -136,130 +177,14 @@ const { data: servicios } = negocio
       {negocio && (
         <>
 
-          <!-- ════════════════════════════════════
-               FORMULARIO DE NUEVO SERVICIO
-          ═════════════════════════════════════ -->
-          <section style="
-            background:#111;
-            border:1px solid rgba(186,143,87,0.22);
-            border-radius:1rem;
-            padding:1.75rem;
-            margin-bottom:2rem;
-          ">
-            <h2 style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1rem;color:#fff;margin:0 0 1.25rem;display:flex;align-items:center;gap:0.5rem">
-              <span style="color:#ba8f57">＋</span> Añadir nuevo servicio
-            </h2>
+          <!-- Formulario de Servicio Preact Island (Cálculo en Tiempo Real + Tasa BCV) -->
+          <FormularioServicio client:only="preact" tasaBcvInicial={tasaBcv} />
 
-            {formError && (
-              <p style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#f87171;margin-bottom:1rem;padding:0.6rem 0.9rem;background:rgba(248,113,113,0.08);border-radius:0.4rem;border-left:2px solid #f87171">
-                {formError}
-              </p>
-            )}
-
-            <form method="POST" style="display:flex;flex-direction:column;gap:1.1rem">
-              <input type="hidden" name="_accion" value="crear" />
-
-              <!-- Nombre del servicio -->
-              <div>
-                <label style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#888;display:block;margin-bottom:0.35rem;letter-spacing:0.04em">
-                  NOMBRE DEL SERVICIO *
-                </label>
-                <input
-                  type="text" name="nombre" required
-                  placeholder="Ej: Corte de Cabello, Balayage, Tatuaje Blackwork…"
-                  style="
-                    width:100%;background:#1a1a1a;
-                    border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;
-                    padding:0.7rem 0.9rem;color:#fff;
-                    font-family:'Lato',sans-serif;font-size:0.9rem;
-                    outline:none;box-sizing:border-box;
-                  "
-                  onfocus="this.style.borderColor='#ba8f57'"
-                  onblur="this.style.borderColor='rgba(186,143,87,0.25)'"
-                />
-              </div>
-
-              <!-- Duración + Precio en fila -->
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem">
-
-                <!-- Duración -->
-                <div>
-                  <label style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#888;display:block;margin-bottom:0.35rem;letter-spacing:0.04em">
-                    DURACIÓN (min)
-                  </label>
-                  <input
-                    type="number" name="duracion" min="15" max="480" step="15" value="60"
-                    style="
-                      width:100%;background:#1a1a1a;
-                      border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;
-                      padding:0.7rem 0.9rem;color:#fff;
-                      font-family:'Lato',sans-serif;font-size:0.9rem;
-                      outline:none;box-sizing:border-box;
-                    "
-                    onfocus="this.style.borderColor='#ba8f57'"
-                    onblur="this.style.borderColor='rgba(186,143,87,0.25)'"
-                  />
-                </div>
-
-                <!-- Precio USD -->
-                <div>
-                  <label style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#888;display:block;margin-bottom:0.35rem;letter-spacing:0.04em">
-                    PRECIO USD *
-                  </label>
-                  <div style="position:relative">
-                    <span style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:#ba8f57;font-size:0.85rem;font-weight:700">$</span>
-                    <input
-                      type="number" name="precio_usd" min="0.5" step="0.5" required
-                      placeholder="0.00"
-                      style="
-                        width:100%;background:#1a1a1a;
-                        border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;
-                        padding:0.7rem 0.9rem 0.7rem 1.75rem;color:#fff;
-                        font-family:'Lato',sans-serif;font-size:0.9rem;
-                        outline:none;box-sizing:border-box;
-                      "
-                      onfocus="this.style.borderColor='#ba8f57'"
-                      onblur="this.style.borderColor='rgba(186,143,87,0.25)'"
-                    />
-                  </div>
-                </div>
-
-                <!-- Precio Bs -->
-                <div>
-                  <label style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#888;display:block;margin-bottom:0.35rem;letter-spacing:0.04em">
-                    PRECIO Bs
-                  </label>
-                  <input
-                    type="number" name="precio_bs" min="0" step="1"
-                    placeholder="0.00"
-                    style="
-                      width:100%;background:#1a1a1a;
-                      border:1px solid rgba(186,143,87,0.25);border-radius:0.5rem;
-                      padding:0.7rem 0.9rem;color:#fff;
-                      font-family:'Lato',sans-serif;font-size:0.9rem;
-                      outline:none;box-sizing:border-box;
-                    "
-                    onfocus="this.style.borderColor='#ba8f57'"
-                    onblur="this.style.borderColor='rgba(186,143,87,0.25)'"
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                style="
-                  background:#ba8f57;color:#1a1a1a;
-                  font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;
-                  padding:0.8rem;border-radius:9999px;border:none;cursor:pointer;
-                  letter-spacing:0.03em;margin-top:0.25rem;transition:background 0.18s;
-                "
-                onmouseover="this.style.background='#d4a96a'"
-                onmouseout="this.style.background='#ba8f57'"
-              >
-                Guardar servicio →
-              </button>
-            </form>
-          </section>
+          {formError && (
+            <p style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#f87171;margin-bottom:1rem;padding:0.6rem 0.9rem;background:rgba(248,113,113,0.08);border-radius:0.4rem;border-left:2px solid #f87171">
+              {formError}
+            </p>
+          )}
 
           <!-- ════════════════════════════════════
                TABLA DE SERVICIOS ACTUALES
@@ -308,8 +233,8 @@ const { data: servicios } = negocio
                       <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#ba8f57;margin:0">
                         ${s.precio_usd?.toFixed(2)}
                       </p>
-                      <p style="font-family:'Lato',sans-serif;font-size:0.7rem;color:#555;margin:0.1rem 0 0">
-                        Bs {s.precio_bs?.toLocaleString('es-VE', { maximumFractionDigits: 2 })}
+                      <p style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#777;margin:0.12rem 0 0;text-transform:uppercase;font-weight:700">
+                        {convertirRefABs(s.precio_usd, tasaBcv)}
                       </p>
                     </div>
 
@@ -343,5 +268,55 @@ const { data: servicios } = negocio
 
     </div>
   </main>
+
+  <!-- Script interactivo premium de sincronización BCV en tiempo real -->
+  <script is:inline>
+    const btnSync = document.getElementById('btn-sync-bcv');
+    const syncIcon = document.getElementById('sync-icon');
+
+    if (btnSync) {
+      btnSync.addEventListener('click', async () => {
+        // Deshabilitar botón y animar el icono
+        btnSync.disabled = true;
+        btnSync.style.opacity = '0.6';
+        btnSync.style.cursor = 'not-allowed';
+        if (syncIcon) {
+          syncIcon.style.animation = 'spin 1s linear infinite';
+        }
+
+        try {
+          // GET al endpoint de sincronización
+          const res = await fetch('/api/sync-bcv', { method: 'GET' });
+          const data = await res.json();
+
+          if (res.ok && data.ok) {
+            // Recargar la página con éxito
+            alert(`✅ ¡Tasa sincronizada con éxito!\n\nTasa anterior: ${data.tasa_anterior ? data.tasa_anterior.toFixed(2) : 'N/A'} Bs\nNueva tasa oficial: ${data.tasa_nueva.toFixed(2)} Bs`);
+            window.location.reload();
+          } else {
+            throw new Error(data.error || 'Error al procesar la sincronización.');
+          }
+        } catch (err) {
+          console.error('Error al sincronizar:', err);
+          alert(`❌ Error al sincronizar: ${err.message}`);
+        } finally {
+          btnSync.disabled = false;
+          btnSync.style.opacity = '1';
+          btnSync.style.cursor = 'pointer';
+          if (syncIcon) {
+            syncIcon.style.animation = 'none';
+          }
+        }
+      });
+    }
+  </script>
+
+  <!-- Animación de rotación global para el spinner -->
+  <style is:global>
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
 
 </LayoutBase>

@@ -18,7 +18,11 @@ const negocioId = Astro.url.searchParams.get('id');
 if (!negocioId) return Astro.redirect('/app/cliente/buscar');
 
 // ── Consultas paralelas SSR ───────────────────────────────────────────────────
-const [{ data: negocio, error: negocioError }, { data: servicios }] = await Promise.all([
+const [
+  { data: negocio, error: negocioError },
+  { data: servicios },
+  { data: configData }
+] = await Promise.all([
   supabase
     .from('negocios')
     .select('id, name, address, categoria, descripcion, telefono')
@@ -29,7 +33,14 @@ const [{ data: negocio, error: negocioError }, { data: servicios }] = await Prom
     .select('id, nombre, duracion_min, precio_usd, precio_bs')
     .eq('negocio_id', negocioId)
     .order('precio_usd', { ascending: true }),
+  supabase
+    .from('configuracion_sistema')
+    .select('tasa_bcv')
+    .eq('id', 1)
+    .maybeSingle()
 ]);
+
+const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
 
 if (negocioError || !negocio) return Astro.redirect('/app/cliente/buscar');
 
@@ -96,6 +107,7 @@ const iconoCategoria: Record<string, string> = {
         negocioId={negocioId}
         clienteId={user.id}
         servicios={servicios ?? []}
+        tasaBcvInicial={tasaBcv}
       />
     </div>
   </main>

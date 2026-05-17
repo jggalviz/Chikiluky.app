@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'preact/hooks';
+import { useState, useMemo, useEffect } from 'preact/hooks';
 import { createClient } from '@supabase/supabase-js';
+import { convertirRefABs } from '../utils/currency.js';
 
 const supabase = createClient(
   import.meta.env.PUBLIC_SUPABASE_URL,
@@ -63,12 +64,57 @@ const S = {
   }),
 };
 
-export default function CalendarioReservas({ negocioId, clienteId, servicios }) {
+export default function CalendarioReservas({ negocioId, clienteId, servicios, tasaBcvInicial = 40.00 }) {
   const [paso,          setPaso]          = useState(1);
   const [servicio,      setServicio]      = useState(null);
   const [dia,           setDia]           = useState(null);
   const [hora,          setHora]          = useState(null);
   const [horasOcupadas, setHorasOcupadas] = useState([]);
+  const [tasaBcv,       setTasaBcv]       = useState(tasaBcvInicial);
+
+  // Suscribirse a actualizaciones de la tasa BCV en tiempo real
+  useEffect(() => {
+    async function fetchTasa() {
+      try {
+        const { data, error } = await supabase
+          .from('configuracion_sistema')
+          .select('tasa_bcv')
+          .eq('id', 1)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (data?.tasa_bcv) {
+          setTasaBcv(parseFloat(data.tasa_bcv));
+        }
+      } catch (err) {
+        console.error('Error al obtener tasa BCV de Supabase:', err);
+      }
+    }
+
+    fetchTasa();
+
+    const channel = supabase
+      .channel('booking-config-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'configuracion_sistema',
+          filter: 'id=eq.1'
+        },
+        (payload) => {
+          if (payload.new?.tasa_bcv) {
+            setTasaBcv(parseFloat(payload.new.tasa_bcv));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const dias  = useMemo(() => proximosDias(7), []);
   const slots = useMemo(
@@ -109,13 +155,16 @@ export default function CalendarioReservas({ negocioId, clienteId, servicios }) 
     const endTime = new Date(startTime);
     endTime.setMinutes(endTime.getMinutes() + (servicio.duracion_min ?? 60));
 
+    // Cálculo matemático dinámico con la tasa de cambio en vivo
+    const precioBsCalculado = Math.round(parseFloat(servicio.precio_usd) * tasaBcv * 100) / 100;
+
     const params = new URLSearchParams({
       negocioId,
       clienteId,
       servicioNombre: servicio.nombre,
       duracion:       servicio.duracion_min ?? 60,
       precioUsd:      servicio.precio_usd,
-      precioBs:       servicio.precio_bs,
+      precioBs:       precioBsCalculado,
       startTime:      startTime.toISOString(),
       endTime:        endTime.toISOString(),
     });
@@ -182,8 +231,8 @@ export default function CalendarioReservas({ negocioId, clienteId, servicios }) 
                   <p style={{ fontFamily:"'Urbanist',sans-serif", fontWeight:800, fontSize:'0.95rem', color:'#ba8f57', margin:0 }}>
                     ${s.precio_usd}
                   </p>
-                  <p style={{ fontFamily:"'Lato',sans-serif", fontSize:'0.72rem', color:'#555', margin:'0.1rem 0 0' }}>
-                    Bs {s.precio_bs?.toLocaleString('es-VE')}
+                  <p style={{ fontFamily:"'Lato',sans-serif", fontSize:'0.68rem', color:'#777', margin:'0.12rem 0 0', textTransform:'uppercase', fontWeight:700 }}>
+                    {convertirRefABs(s.precio_usd, tasaBcv)}
                   </p>
                 </div>
               </button>
@@ -263,7 +312,7 @@ export default function CalendarioReservas({ negocioId, clienteId, servicios }) 
             {DIAS_ES[dia.getDay()]} {dia.getDate()} de {MESES_ES[dia.getMonth()]} · {hora} · ⏱ {servicio.duracion_min ?? 60} min
           </p>
           <p style={{ fontFamily:"'Urbanist',sans-serif", fontWeight:700, fontSize:'0.9rem', color:'#ba8f57', margin:'0.4rem 0 0' }}>
-            ${servicio.precio_usd} USD · Bs {servicio.precio_bs?.toLocaleString('es-VE')}
+            ${servicio.precio_usd} USD · {convertirRefABs(servicio.precio_usd, tasaBcv)}
           </p>
         </div>
       )}

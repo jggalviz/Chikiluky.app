@@ -2,6 +2,7 @@
 import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { createClient } from '@supabase/supabase-js';
 import { getSession } from '../../../lib/session.js';
+import { convertirRefABs } from '../../../utils/currency.js';
 
 const { user } = await getSession(Astro.request);
 if (!user) return Astro.redirect('/');
@@ -32,6 +33,15 @@ const metodosActivos = Object.entries(pagos).filter(([k,v]) =>
   k !== 'reserva_sin_pago' && v?.activo
 );
 
+// Obtener la tasa de cambio en vivo para el recálculo dinámico
+const { data: configData } = await sb
+  .from('configuracion_sistema')
+  .select('tasa_bcv')
+  .eq('id', 1)
+  .maybeSingle();
+const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
+const precioBsCalculado = Math.round(precioUsd * tasaBcv * 100) / 100;
+
 let formExito = false;
 let formError = '';
 
@@ -56,7 +66,7 @@ if (Astro.request.method === 'POST') {
       end_time:               endTime,
       status:                 sinPago && !referencia ? 'pendiente' : 'pendiente_pago',
       price_usd:              precioUsd,
-      price_bs:               precioBs,
+      price_bs:               precioBsCalculado,
       comprobante_referencia: referencia || null,
       comprobante_fecha:      fechaPago  || null,
       notas: referencia ? `Método: ${metodoElegido} (${cuenta}) · Monto: ${monto} ${moneda}` : null,
@@ -107,7 +117,7 @@ function dato(m: string, sub: string, k: string) {
       <section style="background:#111;border:1px solid rgba(186,143,87,0.2);border-radius:1rem;padding:1.25rem;margin-bottom:1.5rem">
         <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1rem;color:#fff;margin:0">{servicioNombre}</p>
         <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#888;margin:0.3rem 0;text-transform:capitalize">{negocio?.name} · {fechaCita} · {horaCita}</p>
-        <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#ba8f57;margin:0.5rem 0 0">${precioUsd.toFixed(2)} USD · Bs {precioBs.toLocaleString('es-VE',{maximumFractionDigits:2})}</p>
+        <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#ba8f57;margin:0.5rem 0 0">${precioUsd.toFixed(2)} USD · {convertirRefABs(precioUsd, tasaBcv)}</p>
       </section>
 
       {formError && <p style="font-family:'Lato',sans-serif;font-size:0.82rem;color:#f87171;background:rgba(248,113,113,0.08);border-left:2px solid #f87171;padding:0.6rem 0.9rem;border-radius:0.4rem;margin-bottom:1rem">{formError}</p>}
