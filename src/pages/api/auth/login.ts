@@ -34,7 +34,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   if (authError || !authData.user || !authData.session) {
     return new Response(
-      JSON.stringify({ error: 'Credenciales incorrectas.' }),
+      JSON.stringify({ error: authError?.message ?? 'Credenciales incorrectas.' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
     );
   }
