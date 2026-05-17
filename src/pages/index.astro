@@ -207,95 +207,26 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(186,143,87,0.3),transparent)"></div>
     
     <div style="max-width:1280px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:4rem">
+      <div style="text-align:center;margin-bottom:3rem">
         <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;display:block;margin-bottom:0.75rem">ENCUENTRA LO QUE BUSCAS</span>
         <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2rem,3vw,2.5rem);text-transform:uppercase;color:#fff;margin:0">Explora por Categoria</h2>
         <div style="height:3px;width:60px;background:#BA8F57;margin:1.25rem auto 0"></div>
       </div>
       
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem">
-        
-        <!-- Categoría 1: Peluquería -->
-        <a href="/app/cliente/buscar?cat=Peluquería" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💇</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Peluquería</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Estilistas y cortes de tendencia</p>
-          </div>
-        </a>
-
-        <!-- Categoría 2: Barbería -->
-        <a href="/app/cliente/buscar?cat=Barbería" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">✂️</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Barbería</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cortes de cabello y cuidado de barba</p>
-          </div>
-        </a>
-
-        <!-- Categoría 3: Uñas -->
-        <a href="/app/cliente/buscar?cat=Uñas" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💅</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Uñas</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Manicura, pedicura y sistemas de uñas</p>
-          </div>
-        </a>
-
-        <!-- Categoría 4: Estética y Cejas -->
-        <a href="/app/cliente/buscar?cat=Estética%20y%20Cejas" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">👁️</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Estética y Cejas</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cuidado facial, cejas y pestañas</p>
-          </div>
-        </a>
-
-        <!-- Categoría 5: Masajes y Spa -->
-        <a href="/app/cliente/buscar?cat=Masajes%20y%20Spa" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🧖</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Masajes y Spa</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Relajación y masajes terapéuticos</p>
-          </div>
-        </a>
-
-        <!-- Categoría 6: Maquillaje -->
-        <a href="/app/cliente/buscar?cat=Maquillaje" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💄</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Maquillaje</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Maquillaje profesional y de gala</p>
-          </div>
-        </a>
-
-        <!-- Categoría 7: Tatuajes -->
-        <a href="/app/cliente/buscar?cat=Tatuajes" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🖋️</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Tatuajes</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Estudios de tatuaje y arte corporal</p>
-          </div>
-        </a>
-
-        <!-- Categoría 8: Depilación -->
-        <a href="/app/cliente/buscar?cat=Depilación" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">✨</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Depilación</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Depilación con cera y tecnología láser</p>
-          </div>
-        </a>
-
-        <!-- Categoría 9: Podología -->
-        <a href="/app/cliente/buscar?cat=Podología" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
-          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🦶</div>
-          <div>
-            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Podología</h4>
-            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cuidado y salud integral del pie</p>
-          </div>
-        </a>
-
+      <!-- Filtros de categoría minimalista — scroll horizontal suave -->
+      <div class="filtros-wrapper">
+        <div class="filtros-scroll">
+          <a href="/app/cliente/buscar" class="cat-btn active">Todos</a>
+          <a href="/app/cliente/buscar?cat=Peluquería" class="cat-btn">Peluquería</a>
+          <a href="/app/cliente/buscar?cat=Barbería" class="cat-btn">Barbería</a>
+          <a href="/app/cliente/buscar?cat=Uñas" class="cat-btn">Uñas</a>
+          <a href="/app/cliente/buscar?cat=Estética%20y%20Cejas" class="cat-btn">Estética y Cejas</a>
+          <a href="/app/cliente/buscar?cat=Masajes%20y%20Spa" class="cat-btn">Masajes y Spa</a>
+          <a href="/app/cliente/buscar?cat=Maquillaje" class="cat-btn">Maquillaje</a>
+          <a href="/app/cliente/buscar?cat=Tatuajes" class="cat-btn">Tatuajes</a>
+          <a href="/app/cliente/buscar?cat=Depilación" class="cat-btn">Depilación</a>
+          <a href="/app/cliente/buscar?cat=Podología" class="cat-btn">Podología</a>
+        </div>
       </div>
     </div>
   </section>
@@ -387,6 +318,71 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       .hero-mockup {
         justify-content: flex-end !important;
       }
+    }
+
+    /* ── Filtros Minimalistas: menú horizontal elegante ── */
+    .filtros-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 1.5rem auto 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Fades laterales indicando que hay más contenido en scroll horizontal */
+    .filtros-wrapper::before,
+    .filtros-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2.5rem;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .filtros-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, #111, transparent);
+    }
+    .filtros-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, #111, transparent);
+    }
+
+    .filtros-scroll {
+      display: flex;
+      gap: 1.75rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 2rem;
+      scrollbar-width: none; /* Firefox */
+    }
+    .filtros-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+    /* Botones minimalistas de categoría */
+    .cat-btn {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: rgba(255, 255, 255, 0.45);
+      padding: 0.75rem 0.1rem;
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 500;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .cat-btn:hover {
+      color: rgba(255, 255, 255, 0.95);
+    }
+    .cat-btn.active {
+      color: #ffffff;
+      border-bottom-color: #ba8f57;
+      font-weight: 600;
     }
   </style>
 
