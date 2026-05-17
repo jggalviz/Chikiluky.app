@@ -119,6 +119,12 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
       <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.pro</span>
     </a>
     <nav style="display:flex;align-items:center;gap:0.4rem">
+      {perfil && (
+        <div style="display:flex;align-items:center;gap:0.45rem;padding:0.35rem 0.75rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:0px;margin-right:0.2rem">
+          <span style="width:6px;height:6px;background:#ba8f57;border-radius:50%;box-shadow:0 0 4px #ba8f57"></span>
+          <span style="font-family:'Urbanist',sans-serif;font-size:0.76rem;color:#eee;font-weight:700;letter-spacing:0.02em">{perfil.full_name}</span>
+        </div>
+      )}
       <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Escritorio</a>
       <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Agenda</a>
       <a href="/app/experto/servicios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Servicios</a>
