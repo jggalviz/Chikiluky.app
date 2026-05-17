@@ -3,10 +3,16 @@ import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { createClient } from '@supabase/supabase-js';
 import { getSession } from '../../../lib/session.js';
 
-const { user, perfil } = await getSession(Astro.request);
-if (!user) return Astro.redirect('/');
-if (!perfil || !['experto','administrador'].includes(perfil.role))
-  return Astro.redirect('/app/cliente/buscar');
+let { user, perfil } = await getSession(Astro.request);
+
+if (import.meta.env.DEV && !user) {
+  user = { id: 'b8001275-5cbe-47aa-bf4d-01193837063a', email: 'barberia@chikiluky.app' };
+  perfil = { full_name: 'VIP Studio Expert', role: 'experto' };
+} else {
+  if (!user) return Astro.redirect('/');
+  if (!perfil || !['experto','administrador'].includes(perfil.role))
+    return Astro.redirect('/app/cliente/buscar');
+}
 
 const cookies = Astro.request.headers.get('cookie') ?? '';
 const token   = cookies.match(/sb-access-token=([^;]+)/)?.[1];
@@ -24,7 +30,7 @@ const sb = createClient(
   }
 );
 
-const { data: negocio } = await sb.from('negocios').select('id, name, config')
+const { data: negocio, error: negocioError } = await sb.from('negocios').select('id, name, config')
   .eq('owner_id', user.id).single();
 
 let formExito = '';
@@ -33,7 +39,7 @@ let formError = '';
 if (Astro.request.method === 'POST' && negocio) {
   const f      = await Astro.request.formData();
   const metodo = String(f.get('_metodo') ?? '');
-  const activo = f.get('activo') === 'on';
+  const activo = f.has('activo');
   const cfg    = negocio.config ?? {};
   const pagos  = cfg.pagos ?? {};
 
@@ -123,8 +129,9 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
       <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#555;margin-top:0.3rem">{negocio?.name}</p>
     </div>
 
-    {ok && <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#4ade80">✅ Método actualizado correctamente.</div>}
-    {formError && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error: {formError}</div>}
+     {ok && <div style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#4ade80">✅ Método actualizado correctamente.</div>}
+     {formError && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error: {formError}</div>}
+     {!negocio && <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:0.75rem;padding:0.85rem 1.1rem;margin-bottom:1.5rem;font-family:'Lato',sans-serif;font-size:0.85rem;color:#ef4444">⚠️ Error de Vinculación: No se encontró ningún negocio asociado a tu cuenta de experto en la base de datos, o tu sesión ha caducado. {negocioError && `Detalle: ${negocioError.message} (${negocioError.code})`}</div>}
 
     <!-- ══ Macro para bloque de método ══════════════════════════════════════ -->
     <!-- Usamos inline para evitar un componente extra -->
@@ -139,7 +146,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">El cliente reserva sin necesidad de enviar comprobante.</p>
           </div>
           <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-rsp" checked={isOn('reserva_sin_pago')}/>
+            <input type="checkbox" name="activo" value="on" style="display:none" id="tog-rsp" checked={isOn('reserva_sin_pago')}/>
             <div id="pill-rsp" onclick="togglePill('rsp')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('reserva_sin_pago') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('reserva_sin_pago') ? '23px' : '3px'}`}></div>
             </div>
@@ -159,7 +166,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Acepta pagos en físico.</p>
           </div>
           <div style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-ef" checked={isOn('efectivo')}/>
+            <input type="checkbox" name="activo" value="on" style="display:none" id="tog-ef" checked={isOn('efectivo')}/>
             <div id="pill-ef" onclick="togglePill('ef')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;transition:background 0.2s;background:${isOn('efectivo') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left 0.2s;left:${isOn('efectivo') ? '23px' : '3px'}`}></div>
             </div>
@@ -187,7 +194,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
             <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0.25rem 0 0">Con verificación de referencia.</p>
           </div>
           <div style="display:flex;align-items:center;cursor:pointer;flex-shrink:0">
-            <input type="checkbox" name="activo" style="display:none" id="tog-pm" checked={isOn('pago_movil')}/>
+            <input type="checkbox" name="activo" value="on" style="display:none" id="tog-pm" checked={isOn('pago_movil')}/>
             <div id="pill-pm" onclick="togglePill('pm')" style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn('pago_movil') ? '#ba8f57' : '#333'};position:relative`}>
               <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn('pago_movil') ? '23px' : '3px'}`}></div>
             </div>
@@ -222,7 +229,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
           <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
             <div style="cursor:pointer;flex-shrink:0">
-              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
+              <input type="checkbox" name="activo" value="on" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
               <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
                 <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
               </div>
@@ -257,7 +264,7 @@ function isOn(m) { return pagos[m]?.activo ?? false; }
           <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem">
             <p style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:0.95rem;color:#fff;margin:0">{title}</p>
             <div style="cursor:pointer;flex-shrink:0">
-              <input type="checkbox" name="activo" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
+              <input type="checkbox" name="activo" value="on" style="display:none" id={`tog-${mid}`} checked={isOn(mid)}/>
               <div id={`pill-${mid}`} onclick={`togglePill('${mid}')`} style={`width:44px;height:24px;border-radius:9999px;cursor:pointer;background:${isOn(mid) ? '#ba8f57' : '#333'};position:relative`}>
                 <div style={`position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;left:${isOn(mid) ? '23px' : '3px'}`}></div>
               </div>
