@@ -3,7 +3,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
 import SoporteFlotante from '../islands/SoporteFlotante';
 import { getSession } from '../lib/session.js';
 
-const { user, perfil } = await getSession(Astro.request);
+const { user, perfil, token } = await getSession(Astro.request);
 const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
 ---
 <LayoutBase title="CHIKILUKY — El Ecosistema Digital de Belleza" description="Reserva tu cita de belleza en Caracas. Sin WhatsApp, sin esperas.">
@@ -1101,6 +1101,6 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
   </style>
 
   <!-- WIDGET DE SOPORTE FLOTANTE REALTIME -->
-  <SoporteFlotante client:only="preact" />
+  <SoporteFlotante client:only="preact" token={token} />
 
 </LayoutBase>

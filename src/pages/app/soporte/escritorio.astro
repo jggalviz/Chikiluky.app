@@ -4,7 +4,7 @@ import { getSession } from '../../../lib/session.js';
 import SoporteAdminInbox from '../../../islands/SoporteAdminInbox.jsx';
 
 console.log("[escritorio.astro] CALLING getSession...");
-const { user, perfil } = await getSession(Astro.request);
+const { user, perfil, token } = await getSession(Astro.request);
 
 console.log("[escritorio.astro] user:", user ? user.id : 'null');
 console.log("[escritorio.astro] perfil:", perfil ? JSON.stringify(perfil) : 'null');
@@ -52,7 +52,7 @@ if (!perfil || !['soporte','administrador'].includes(perfil.role)) {
       </div>
 
       {/* Componente Inbox Completo */}
-      <SoporteAdminInbox client:only="preact" />
+      <SoporteAdminInbox client:only="preact" token={token} />
 
     </div>
   </main>

@@ -5,7 +5,7 @@ import { getSession } from '../../../lib/session.js';
 import BookingFlow from '../../../islands/BookingFlow.jsx';
 
 // ── Validación de sesión ──────────────────────────────────────────────────────
-const { user, perfil } = await getSession(Astro.request);
+const { user, perfil, token } = await getSession(Astro.request);
 if (!user) return Astro.redirect('/');
 
 // ── Parámetro de URL ──────────────────────────────────────────────────────────
@@ -108,6 +108,7 @@ if (negocioError || !negocio) return Astro.redirect('/app/cliente/buscar');
         clienteId={user.id}
         servicios={servicios ?? []}
         tasaBcvInicial={tasaBcv}
+        token={token}
       />
     </div>
   </main>

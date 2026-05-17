@@ -2,12 +2,18 @@ import { useState, useEffect } from 'preact/hooks';
 import { createClient } from '@supabase/supabase-js';
 import { convertirRefABs } from '../utils/currency.js';
 
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-);
-
-export default function ProDashboard({ negocio, profesionalId, servicios, tasaBcvInicial, fullName }) {
+export default function ProDashboard({ negocio, profesionalId, servicios, tasaBcvInicial, fullName, token }) {
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+    token ? {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    } : undefined
+  );
   const [cargando, setCargando] = useState(true);
   const [reservas, setReservas] = useState([]);
   const [tasaBcv, setTasaBcv] = useState(tasaBcvInicial);

@@ -2,11 +2,6 @@ import { useState, useMemo, useEffect } from 'preact/hooks';
 import { createClient } from '@supabase/supabase-js';
 import { convertirRefABs } from '../utils/currency.js';
 
-const supabase = createClient(
-  import.meta.env.PUBLIC_SUPABASE_URL,
-  import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-);
-
 const DIAS_ES  = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 const MESES_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
@@ -31,7 +26,18 @@ function generarSlots(inicio = 9, fin = 19, durMin = 60) {
   return slots;
 }
 
-export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvInicial = 40.00 }) {
+export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvInicial = 40.00, token }) {
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+    token ? {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    } : undefined
+  );
   const [paso, setPaso] = useState(1);
   const [servicio, setServicio] = useState(null);
   const [especialista, setEspecialista] = useState(null);

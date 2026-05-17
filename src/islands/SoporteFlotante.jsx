@@ -1,7 +1,18 @@
 import { useState, useEffect, useRef } from 'preact/hooks';
-import { supabase } from '../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
-export default function SoporteFlotante() {
+export default function SoporteFlotante({ token }) {
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+    token ? {
+      global: {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    } : undefined
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');

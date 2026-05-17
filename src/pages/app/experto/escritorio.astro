@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getSession } from '../../../lib/session.js';
 import ProDashboard from '../../../islands/ProDashboard.jsx';
 
-const { user, perfil } = await getSession(Astro.request);
+const { user, perfil, token } = await getSession(Astro.request);
 if (!user) return Astro.redirect('/');
 if (!perfil || !['experto','administrador'].includes(perfil.role))
   return Astro.redirect('/app/cliente/buscar');
@@ -67,6 +67,7 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
           servicios={servicios}
           tasaBcvInicial={tasaBcv}
           fullName={perfil.full_name}
+          token={token}
         />
       ) : (
         <div style={{ background: '#0a0a0a', border: '1px solid #262626', borderRadius: '0px', padding: '3rem 2rem', textAlign: 'center', marginTop: '2rem' }}>

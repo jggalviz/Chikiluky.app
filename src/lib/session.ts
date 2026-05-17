@@ -14,6 +14,7 @@ export interface Perfil {
 export interface Session {
   user: { id: string; email?: string } | null;
   perfil: Perfil | null;
+  token?: string;
 }
 
 export async function getSession(request: Request): Promise<Session> {
@@ -55,5 +56,5 @@ export async function getSession(request: Request): Promise<Session> {
     console.error("[getSession] perfiles select error under user context:", pError.message);
   }
 
-  return { user: { id: user.id, email: user.email }, perfil: perfil ?? null };
+  return { user: { id: user.id, email: user.email }, perfil: perfil ?? null, token };
 }

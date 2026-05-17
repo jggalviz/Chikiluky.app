@@ -3,7 +3,7 @@ import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { getSession } from '../../../lib/session.js';
 import SoporteAdminInbox from '../../../islands/SoporteAdminInbox.jsx';
 
-const { user, perfil } = await getSession(Astro.request);
+const { user, perfil, token } = await getSession(Astro.request);
 if (!user) return Astro.redirect('/');
 if (!perfil || !['experto','administrador'].includes(perfil.role))
   return Astro.redirect('/app/cliente/buscar');
@@ -41,7 +41,7 @@ if (!perfil || !['experto','administrador'].includes(perfil.role))
       </div>
 
       {/* Componente Reactivo de Inbox de Soporte */}
-      <SoporteAdminInbox client:only="preact" />
+      <SoporteAdminInbox client:only="preact" token={token} />
 
     </div>
   </main>
