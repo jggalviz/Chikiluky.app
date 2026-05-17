@@ -51,7 +51,7 @@ if (negocioError || !negocio) return Astro.redirect('/app/cliente/buscar');
   <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
     <a href="/app/cliente/buscar" style="text-decoration:none">
       <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
-      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.app</span>
+      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">{perfil && ['experto','administrador'].includes(perfil.role) ? '.pro' : '.app'}</span>
     </a>
     <nav style="display:flex;align-items:center;gap:0.4rem">
       {perfil && (
