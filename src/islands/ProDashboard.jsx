@@ -31,7 +31,7 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
       const finDia = new Date(fechaFiltro); finDia.setHours(23, 59, 59, 999);
 
       // 1. Obtener de la tabla 'reservas' (con joins a perfiles y servicios)
-      const { data: dataReservas, error: errReservas } = await supabase
+      let { data: dataReservas, error: errReservas } = await supabase
         .from('reservas')
         .select(`
           id,
@@ -49,7 +49,30 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
         .eq('profesional_id', profesionalId)
         .eq('fecha', fechaFiltro);
 
-      if (errReservas) throw errReservas;
+      // Fallback si la relación de clave foránea en Supabase apunta incorrectamente a auth.users en vez de public.perfiles
+      if (errReservas && errReservas.code === 'PGRST200') {
+        const { data: fallbackData, error: fallbackErr } = await supabase
+          .from('reservas')
+          .select(`
+            id,
+            fecha,
+            hora_inicio,
+            estado,
+            pago_metodo,
+            pago_referencia,
+            pago_banco_emisor,
+            pago_estado,
+            cliente_id,
+            servicio:servicios(nombre, precio_usd)
+          `)
+          .eq('profesional_id', profesionalId)
+          .eq('fecha', fechaFiltro);
+
+        if (fallbackErr) throw fallbackErr;
+        dataReservas = fallbackData;
+      } else if (errReservas) {
+        throw errReservas;
+      }
 
       // 2. Obtener de la tabla legacy 'citas' para asegurar visualización unificada
       const { data: dataCitas, error: errCitas } = await supabase
