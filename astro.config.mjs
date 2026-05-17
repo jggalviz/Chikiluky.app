@@ -14,4 +14,7 @@ export default defineConfig({
   output: 'server',
   integrations: [preact()],
   adapter: vercel(),
+  build: {
+    inlineStylesheets: 'always',
+  }
 });
