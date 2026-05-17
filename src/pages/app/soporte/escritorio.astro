@@ -1,0 +1,50 @@
+---
+import LayoutBase from '../../../layouts/LayoutBase.astro';
+import { getSession } from '../../../lib/session.js';
+import SoporteAdminInbox from '../../../islands/SoporteAdminInbox.jsx';
+
+const { user, perfil } = await getSession(Astro.request);
+if (!user) return Astro.redirect('/soporte');
+if (!perfil || !['soporte','administrador'].includes(perfil.role))
+  return Astro.redirect('/soporte');
+---
+
+<LayoutBase title="Escritorio de Soporte — CHIKILUKY" description="Bandeja de entrada central para la atención de clientes y visitantes.">
+
+  <!-- CABECERA DEL PANEL DE SOPORTE -->
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(17,17,17,0.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(186,143,87,0.15)">
+    <a href="/app/soporte/escritorio" style="text-decoration:none">
+      <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
+      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.soporte</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:1rem">
+      <div style="display:flex;align-items:center;gap:0.4rem">
+        <span style="width:8px;height:8px;background:#10b981;border-radius:50%;box-shadow:0 0 6px #10b981"></span>
+        <span style="font-family:'Urbanist',sans-serif;font-size:0.8rem;color:#fff;font-weight:600">
+          {perfil.full_name || 'Agente de Soporte'}
+        </span>
+      </div>
+      <span style="color:#2a2a2a">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>
+    </div>
+  </header>
+
+  <!-- CUERPO DEL PANEL DE SOPORTE -->
+  <main style="padding:2rem;background:#1a1a1a;min-height:calc(100vh - 65px);display:flex;flex-direction:column">
+    <div style="max-width:1400px;width:100%;margin:0 auto;flex-grow:1;display:flex;flex-direction:column">
+      
+      {/* Título de la Sección */}
+      <div style="margin-bottom:1.5rem">
+        <p style="font-size:0.7rem;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.2rem">Panel Operativo</p>
+        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,2rem);color:#fff;margin:0">
+          Mensajería y Soporte
+        </h1>
+      </div>
+
+      {/* Componente Inbox Completo */}
+      <SoporteAdminInbox client:only="preact" />
+
+    </div>
+  </main>
+
+</LayoutBase>

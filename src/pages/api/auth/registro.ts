@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  if (!['cliente', 'experto'].includes(rol)) {
+  if (!['cliente', 'experto', 'soporte'].includes(rol)) {
     return new Response(
       JSON.stringify({ error: 'Rol inválido.' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -74,7 +74,9 @@ export const POST: APIRoute = async ({ request }) => {
   if (authData.session) {
     headers.append('Set-Cookie', `sb-access-token=${authData.session.access_token}; ${COOKIE_OPTS}`);
     headers.append('Set-Cookie', `sb-refresh-token=${authData.session.refresh_token}; ${COOKIE_OPTS}`);
-    const redirectTo = rol === 'experto' ? '/app/experto/agenda' : '/app/cliente/buscar';
+    const redirectTo = rol === 'soporte'
+      ? '/app/soporte/escritorio'
+      : (rol === 'experto' ? '/app/experto/agenda' : '/app/cliente/buscar');
     return new Response(
       JSON.stringify({ ok: true, autoLogin: true, redirectTo }),
       { status: 201, headers }

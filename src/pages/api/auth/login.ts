@@ -5,6 +5,7 @@ const REDIRECT_BY_ROLE: Record<string, string> = {
   cliente:       '/app/cliente/buscar',
   experto:       '/app/experto/escritorio',
   administrador: '/app/experto/escritorio',
+  soporte:       '/app/soporte/escritorio',
 };
 
 const COOKIE_OPTS = 'Path=/; HttpOnly; SameSite=Lax; Max-Age=604800';
