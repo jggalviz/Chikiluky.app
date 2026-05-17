@@ -590,22 +590,25 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     /* Pantallas Móviles medianas a pequeñas (max-width: 480px) */
     @media (max-width: 480px) {
       .nav-container {
-        padding: 0.9rem 4%;
+        padding: 0.8rem 3%;
       }
       .logo-img {
-        height: 28px;
-        width: 28px;
+        height: 24px;
+        width: 24px;
       }
       .logo-text {
-        font-size: 1.15rem;
+        font-size: 1.02rem;
         letter-spacing: 0.04em;
+      }
+      .logo-link {
+        gap: 0.4rem;
       }
       .nav-actions {
         gap: 0.4rem;
       }
       .nav-btn {
-        font-size: 10px;
-        padding: 0.4rem 0.75rem;
+        font-size: 9.5px;
+        padding: 0.35rem 0.65rem;
         letter-spacing: 0.02em;
       }
     }
@@ -613,10 +616,19 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     /* Pantallas Móviles extremadamente pequeñas (max-width: 360px) */
     @media (max-width: 360px) {
       .logo-text {
-        display: none; /* Solución ultra-limpia: oculta el texto largo de la marca y deja el isotipo elegante en dorado */
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+      }
+      .logo-img {
+        height: 20px;
+        width: 20px;
       }
       .logo-link {
-        gap: 0;
+        gap: 0.3rem;
+      }
+      .nav-btn {
+        font-size: 9px;
+        padding: 0.3rem 0.55rem;
       }
     }
   </style>
