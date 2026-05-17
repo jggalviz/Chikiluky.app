@@ -3,6 +3,10 @@
 -- Ejecutar en el SQL Editor de Supabase
 -- ══════════════════════════════════════════════════════════
 
+-- Limpieza inicial para recrear de forma limpia y aplicar los nuevos FK
+DROP TABLE IF EXISTS public.mensajes_chat CASCADE;
+DROP TABLE IF EXISTS public.salas_chat CASCADE;
+
 -- Habilitar extensión UUID si no está activa
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -11,8 +15,8 @@ CREATE TABLE IF NOT EXISTS public.salas_chat (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     sala_type VARCHAR(50) NOT NULL, -- 'cliente_profesional', 'soporte', 'soporte_anonimo'
-    cliente_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-    profesional_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    cliente_id UUID REFERENCES public.perfiles(id) ON DELETE SET NULL,
+    profesional_id UUID REFERENCES public.perfiles(id) ON DELETE SET NULL,
     anonimo_session_id VARCHAR(255) UNIQUE,
     CONSTRAINT chk_sala_type CHECK (sala_type IN ('cliente_profesional', 'soporte', 'soporte_anonimo'))
 );
@@ -22,7 +26,7 @@ CREATE TABLE IF NOT EXISTS public.mensajes_chat (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     sala_id UUID NOT NULL REFERENCES public.salas_chat(id) ON DELETE CASCADE,
-    sender_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    sender_id UUID REFERENCES public.perfiles(id) ON DELETE SET NULL,
     sender_type VARCHAR(50) NOT NULL, -- 'cliente', 'profesional', 'anonimo', 'soporte'
     contenido TEXT NOT NULL,
     CONSTRAINT chk_sender_type CHECK (sender_type IN ('cliente', 'profesional', 'anonimo', 'soporte'))
