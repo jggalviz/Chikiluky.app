@@ -305,24 +305,22 @@ const iconoCategoria: Record<string, string> = {
       const scrollWidth = scrollCont.scrollWidth;
       const clientWidth = scrollCont.clientWidth;
 
-      // 2. Fase de Escritura diferida en requestAnimationFrame para evitar "Forced Reflow"
-      requestAnimationFrame(() => {
-        const leftVisible = scrollLeft > 5;
-        const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
-        
-        if (leftVisible) {
-          arrowL.classList.add('visible');
-        } else {
-          arrowL.classList.remove('visible');
-        }
-        
-        if (rightVisible) {
-          arrowR.classList.add('visible');
-        } else {
-          arrowR.classList.remove('visible');
-        }
-        tickingBuscar = false;
-      });
+      // 2. Fase de Escritura (inmediata en el mismo frame para evitar invalidación cruzada)
+      const leftVisible = scrollLeft > 5;
+      const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
+      
+      if (leftVisible) {
+        arrowL.classList.add('visible');
+      } else {
+        arrowL.classList.remove('visible');
+      }
+      
+      if (rightVisible) {
+        arrowR.classList.add('visible');
+      } else {
+        arrowR.classList.remove('visible');
+      }
+      tickingBuscar = false;
     }
 
     function handleBuscarScroll() {
