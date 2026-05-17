@@ -18,6 +18,10 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
   const [nombreCliente, setNombreCliente] = useState('');
   const [servicioSeleccionado, setServicioSeleccionado] = useState(servicios[0]?.id || '');
   const [metodoPagoManual, setMetodoPagoManual] = useState('efectivo');
+  const [fechaManual, setFechaManual] = useState(new Date().toISOString().split('T')[0]);
+  const [horaManual, setHoraManual] = useState(
+    `${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`
+  );
 
   // Mensajes de feedback
   const [errorMsg, setErrorMsg] = useState('');
@@ -274,9 +278,11 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
     }
 
     try {
-      const hoyStr = new Date().toISOString().split('T')[0];
-      const ahora = new Date();
-      const horaStr = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}:00`;
+      const hoyStr = fechaManual;
+      const horaStr = `${horaManual}:00`;
+
+      // Mapeamos 'punto' a 'efectivo' para evitar violar la restricción CHECK de pago_metodo en 'reservas'
+      const checkPagoMetodo = (metodoPagoManual === 'punto') ? 'efectivo' : metodoPagoManual;
 
       // 1. Guardar en 'reservas'
       const { data: newRes, error: errRes } = await supabase
@@ -288,8 +294,8 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
           fecha: hoyStr,
           hora_inicio: horaStr,
           estado: 'completada',
-          pago_metodo: metodoPagoManual,
-          pago_referencia: 'REGISTRO MANUAL (OFFLINE)',
+          pago_metodo: checkPagoMetodo,
+          pago_referencia: `REGISTRO MANUAL (OFFLINE) - ${metodoPagoManual.toUpperCase()}`,
           pago_estado: 'verificado'
         }])
         .select()
@@ -298,49 +304,60 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
       if (errRes) throw errRes;
 
       // 2. Guardar compatible en legacy 'citas'
-      const endTime = new Date();
-      endTime.setMinutes(endTime.getMinutes() + 60);
+      const [shh, smm] = horaManual.split(':').map(Number);
+      const startTimeDate = new Date(fechaManual);
+      startTimeDate.setHours(shh, smm, 0, 0);
 
-      await supabase.from('citas').insert([{
+      const endTimeDate = new Date(startTimeDate);
+      endTimeDate.setMinutes(endTimeDate.getMinutes() + 60);
+
+      const { error: errCita } = await supabase.from('citas').insert([{
         client_id: null,
         business_id: negocio.id,
         expert_id: profesionalId,
         servicio: serv.nombre,
-        start_time: ahora.toISOString(),
-        end_time: endTime.toISOString(),
+        start_time: startTimeDate.toISOString(),
+        end_time: endTimeDate.toISOString(),
         status: 'completada',
         price_usd: parseFloat(serv.precio_usd),
         price_bs: Math.round(parseFloat(serv.precio_usd) * tasaBcv * 100) / 100,
         comprobante_referencia: 'REGISTRO MANUAL',
-        notas: `Turno manual offline: ${nombreCliente || 'Cliente de la Calle'}`
+        notas: `Turno manual offline: ${nombreCliente || 'Cliente de la Calle'} · Método: ${metodoPagoManual.toUpperCase()}`
       }]);
+
+      if (errCita) throw errCita;
 
       setExitoMsg('Turno offline registrado con éxito.');
       setShowModalManual(false);
 
-      // Añadir reactivamente al listado local para recalcular balance instantáneamente
-      const nuevoItem = {
-        id: newRes.id,
-        hora: horaStr.slice(0, 5),
-        clienteName: nombreCliente.trim() || 'Cliente de la Calle',
-        clienteId: null,
-        servicioName: serv.nombre,
-        precioUsd: parseFloat(serv.precio_usd),
-        pagoMetodo: metodoPagoManual,
-        pagoReferencia: 'REGISTRO MANUAL',
-        pagoBancoEmisor: null,
-        pagoEstado: 'verificado',
-        estado: 'completada',
-        source: 'reserva'
-      };
+      // Añadir reactivamente al listado local si coincide con la fecha filtrada
+      if (fechaManual === fechaFiltro) {
+        const nuevoItem = {
+          id: newRes.id,
+          hora: horaStr.slice(0, 5),
+          clienteName: nombreCliente.trim() || 'Cliente de la Calle',
+          clienteId: null,
+          servicioName: serv.nombre,
+          precioUsd: parseFloat(serv.precio_usd),
+          pagoMetodo: metodoPagoManual,
+          pagoReferencia: 'REGISTRO MANUAL',
+          pagoBancoEmisor: null,
+          pagoEstado: 'verificado',
+          estado: 'completada',
+          source: 'reserva'
+        };
 
-      setReservas(prev => [...prev, nuevoItem].sort((a, b) => a.hora.localeCompare(b.hora)));
+        setReservas(prev => [...prev, nuevoItem].sort((a, b) => a.hora.localeCompare(b.hora)));
+      }
 
       // Resetear campos
       setNombreCliente('');
+      setFechaManual(new Date().toISOString().split('T')[0]);
+      setHoraManual(`${String(new Date().getHours()).padStart(2, '0')}:${String(new Date().getMinutes()).padStart(2, '0')}`);
     } catch (err) {
       console.error('Error al guardar turno manual:', err);
-      setErrorMsg('Error al registrar el turno en Supabase.');
+      const errMsg = err.message || err.details || JSON.stringify(err);
+      setErrorMsg(`Error al registrar el turno en Supabase: ${errMsg}. Asegúrate de haber ejecutado el archivo de migración SQL rls_manual_bookings.sql provisto para configurar los permisos RLS.`);
     }
   }
 
@@ -683,6 +700,28 @@ export default function ProDashboard({ negocio, profesionalId, servicios, tasaBc
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Fecha y Hora en una fila */}
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.68rem', color: '#737373', marginBottom: '0.4rem', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fecha del Turno</label>
+                  <input
+                    type="date"
+                    value={fechaManual}
+                    onChange={(e) => setFechaManual(e.target.value)}
+                    style={{ width: '100%', background: '#0d0d0d', border: '1px solid #262626', borderRadius: '0px', padding: '0.75rem', color: '#fff', fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.68rem', color: '#737373', marginBottom: '0.4rem', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Hora del Turno</label>
+                  <input
+                    type="time"
+                    value={horaManual}
+                    onChange={(e) => setHoraManual(e.target.value)}
+                    style={{ width: '100%', background: '#0d0d0d', border: '1px solid #262626', borderRadius: '0px', padding: '0.75rem', color: '#fff', fontSize: '0.8rem', fontFamily: "'Lato', sans-serif", outline: 'none', boxSizing: 'border-box' }}
+                  />
+                </div>
               </div>
 
               {/* Método de Pago */}
