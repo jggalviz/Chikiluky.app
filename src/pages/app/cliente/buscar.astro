@@ -263,6 +263,18 @@ const iconoCategoria: Record<string, string> = {
 
       document.getElementById('sin-resultados').style.display = visibles === 0 ? 'block' : 'none';
     };
+
+    // Auto-seleccionar categoría desde la URL al inicializar
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = urlParams.get('cat');
+      if (catParam) {
+        const btn = document.querySelector(`#filtros-cat button[data-cat="${catParam}"]`);
+        if (btn) {
+          window.seleccionarCategoria(btn);
+        }
+      }
+    });
   </script>
 
 </LayoutBase>

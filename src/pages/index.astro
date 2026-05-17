@@ -202,30 +202,100 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   </section>
 
   <!-- CATEGORIAS -->
-  <section style="padding:6rem 5%;background:#111">
+  <section style="padding:6rem 5%;background:#111;position:relative;overflow:hidden">
+    <!-- Efecto de brillo de fondo sutil -->
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(186,143,87,0.3),transparent)"></div>
+    
     <div style="max-width:1280px;margin:0 auto">
-      <h2 style="font-family:'Oswald',sans-serif;font-weight:600;font-size:2rem;text-transform:uppercase;color:#fff;margin-bottom:3rem">Explora por Categoria</h2>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem">
-        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=160&q=35&fm=webp" srcset="https://images.unsplash.com/photo-1562322140-8baeececf3df?w=80&q=25&fm=webp 80w, https://images.unsplash.com/photo-1562322140-8baeececf3df?w=160&q=35&fm=webp 160w" sizes="(max-width: 640px) 80px, 160px" alt="Peluqueria" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
-          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Peluqueria</span></div>
+      <div style="text-align:center;margin-bottom:4rem">
+        <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;letter-spacing:0.16em;font-weight:700;text-transform:uppercase;color:#BA8F57;display:block;margin-bottom:0.75rem">ENCUENTRA LO QUE BUSCAS</span>
+        <h2 style="font-family:'Oswald',sans-serif;font-weight:700;font-size:clamp(2rem,3vw,2.5rem);text-transform:uppercase;color:#fff;margin:0">Explora por Categoria</h2>
+        <div style="height:3px;width:60px;background:#BA8F57;margin:1.25rem auto 0"></div>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem">
+        
+        <!-- Categoría 1: Peluquería -->
+        <a href="/app/cliente/buscar?cat=Peluquería" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💇</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Peluquería</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Estilistas y cortes de tendencia</p>
+          </div>
         </a>
-        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=160&q=35&fm=webp" srcset="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=80&q=25&fm=webp 80w, https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=160&q=35&fm=webp 160w" sizes="(max-width: 640px) 80px, 160px" alt="Barberia" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
-          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Barberia</span></div>
+
+        <!-- Categoría 2: Barbería -->
+        <a href="/app/cliente/buscar?cat=Barbería" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">✂️</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Barbería</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cortes de cabello y cuidado de barba</p>
+          </div>
         </a>
-        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=160&q=35&fm=webp" srcset="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=80&q=25&fm=webp 80w, https://images.unsplash.com/photo-1604654894610-df63bc536371?w=160&q=35&fm=webp 160w" sizes="(max-width: 640px) 80px, 160px" alt="Unas" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
-          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Unas</span></div>
+
+        <!-- Categoría 3: Uñas -->
+        <a href="/app/cliente/buscar?cat=Uñas" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💅</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Uñas</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Manicura, pedicura y sistemas de uñas</p>
+          </div>
         </a>
-        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=160&q=35&fm=webp" srcset="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=80&q=25&fm=webp 80w, https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=160&q=35&fm=webp 160w" sizes="(max-width: 640px) 80px, 160px" alt="Estetica" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
-          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Estetica</span></div>
+
+        <!-- Categoría 4: Estética y Cejas -->
+        <a href="/app/cliente/buscar?cat=Estética%20y%20Cejas" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">👁️</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Estética y Cejas</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cuidado facial, cejas y pestañas</p>
+          </div>
         </a>
-        <a href="/app/cliente/buscar" style="position:relative;aspect-ratio:1;overflow:hidden;border:1px solid #333;display:block;text-decoration:none" onmouseover="this.querySelector('img').style.filter='grayscale(0%)';this.style.borderColor='#BA8F57'" onmouseout="this.querySelector('img').style.filter='grayscale(100%)';this.style.borderColor='#333'">
-          <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=160&q=35&fm=webp" srcset="https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=80&q=25&fm=webp 80w, https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=160&q=35&fm=webp 160w" sizes="(max-width: 640px) 80px, 160px" alt="Tatuajes" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;filter:grayscale(100%);transition:filter 0.5s"/>
-          <div style="position:absolute;bottom:0.75rem;left:0.75rem;right:0.75rem;background:#000;border:1px solid #BA8F57;padding:0.4rem;text-align:center"><span style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;letter-spacing:0.1em;font-weight:700;text-transform:uppercase;color:#fff">Tatuajes</span></div>
+
+        <!-- Categoría 5: Masajes y Spa -->
+        <a href="/app/cliente/buscar?cat=Masajes%20y%20Spa" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🧖</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Masajes y Spa</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Relajación y masajes terapéuticos</p>
+          </div>
         </a>
+
+        <!-- Categoría 6: Maquillaje -->
+        <a href="/app/cliente/buscar?cat=Maquillaje" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">💄</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Maquillaje</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Maquillaje profesional y de gala</p>
+          </div>
+        </a>
+
+        <!-- Categoría 7: Tatuajes -->
+        <a href="/app/cliente/buscar?cat=Tatuajes" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🖋️</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Tatuajes</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Estudios de tatuaje y arte corporal</p>
+          </div>
+        </a>
+
+        <!-- Categoría 8: Depilación -->
+        <a href="/app/cliente/buscar?cat=Depilación" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">✨</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Depilación</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Depilación con cera y tecnología láser</p>
+          </div>
+        </a>
+
+        <!-- Categoría 9: Podología -->
+        <a href="/app/cliente/buscar?cat=Podología" style="display:flex;align-items:center;gap:1.25rem;background:#18181b;border:1px solid rgba(255,255,255,0.05);padding:1.5rem;border-radius:12px;text-decoration:none;transition:all 0.3s" onmouseover="this.style.borderColor='#BA8F57';this.style.boxShadow='0 10px 30px -10px rgba(186,143,87,0.15)';this.querySelector('.cat-icon-container').style.transform='scale(1.1)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)';this.style.boxShadow='none';this.querySelector('.cat-icon-container').style.transform='scale(1)';">
+          <div class="cat-icon-container" style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,rgba(186,143,87,0.15),rgba(186,143,87,0.05));border:1px solid rgba(186,143,87,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:transform 0.3s">🦶</div>
+          <div>
+            <h4 style="font-family:'Oswald',sans-serif;font-size:1.1rem;color:#fff;margin:0;text-transform:uppercase;letter-spacing:0.04em">Podología</h4>
+            <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;color:rgba(255,255,255,0.45);margin:2px 0 0">Cuidado y salud integral del pie</p>
+          </div>
+        </a>
+
       </div>
     </div>
   </section>
