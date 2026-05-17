@@ -2,7 +2,7 @@
 import LayoutBase from '../layouts/LayoutBase.astro';
 ---
 
-<LayoutBase title="Portal de Soporte — CHIKILUKY" description="Acceso y registro para el equipo de soporte técnico de CHIKILUKY.">
+<LayoutBase title="Portal de Soporte — CHIKILUKY" description="Acceso exclusivo para el equipo de soporte técnico de CHIKILUKY.">
 
   <main style="min-height:100vh;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:2rem 1.5rem">
     
@@ -10,63 +10,35 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     <div style="position:absolute;bottom:0;left:0;right:0;top:0;background-image:linear-gradient(to right,#4f4f4f2e 1px,transparent 1px),linear-gradient(to bottom,#8080800a 1px,transparent 1px);background-size:14px 24px;pointer-events:none;z-index:1"></div>
     <div style="position:absolute;left:50%;transform:translateX(-50%);top:-10%;width:1000px;height:1000px;border-radius:50%;background:radial-gradient(circle 400px at 50% 300px,#fbfbfb36,#000);pointer-events:none;z-index:1"></div>
 
-    <div style="max-width:440px;width:100%;background:rgba(17,17,17,0.95);backdrop-filter:blur(16px);border:1px solid rgba(186,143,87,0.25);border-radius:16px;padding:2.5rem 2rem;box-shadow:0 25px 60px rgba(0,0,0,0.8);position:relative;z-index:2">
+    <div style="max-width:420px;width:100%;background:rgba(17,17,17,0.95);backdrop-filter:blur(16px);border:1px solid rgba(186,143,87,0.25);border-radius:16px;padding:3rem 2.25rem;box-shadow:0 25px 60px rgba(0,0,0,0.8);position:relative;z-index:2">
       
       {/* Isotipo y Logo */}
-      <div style="text-align:center;margin-bottom:2rem">
+      <div style="text-align:center;margin-bottom:2.25rem">
         <a href="/" style="text-decoration:none;display:inline-block">
-          <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.8rem;color:#ba8f57;letter-spacing:0.04em">CHIKILUKY</span>
-          <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.75rem;color:#555;letter-spacing:0.12em;text-transform:uppercase;display:block;margin-top:0.1rem">Soporte Técnico</span>
+          <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.9rem;color:#ba8f57;letter-spacing:0.04em">CHIKILUKY</span>
+          <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.7rem;color:#555;letter-spacing:0.12em;text-transform:uppercase;display:block;margin-top:0.25rem">Soporte Técnico</span>
         </a>
       </div>
 
-      {/* Selectores de Pestañas */}
-      <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:2rem">
-        <button id="tab-login" onclick="showTab('login')" style="background:none;border:none;border-bottom:2px solid #BA8F57;color:#fff;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.75rem;cursor:pointer;transition:all 0.2s">
-          Iniciar Sesión
-        </button>
-        <button id="tab-registro" onclick="showTab('registro')" style="background:none;border:none;border-bottom:2px solid transparent;color:#555;font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.75rem;cursor:pointer;transition:all 0.2s">
-          Crear Perfil
-        </button>
+      <div style="margin-bottom:1.75rem;text-align:center">
+        <h2 style="font-family:'Urbanist',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin:0 0 0.4rem">Acceso al Panel Administrativo</h2>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.45);margin:0">
+          Inicia sesión con tus credenciales de administrador o soporte técnico.
+        </p>
       </div>
 
       {/* ── FORMULARIO: INICIAR SESIÓN ── */}
       <form id="form-login" style="display:flex;flex-direction:column;gap:1.25rem">
         <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Email Corporativo</label>
+          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Email Corporativo</label>
           <input type="email" name="email" required placeholder="correo@soporte.chikiluky.app" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Contraseña</label>
+          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Contraseña</label>
           <input type="password" name="password" required placeholder="••••••••" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
         </div>
-        <button type="submit" style="background:#BA8F57;color:#000;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:1rem;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-top:0.5rem" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#BA8F57'">
+        <button type="submit" style="background:#BA8F57;color:#000;font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:1rem;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-top:0.5rem" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#BA8F57'">
           Ingresar al Panel
-        </button>
-      </form>
-
-      {/* ── FORMULARIO: CREAR PERFIL ── */}
-      <form id="form-registro" style="display:none;flex-direction:column;gap:1.25rem">
-        <input type="hidden" name="role" value="administrador"/>
-        
-        <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Nombre Completo</label>
-          <input type="text" name="full_name" required placeholder="Nombre Apellido" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Teléfono</label>
-          <input type="tel" name="telefono" placeholder="+58 412 1234567" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Email de Soporte</label>
-          <input type="email" name="email" required placeholder="correo@soporte.chikiluky.app" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.4rem">
-          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Contraseña</label>
-          <input type="password" name="password" required placeholder="Min. 6 caracteres" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
-        </div>
-        <button type="submit" style="background:#BA8F57;color:#000;font-family:'Hanken Grotesk',sans-serif;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:1rem;border:none;border-radius:8px;cursor:pointer;transition:all 0.2s;margin-top:0.5rem" onmouseover="this.style.background='#fff'" onmouseout="this.style.background='#BA8F57'">
-          Crear Cuenta de Soporte
         </button>
       </form>
 
@@ -79,22 +51,6 @@ import LayoutBase from '../layouts/LayoutBase.astro';
 
   {/* Estilos e Interacciones Dinámicas */}
   <script is:inline>
-    window.showTab = function(tabName) {
-      const isLogin = tabName === 'login';
-      document.getElementById('form-login').style.display = isLogin ? 'flex' : 'none';
-      document.getElementById('form-registro').style.display = isLogin ? 'none' : 'flex';
-      
-      document.getElementById('tab-login').style.color = isLogin ? '#fff' : '#555';
-      document.getElementById('tab-login').style.borderBottomColor = isLogin ? '#BA8F57' : 'transparent';
-      
-      document.getElementById('tab-registro').style.color = isLogin ? '#555' : '#BA8F57';
-      document.getElementById('tab-registro').style.borderBottomColor = isLogin ? 'transparent' : '#BA8F57';
-
-      // Limpiar errores
-      const statusEl = document.getElementById('status-container');
-      if (statusEl) statusEl.innerHTML = '';
-    };
-
     function showStatus(msg, isError = true) {
       const container = document.getElementById('status-container');
       if (!container) return;
@@ -141,44 +97,6 @@ import LayoutBase from '../layouts/LayoutBase.astro';
 
         // Redirigir al escritorio de soporte
         window.location.href = data.redirectTo || '/app/soporte/escritorio';
-      } catch (err) {
-        showStatus('Error de conexión con el servidor.');
-        setLoading(btn, false);
-      }
-    });
-
-    // Interceptar Registro
-    document.getElementById('form-registro').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const statusEl = document.getElementById('status-container');
-      statusEl.innerHTML = '';
-
-      const btn = e.target.querySelector('button[type="submit"]');
-      setLoading(btn, true);
-
-      try {
-        const res = await fetch('/api/auth/registro', {
-          method: 'POST',
-          body: new FormData(e.target)
-        });
-        const data = await res.json();
-
-        if (!res.ok) {
-          showStatus(data.error || 'Error al crear la cuenta.');
-          setLoading(btn, false);
-          return;
-        }
-
-        if (data.autoLogin && data.redirectTo) {
-          window.location.href = data.redirectTo;
-          return;
-        }
-
-        showStatus(data.message || 'Cuenta creada. Revisa tu email para confirmar.', false);
-        e.target.reset();
-        setTimeout(() => {
-          window.showTab('login');
-        }, 2500);
       } catch (err) {
         showStatus('Error de conexión con el servidor.');
         setLoading(btn, false);
