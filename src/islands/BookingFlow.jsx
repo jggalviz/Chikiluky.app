@@ -441,7 +441,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
       <div style={{
         background: '#111',
         border: '1px solid rgba(186, 143, 87, 0.3)',
-        borderRadius: '0.85rem',
+        borderRadius: '0px',
         padding: '2.5rem 2rem',
         textAlign: 'center',
         boxShadow: '0 20px 50px rgba(0,0,0,0.9)'
@@ -488,7 +488,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
         <div style={{
           background: '#0a0a0a',
           border: '1px solid rgba(186, 143, 87, 0.08)',
-          borderRadius: '0.75rem',
+          borderRadius: '0px',
           padding: '1.5rem',
           marginBottom: '2.25rem',
           textAlign: 'left'
@@ -608,7 +608,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
               width: '100%',
               background: '#ba8f57',
               border: 'none',
-              borderRadius: '2rem',
+              borderRadius: '0px',
               padding: '0.9rem',
               fontSize: '0.85rem',
               fontFamily: "'Urbanist', sans-serif",
@@ -658,7 +658,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
       {/* ── PASO 1: Catálogo de Servicios ── */}
       {paso === 1 && (
-        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.25rem' }}>
+        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0px', padding: '1.5rem', marginBottom: '1.25rem' }}>
           <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
             1 · Elige un Servicio
           </span>
@@ -674,7 +674,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                     display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '1rem', background: servicio?.id === s.id ? 'rgba(186,143,87,0.12)' : '#161616',
                     border: servicio?.id === s.id ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.03)',
-                    borderRadius: '0.75rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left'
+                    borderRadius: '0px', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left'
                   }}
                   onMouseOver={(e) => e.currentTarget.style.borderColor = 'rgba(186,143,87,0.4)'}
                   onMouseOut={(e) => e.currentTarget.style.borderColor = servicio?.id === s.id ? '#ba8f57' : 'rgba(255,255,255,0.03)'}
@@ -704,7 +704,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
       {/* ── PASO 2: Selección de Especialista / Staff ── */}
       {paso === 2 && (
-        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.25rem' }}>
+        <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0px', padding: '1.5rem', marginBottom: '1.25rem' }}>
           <button
             onClick={() => setPaso(1)}
             style={{
@@ -734,7 +734,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       display: 'flex', alignItems: 'center', gap: '1rem',
                       padding: '1rem', background: activo ? 'rgba(186,143,87,0.12)' : '#161616',
                       border: activo ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.03)',
-                      borderRadius: '0.85rem', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', width: '100%',
+                      borderRadius: '0px', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', width: '100%',
                       outline: 'none'
                     }}
                     onMouseOver={(e) => e.currentTarget.style.borderColor = 'rgba(186,143,87,0.4)'}
@@ -789,7 +789,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
             ← Volver {tieneVariosEspecialistas ? `al ${getEspecialistaLabel(categoria)}` : 'a los Servicios'}
           </button>
           {/* Calendario horizontal */}
-          <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1rem' }}>
+          <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0px', padding: '1.5rem', marginBottom: '1rem' }}>
             <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
               3.A · Elige la Fecha
             </span>
@@ -802,7 +802,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                     onClick={() => elegirDia(d)}
                     style={{
                       fontFamily: "'Urbanist', sans-serif", fontWeight: 700, fontSize: '0.82rem',
-                      padding: '0.75rem 1rem', borderRadius: '0.75rem', cursor: 'pointer',
+                      padding: '0.75rem 1rem', borderRadius: '0px', cursor: 'pointer',
                       border: activo ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.03)',
                       background: activo ? '#ba8f57' : '#161616',
                       color: activo ? '#111' : '#ba8f57',
@@ -820,7 +820,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
           {/* Slots de Hora */}
           {dia && (
-            <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem', marginBottom: '1.25rem' }}>
+            <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0px', padding: '1.5rem', marginBottom: '1.25rem' }}>
               <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
                 3.B · Elige la Hora
               </span>
@@ -835,7 +835,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       onClick={() => { setHora(slot); setPaso(4); }}
                       style={{
                         fontFamily: "'Urbanist', sans-serif", fontWeight: 700, fontSize: '0.8rem',
-                        padding: '0.65rem 0.5rem', borderRadius: '0.5rem', cursor: ocupado ? 'not-allowed' : 'pointer',
+                        padding: '0.65rem 0.5rem', borderRadius: '0px', cursor: ocupado ? 'not-allowed' : 'pointer',
                         border: activo ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.02)',
                         background: activo ? '#ba8f57' : '#161616',
                         color: activo ? '#111' : (ocupado ? '#333' : '#eee'),
@@ -858,7 +858,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           
           {/* Ficha Resumen de Cita */}
-          <div style={{ background: 'rgba(186, 143, 87, 0.05)', border: '1px solid rgba(186, 143, 87, 0.25)', borderRadius: '1rem', padding: '1.25rem' }}>
+          <div style={{ background: 'rgba(186, 143, 87, 0.05)', border: '1px solid rgba(186, 143, 87, 0.25)', borderRadius: '0px', padding: '1.25rem' }}>
             <p style={{ margin: '0 0 0.25rem 0', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#888', letterSpacing: '0.04em' }}>RESUMEN DE TU SELECCIÓN</p>
             <p style={{ margin: '0 0 0.5rem 0', fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '1.1rem', color: '#fff' }}>{servicio.nombre}</p>
             
@@ -875,7 +875,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
           </div>
 
           {/* Selector de Pasarela Condicional */}
-          <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '1rem', padding: '1.5rem' }}>
+          <div style={{ background: '#111', border: '1px solid rgba(186,143,87,0.18)', borderRadius: '0px', padding: '1.5rem' }}>
             <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: '#ba8f57', marginBottom: '1rem', display: 'block' }}>
               4 · Confirmación de Pago
             </span>
@@ -888,7 +888,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                   style={{
                     padding: '0.85rem 0.5rem', background: metodoPago === 'pago_movil' ? 'rgba(186,143,87,0.15)' : '#161616',
                     border: metodoPago === 'pago_movil' ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.02)',
-                    borderRadius: '0.75rem', color: metodoPago === 'pago_movil' ? '#ba8f57' : '#aaa',
+                    borderRadius: '0px', color: metodoPago === 'pago_movil' ? '#ba8f57' : '#aaa',
                     cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem', transition: 'all 0.2s'
                   }}
                 >
@@ -907,7 +907,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                   style={{
                     padding: '0.85rem 0.5rem', background: metodoPago === 'zelle' ? 'rgba(186,143,87,0.15)' : '#161616',
                     border: metodoPago === 'zelle' ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.02)',
-                    borderRadius: '0.75rem', color: metodoPago === 'zelle' ? '#ba8f57' : '#aaa',
+                    borderRadius: '0px', color: metodoPago === 'zelle' ? '#ba8f57' : '#aaa',
                     cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem', transition: 'all 0.2s'
                   }}
                 >
@@ -927,7 +927,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                   style={{
                     padding: '0.85rem 0.5rem', background: metodoPago === 'efectivo' ? 'rgba(186,143,87,0.15)' : '#161616',
                     border: metodoPago === 'efectivo' ? '1px solid #ba8f57' : '1px solid rgba(255,255,255,0.02)',
-                    borderRadius: '0.75rem', color: metodoPago === 'efectivo' ? '#ba8f57' : '#aaa',
+                    borderRadius: '0px', color: metodoPago === 'efectivo' ? '#ba8f57' : '#aaa',
                     cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.45rem', transition: 'all 0.2s'
                   }}
                 >
@@ -945,7 +945,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
             
             {/* Formulario Pago Móvil */}
             {metodoPago === 'pago_movil' && (
-              <div style={{ background: '#0a0a0a', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '0.75rem', padding: '1.25rem', marginBottom: '1.5rem' }}>
+              <div style={{ background: '#0a0a0a', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '0px', padding: '1.25rem', marginBottom: '1.5rem' }}>
                 <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.7rem', color: '#ba8f57', fontWeight: 'bold', letterSpacing: '0.05em', textTransform: 'uppercase' }}>CUENTA DESTINO PROFESIONAL</p>
                 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.78rem', color: '#ccc' }}>
@@ -1028,7 +1028,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                       placeholder="Ej: Mercantil"
                       value={bancoEmisor}
                       onInput={(e) => setBancoEmisor(e.target.value)}
-                      style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                      style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                     />
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
@@ -1039,7 +1039,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                         placeholder="Ej: 948201"
                         value={referencia}
                         onInput={(e) => setReferencia(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.6rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                       />
                     </div>
                     <div>
@@ -1048,7 +1048,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                         type="datetime-local"
                         value={fechaPago}
                         onChange={(e) => setFechaPago(e.target.value)}
-                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0.4rem', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
+                        style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.55rem 0.75rem', color: '#fff', fontSize: '0.83rem', outline: 'none' }}
                       />
                     </div>
                   </div>
@@ -1058,7 +1058,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
             {/* Formulario Zelle */}
             {metodoPago === 'zelle' && (
-              <div style={{ background: '#0a0a0a', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '0.75rem', padding: '1.25rem', marginBottom: '1.5rem' }}>
+              <div style={{ background: '#0a0a0a', border: '1px solid rgba(186,143,87,0.15)', borderRadius: '0px', padding: '1.25rem', marginBottom: '1.5rem' }}>
                 <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.7rem', color: '#ba8f57', fontWeight: 'bold', letterSpacing: '0.05em', textTransform: 'uppercase' }}>DATOS ZELLE DESTINO</p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1rem', fontSize: '0.78rem', color: '#ccc' }}>
@@ -1129,7 +1129,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
             {/* Formulario Efectivo */}
             {metodoPago === 'efectivo' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(186,143,87,0.05)', border: '1px solid rgba(186,143,87,0.12)', borderRadius: '0.75rem', padding: '1rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(186,143,87,0.05)', border: '1px solid rgba(186,143,87,0.12)', borderRadius: '0px', padding: '1rem', marginBottom: '1.5rem' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -1143,7 +1143,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
 
             {/* Mensaje de Error */}
             {errorMsg && (
-              <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '0.5rem', padding: '0.75rem', color: '#ef4444', fontSize: '0.78rem', marginBottom: '1rem', textAlign: 'center', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', letterSpacing: '0.01em', textTransform: 'uppercase' }}>
+              <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '0px', padding: '0.75rem', color: '#ef4444', fontSize: '0.78rem', marginBottom: '1rem', textAlign: 'center', fontFamily: "'Urbanist', sans-serif", fontWeight: '700', letterSpacing: '0.01em', textTransform: 'uppercase' }}>
                 {errorMsg}
               </div>
             )}
@@ -1155,7 +1155,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                 onClick={() => setPaso(3)}
                 style={{
                   flex: 1, padding: '0.85rem', background: '#1a1a1a', border: '1px solid rgba(255,255,255,0.05)',
-                  borderRadius: '2rem', color: '#aaa', fontFamily: "'Urbanist', sans-serif", fontWeight: 700,
+                  borderRadius: '0px', color: '#aaa', fontFamily: "'Urbanist', sans-serif", fontWeight: 700,
                   fontSize: '0.82rem', cursor: cargando ? 'not-allowed' : 'pointer'
                 }}
               >
@@ -1167,7 +1167,7 @@ export default function BookingFlow({ negocioId, clienteId, servicios, tasaBcvIn
                 onClick={confirmarReserva}
                 style={{
                   flex: 2, padding: '0.85rem', background: cargando ? '#333' : '#ba8f57',
-                  border: 'none', borderRadius: '2rem', color: cargando ? '#555' : '#111',
+                  border: 'none', borderRadius: '0px', color: cargando ? '#555' : '#111',
                   fontFamily: "'Urbanist', sans-serif", fontWeight: 800, fontSize: '0.82rem',
                   cursor: cargando ? 'not-allowed' : 'pointer', letterSpacing: '0.03em', transition: 'all 0.2s'
                 }}
