@@ -1,24 +1,12 @@
 ---
 import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { supabase } from '../../../lib/supabase.js';
-import FormularioServicio from '../../../islands/FormularioServicio.jsx';
-import { convertirRefABs } from '../../../utils/currency.js';
+import { getSession } from '../../../lib/session.js';
+import GestionServicios from '../../../islands/GestionServicios.jsx';
 
 // ── Validación de sesión y rol ────────────────────────────────────────────────
-const authHeader = Astro.request.headers.get('cookie') ?? '';
-const token = authHeader.match(/sb-access-token=([^;]+)/)?.[1];
-
-const { data: { user } } = token
-  ? await supabase.auth.getUser(token)
-  : { data: { user: null } };
-
+const { user, perfil } = await getSession(Astro.request);
 if (!user) return Astro.redirect('/');
-
-const { data: perfil } = await supabase
-  .from('perfiles')
-  .select('full_name, role')
-  .eq('id', user.id)
-  .single();
 
 if (!perfil || !['experto', 'administrador'].includes(perfil.role)) {
   return Astro.redirect('/app/cliente/buscar');
@@ -33,7 +21,6 @@ const { data: negocio } = await supabase
 
 // ── Procesar POST del formulario (SSR nativo) ─────────────────────────────────
 let formError  = '';
-let formExito  = false;
 
 if (Astro.request.method === 'POST' && negocio) {
   const form       = await Astro.request.formData();
@@ -41,22 +28,49 @@ if (Astro.request.method === 'POST' && negocio) {
 
   if (accion === 'crear') {
     const nombre      = String(form.get('nombre')       ?? '').trim();
+    const categoria   = String(form.get('categoria')    ?? '').trim();
     const duracion    = parseInt(String(form.get('duracion')   ?? '60'));
     const precio_usd  = parseFloat(String(form.get('precio_usd') ?? '0'));
     const precio_bs   = parseFloat(String(form.get('precio_bs')  ?? '0'));
 
-    if (!nombre || isNaN(precio_usd) || precio_usd <= 0) {
-      formError = 'Nombre y precio en USD son requeridos.';
+    if (!nombre || !categoria || isNaN(precio_usd) || precio_usd <= 0) {
+      formError = 'Nombre, categoría y precio en USD son requeridos.';
     } else {
       const { error } = await supabase.from('servicios').insert({
         negocio_id:   negocio.id,
         nombre,
+        categoria,
         duracion_min: isNaN(duracion) ? 60 : duracion,
         precio_usd,
         precio_bs:    isNaN(precio_bs) ? 0 : precio_bs,
       });
       if (error) formError = error.message;
-      else formExito = true;
+    }
+  }
+
+  if (accion === 'editar') {
+    const servicioId  = String(form.get('servicio_id')  ?? '');
+    const nombre      = String(form.get('nombre')       ?? '').trim();
+    const categoria   = String(form.get('categoria')    ?? '').trim();
+    const duracion    = parseInt(String(form.get('duracion')   ?? '60'));
+    const precio_usd  = parseFloat(String(form.get('precio_usd') ?? '0'));
+    const precio_bs   = parseFloat(String(form.get('precio_bs')  ?? '0'));
+
+    if (!servicioId || !nombre || !categoria || isNaN(precio_usd) || precio_usd <= 0) {
+      formError = 'Todos los campos son requeridos para editar.';
+    } else {
+      const { error } = await supabase
+        .from('servicios')
+        .update({
+          nombre,
+          categoria,
+          duracion_min: isNaN(duracion) ? 60 : duracion,
+          precio_usd,
+          precio_bs:    isNaN(precio_bs) ? 0 : precio_bs,
+        })
+        .eq('id', servicioId)
+        .eq('negocio_id', negocio.id);
+      if (error) formError = error.message;
     }
   }
 
@@ -67,20 +81,21 @@ if (Astro.request.method === 'POST' && negocio) {
         .from('servicios')
         .delete()
         .eq('id', servicioId)
-        .eq('negocio_id', negocio.id); // RLS extra por negocio
+        .eq('negocio_id', negocio.id);
     }
   }
 
   // POST-redirect-GET para evitar resubmit
-  if (!formError) return Astro.redirect('/app/experto/precios');
+  if (!formError) return Astro.redirect('/app/experto/servicios');
 }
 
 // ── Listar servicios actuales ─────────────────────────────────────────────────
 const { data: servicios } = negocio
   ? await supabase
       .from('servicios')
-      .select('id, nombre, duracion_min, precio_usd, precio_bs')
+      .select('id, nombre, categoria, duracion_min, precio_usd, precio_bs')
       .eq('negocio_id', negocio.id)
+      .order('categoria', { ascending: true })
       .order('precio_usd', { ascending: true })
   : { data: [] };
 
@@ -94,8 +109,8 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
 ---
 
 <LayoutBase
-  title="Gestión de Tarifas — CHIKILUKY Pro"
-  description="Configura los servicios y precios de tu negocio en CHIKILUKY."
+  title="Gestión de Servicios — CHIKILUKY Pro"
+  description="Configura los servicios, categorías, tiempos y precios de tu negocio en CHIKILUKY."
 >
 
   <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
@@ -106,7 +121,7 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
     <nav style="display:flex;align-items:center;gap:0.4rem">
       <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Escritorio</a>
       <a href="/app/experto/agenda" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Agenda</a>
-      <a href="/app/experto/precios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Tarifas</a>
+      <a href="/app/experto/servicios" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Servicios</a>
       <a href="/app/experto/pagos" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Pagos</a>
       <a href="/app/experto/soporte" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Soporte</a>
       <span style="color:#262626;margin:0 0.2rem">|</span>
@@ -122,8 +137,8 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
         <p style="font-size:0.68rem;font-family:'Urbanist',sans-serif;font-weight:bold;letter-spacing:0.16em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.3rem">
           Panel de control
         </p>
-        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,1.9rem);color:#fff;margin:0 0 0.75rem 0;letter-spacing:-0.02em">
-          Tarifas y Servicios
+        <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.4rem,4vw,1.9rem);color:#fff;margin:0 0 0.75rem 0;letter-spacing:-0.02em;text-transform:uppercase">
+          Mis Servicios
         </h1>
         <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75rem;margin-top:0.4rem">
           {negocio && (
@@ -184,117 +199,32 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
 
       {negocio && (
         <>
-
-          <!-- Formulario de Servicio Preact Island (Cálculo en Tiempo Real + Tasa BCV) -->
-          <FormularioServicio client:only="preact" tasaBcvInicial={tasaBcv} />
-
           {formError && (
             <p style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#ef4444;margin-bottom:1.5rem;padding:0.75rem 0.9rem;background:rgba(239,68,68,0.05);border-radius:0px;border-left:2px solid #ef4444">
               {formError}
             </p>
           )}
 
-          <!-- ════════════════════════════════════
-               TABLA DE SERVICIOS ACTUALES
-          ═════════════════════════════════════ -->
-          <section style="margin-top:2.5rem">
-            <h2 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#fff;margin:0 0 1.25rem 0;display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:0.04em">
-              Servicios publicados
-              <span style="font-family:'Lato',sans-serif;font-size:0.78rem;font-weight:400;color:#555;text-transform:none;letter-spacing:0">
-                {servicios?.length ?? 0} en total
-              </span>
-            </h2>
-
-            {(!servicios || servicios.length === 0) ? (
-              <div style="background:#0a0a0a;border:1px dashed #262626;border-radius:0px;padding:3rem;text-align:center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem;display:block">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-                <p style="font-family:'Lato',sans-serif;font-size:0.88rem;color:#737373;margin:0">
-                  Aún no tienes servicios registrados. Añade el primero usando el formulario de arriba.
-                </p>
-              </div>
-            ) : (
-              <div style="display:flex;flex-direction:column;gap:0.6rem">
-                {servicios.map((s) => (
-                  <div style="
-                    display:flex;align-items:center;justify-content:space-between;gap:0.75rem;
-                    background:#0a0a0a;
-                    border:1px solid #1a1a1a;
-                    border-radius:0px;
-                    padding:1.1rem 1.3rem;
-                    transition:border-color 0.18s;
-                  "
-                  onmouseover="this.style.borderColor='#404040'"
-                  onmouseout="this.style.borderColor='#1a1a1a'">
-
-                    <!-- Info del servicio -->
-                    <div style="flex:1;min-width:0">
-                      <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.95rem;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:0.02em">
-                        {s.nombre}
-                      </p>
-                      <p style="font-family:'Lato',sans-serif;font-size:0.72rem;color:#737373;margin:0.25rem 0 0;display:flex;align-items:center;gap:0.35rem">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#525252">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        <span>{s.duracion_min} minutos</span>
-                      </p>
-                    </div>
-
-                    <!-- Precios -->
-                    <div style="text-align:right;flex-shrink:0;margin-right:0.5rem">
-                      <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.05rem;color:#ba8f57;margin:0">
-                        ${s.precio_usd?.toFixed(2)}
-                      </p>
-                      <p style="font-family:'Lato',sans-serif;font-size:0.68rem;color:#525252;margin:0.12rem 0 0;text-transform:uppercase;font-weight:bold">
-                        {convertirRefABs(s.precio_usd, tasaBcv)}
-                      </p>
-                    </div>
-
-                    <!-- Eliminar -->
-                    <form method="POST" style="flex-shrink:0;margin:0">
-                      <input type="hidden" name="_accion" value="eliminar" />
-                      <input type="hidden" name="servicio_id" value={s.id} />
-                      <button
-                        type="submit"
-                        title="Eliminar servicio"
-                        onclick="return confirm('¿Seguro que deseas eliminar este servicio?')"
-                        style="
-                          background:transparent;border:1px solid rgba(239,68,68,0.25);
-                          color:#ef4444;padding:0.35rem 0.65rem;border-radius:0px;
-                          cursor:pointer;font-size:0.74rem;font-weight:bold;transition:all 0.18s;
-                        "
-                        onmouseover="this.style.background='rgba(239,68,68,0.05)';this.style.borderColor='rgba(239,68,68,0.5)'"
-                        onmouseout="this.style.background='transparent';this.style.borderColor='rgba(239,68,68,0.25)'"
-                      >
-                        ✕
-                      </button>
-                    </form>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-
+          {/* Isla Unificada de Preact (Formulario Dinámico + Lista Interactiva de Servicios) */}
+          <GestionServicios 
+            client:only="preact" 
+            serviciosIniciales={servicios ?? []} 
+            tasaBcvInicial={tasaBcv}
+            negocioName={negocio.name}
+          />
         </>
       )}
 
     </div>
   </main>
 
-  <!-- Script interactivo premium de sincronización BCV en tiempo real -->
+  <!-- Script interactivo de sincronización BCV en tiempo real -->
   <script is:inline>
     const btnSync = document.getElementById('btn-sync-bcv');
     const syncIcon = document.getElementById('sync-icon');
 
     if (btnSync) {
       btnSync.addEventListener('click', async () => {
-        // Deshabilitar botón y animar el icono
         btnSync.disabled = true;
         btnSync.style.opacity = '0.6';
         btnSync.style.cursor = 'not-allowed';
@@ -303,7 +233,6 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
         }
 
         try {
-          // GET al endpoint del scraper oficial del BCV
           const res = await fetch('/api/update-bcv', { method: 'GET' });
           const data = await res.json();
 
