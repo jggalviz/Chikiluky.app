@@ -24,88 +24,72 @@ const categorias = [
   'Depilación',
   'Podología',
 ];
-
-const iconoCategoria: Record<string, string> = {
-  'Peluquería':     '💇',
-  'Barbería':       '✂️',
-  'Uñas':           '💅',
-  'Estética y Cejas':'👁️',
-  'Masajes y Spa':  '🧖',
-  'Maquillaje':     '💄',
-  'Tatuajes':       '🖋️',
-  'Depilación':     '✨',
-  'Podología':      '🦶',
-};
 ---
 
 <LayoutBase
-  title="Buscar Salón"
+  title="Buscar Salón — CHIKILUKY"
   description="Encuentra y agenda tu cita en barberías y salones de Caracas."
 >
 
   <!-- ═══════════════════════════════════════
        HEADER DE NAVEGACIÓN
   ════════════════════════════════════════ -->
-  <header style="
-    position:sticky;top:0;z-index:40;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:0.9rem 1.5rem;
-    background:rgba(17,17,17,0.92);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid rgba(186,143,87,0.15);
-  ">
-    <!-- Isotipo -->
-    <a href="/app/cliente/buscar" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">
-      <span class="brand-text" style="font-size:1.2rem;color:#ba8f57">CHIKILUKY</span>
-      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#666;letter-spacing:0.12em;text-transform:uppercase">.app</span>
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(10,10,10,0.95);backdrop-filter:blur(14px);border-bottom:1px solid #262626">
+    <a href="/app/cliente/buscar" style="text-decoration:none">
+      <span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> 
+      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#555;letter-spacing:0.1em;text-transform:uppercase">.app</span>
     </a>
-
-    <nav style="display:flex;align-items:center;gap:0.5rem">
+    <nav style="display:flex;align-items:center;gap:0.4rem">
       {perfil && ['experto','administrador'].includes(perfil.role) && (
-        <a href="/pro/dashboard" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.7rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Panel Pro</a>
+        <a href="/app/experto/escritorio" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#a3a3a3;text-decoration:none;padding:0.35rem 0.75rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#a3a3a3'">Panel Pro</a>
       )}
-      <a href="/app/cliente/buscar" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.7rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Buscar</a>
-      <span style="color:#2a2a2a">|</span>
-      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>
+      <a href="/app/cliente/buscar" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.35rem 0.75rem;border-radius:0px;background:rgba(186,143,87,0.06);border:1px solid rgba(186,143,87,0.15)">Buscar</a>
+      <span style="color:#262626;margin:0 0.2rem">|</span>
+      <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.76rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.25);padding:0.35rem 0.9rem;border-radius:0px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.06)'" onmouseout="this.style.background='transparent'">Salir</a>
     </nav>
   </header>
 
   <!-- ═══════════════════════════════════════
        HERO DE BÚSQUEDA
   ════════════════════════════════════════ -->
-  <section style="padding:3rem 1.5rem 2rem;text-align:center;background:#1a1a1a">
-    <p style="font-size:0.7rem;letter-spacing:0.18em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.6rem">Disponible ahora</p>
-    <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.4rem);color:#fff;margin-bottom:2rem">
+  <section style="padding:3.5rem 1.5rem 2.5rem;text-align:center;background:#0a0a0a;border-bottom:1px solid #1a1a1a">
+    <p style="font-size:0.68rem;font-family:'Urbanist',sans-serif;font-weight:bold;letter-spacing:0.18em;color:#ba8f57;text-transform:uppercase;margin-bottom:0.6rem">Disponible ahora</p>
+    <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:clamp(1.6rem,4vw,2.4rem);color:#fff;margin:0 0 2rem;letter-spacing:-0.02em">
       ¿A qué salón vas hoy?
     </h1>
 
     <!-- Barra de búsqueda + filtro de categoría -->
     <div style="display:flex;flex-direction:column;gap:0.75rem;max-width:580px;margin:0 auto" class="search-bar">
       <div style="position:relative">
-        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#ba8f57;font-size:1rem;pointer-events:none">🔍</span>
+        <span style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#ba8f57;pointer-events:none;display:flex;align-items:center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
         <input
           id="input-busqueda"
           type="search"
           placeholder="Busca por nombre o dirección…"
           oninput="filtrarNegocios()"
           style="
-            width:100%;padding:0.8rem 1rem 0.8rem 2.6rem;
-            background:#111;
-            border:1px solid rgba(186,143,87,0.3);
-            border-radius:0.6rem;
+            width:100%;padding:0.9rem 1rem 0.9rem 2.8rem;
+            background:#050505;
+            border:1px solid #262626;
+            border-radius:0px;
             color:#fff;
-            font-family:'Lato',sans-serif;font-size:0.95rem;
+            font-family:'Lato',sans-serif;font-size:0.92rem;
             outline:none;box-sizing:border-box;
           "
           onfocus="this.style.borderColor='#ba8f57'"
-          onblur="this.style.borderColor='rgba(186,143,87,0.3)'"
+          onblur="this.style.borderColor='#262626'"
         />
       </div>
 
       <!-- Filtros de categoría minimalista — scroll horizontal suave con flechas de navegación -->
       <div class="filtros-wrapper">
         <button class="scroll-arrow left-arrow" id="buscar-arrow-left" onclick="scrollBuscarMenu(-200)" aria-label="Desplazar izquierda">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -123,7 +107,7 @@ const iconoCategoria: Record<string, string> = {
         </div>
 
         <button class="scroll-arrow right-arrow" id="buscar-arrow-right" onclick="scrollBuscarMenu(200)" aria-label="Desplazar derecha">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -132,100 +116,102 @@ const iconoCategoria: Record<string, string> = {
   </section>
 
   <!-- ═══════════════════════════════════════
-       GRID DE NEGOCIOS (SSR)
+       LISTA DE NEGOCIOS (SSR) - UNA SOLA COLUMNA
   ════════════════════════════════════════ -->
-  <main style="padding:2rem 1.5rem 4rem;background:#1a1a1a;flex:1">
+  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;flex:1">
     <div class="max-w-6xl mx-auto">
 
       {negociosError && (
-        <p style="text-align:center;color:#f87171;font-size:0.9rem;padding:2rem">
+        <p style="text-align:center;color:#ef4444;font-family:'Urbanist',sans-serif;font-size:0.9rem;padding:2rem">
           Error al cargar los salones. Intenta de nuevo más tarde.
         </p>
       )}
 
       {(!negocios || negocios.length === 0) && !negociosError && (
-        <div style="text-align:center;padding:4rem 1rem">
-          <p style="font-size:2rem;margin-bottom:1rem">🏪</p>
-          <p style="font-family:'Urbanist',sans-serif;font-size:1.1rem;color:#666">
-            Aún no hay salones registrados 
+        <div style="text-align:center;padding:5rem 1rem;border:1px solid #1a1a1a;background:#0a0a0a;border-radius:0px;max-width:800px;margin:0 auto">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1.25rem;display:block">
+            <rect x="2" y="7" width="20" height="14" rx="0" ry="0"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#fff;margin:0 0 0.35rem 0;text-transform:uppercase;letter-spacing:0.04em">
+            Aún no hay salones registrados
           </p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#444;margin-top:0.4rem">
-            ¿Tienes un negocio? <a href="/" style="color:#ba8f57;text-decoration:none">Regístralo aquí</a>
+          <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#555;margin:0">
+            ¿Tienes un negocio? <a href="/" style="color:#ba8f57;text-decoration:none;font-weight:bold">Regístralo aquí</a>
           </p>
         </div>
       )}
 
-      <!-- Grid de tarjetas -->
+      <!-- Lista de tarjetas de una sola columna -->
       <div id="grid-negocios" style="
-        display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
-        gap:1.25rem;
+        display:flex;
+        flex-direction:column;
+        gap:0.75rem;
+        max-width:800px;
+        margin:0 auto;
       ">
         {negocios?.map((negocio) => (
           <article
             data-nombre={negocio.name.toLowerCase()}
             data-cat={negocio.categoria ?? 'Otros'}
-            style="
-              background:#111;
-              border:1px solid rgba(186,143,87,0.18);
-              border-radius:1rem;
-              padding:1.5rem;
-              display:flex;flex-direction:column;gap:0.75rem;
-              transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-              cursor:default;
-            "
-            onmouseover="this.style.borderColor='rgba(186,143,87,0.55)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(186,143,87,0.08)'"
-            onmouseout="this.style.borderColor='rgba(186,143,87,0.18)';this.style.transform='none';this.style.boxShadow='none'"
+            class="negocio-card"
           >
-            <!-- Badge de categoría -->
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <span style="
-                font-family:'Urbanist',sans-serif;font-size:0.7rem;font-weight:700;
-                letter-spacing:0.1em;text-transform:uppercase;
-                color:#ba8f57;background:rgba(186,143,87,0.1);
-                padding:0.2rem 0.6rem;border-radius:9999px;
-              ">
-                {iconoCategoria[negocio.categoria] ?? '🏪'} {negocio.categoria ?? 'Salón'}
-              </span>
-              <span style="font-size:0.72rem;color:#555;font-family:'Lato',sans-serif">📍 Caracas</span>
+            <!-- Info del negocio -->
+            <div class="negocio-info">
+              <!-- Top Row: Badge de Categoría + Caracas -->
+              <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">
+                <span style="
+                  font-family:'Urbanist',sans-serif;font-size:0.68rem;font-weight:900;
+                  letter-spacing:0.08em;text-transform:uppercase;
+                  color:#ba8f57;background:rgba(186,143,87,0.06);
+                  border:1px solid rgba(186,143,87,0.15);
+                  padding:0.25rem 0.65rem;border-radius:0px;
+                ">
+                  {negocio.categoria ?? 'Salón'}
+                </span>
+                <span style="font-size:0.72rem;color:#525252;font-family:'Lato',sans-serif;display:inline-flex;align-items:center;gap:0.25rem">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  Caracas
+                </span>
+              </div>
+
+              <!-- Nombre -->
+              <h2 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.15rem;color:#fff;line-height:1.2;margin:0.25rem 0 0.15rem 0;text-transform:uppercase;letter-spacing:0.02em">
+                {negocio.name}
+              </h2>
+
+              <!-- Descripción -->
+              {negocio.descripcion && (
+                <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#737373;line-height:1.5;margin:0">
+                  {negocio.descripcion}
+                </p>
+              )}
+
+              <!-- Dirección -->
+              {negocio.address && (
+                <p style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#525252;margin:0.2rem 0 0 0;display:flex;align-items:center;gap:0.3rem">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ba8f57">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                  {negocio.address}
+                </p>
+              )}
             </div>
 
-            <!-- Nombre -->
-            <h2 style="font-family:'Urbanist',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;line-height:1.25;margin:0">
-              {negocio.name}
-            </h2>
-
-            <!-- Descripción (truncada) -->
-            {negocio.descripcion && (
-              <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#777;line-height:1.55;margin:0;
-                         display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">
-                {negocio.descripcion}
-              </p>
-            )}
-
-            <!-- Dirección -->
-            {negocio.address && (
-              <p style="font-family:'Lato',sans-serif;font-size:0.78rem;color:#555;margin:0;display:flex;align-items:center;gap:0.3rem">
-                <span style="color:#ba8f57">📌</span> {negocio.address}
-              </p>
-            )}
-
             <!-- CTA -->
-            <a
-              href={`/app/cliente/reservar?id=${negocio.id}`}
-              style="
-                display:block;margin-top:auto;
-                background:#ba8f57;color:#1a1a1a;
-                font-family:'Urbanist',sans-serif;font-weight:700;font-size:0.88rem;
-                padding:0.65rem 1rem;border-radius:9999px;
-                text-align:center;text-decoration:none;letter-spacing:0.04em;
-                transition:background 0.18s;
-              "
-              onmouseover="this.style.background='#d4a96a'"
-              onmouseout="this.style.background='#ba8f57'"
-            >
-              Ver Agenda →
-            </a>
+            <div class="negocio-cta">
+              <a
+                href={`/app/cliente/reservar?id=${negocio.id}`}
+                class="cta-btn-link"
+              >
+                Ver Agenda →
+              </a>
+            </div>
           </article>
         ))}
       </div>
@@ -240,7 +226,7 @@ const iconoCategoria: Record<string, string> = {
   <!-- ═══════════════════════════════════════
        SCRIPT: Filtro cliente (< 1 KB)
   ════════════════════════════════════════ -->
-  <script>
+  <script is:inline>
     let catActiva = 'Todos';
 
     window.seleccionarCategoria = function(btn) {
@@ -303,12 +289,12 @@ const iconoCategoria: Record<string, string> = {
         return;
       }
 
-      // 1. Fase de Lectura (segura y libre de DOM invalidado)
+      // 1. Fase de Lectura
       const scrollLeft = scrollCont.scrollLeft;
       const scrollWidth = scrollCont.scrollWidth;
       const clientWidth = scrollCont.clientWidth;
 
-      // 2. Fase de Escritura (inmediata en el mismo frame para evitar invalidación cruzada)
+      // 2. Fase de Escritura
       const leftVisible = scrollLeft > 5;
       const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
       
@@ -372,11 +358,11 @@ const iconoCategoria: Record<string, string> = {
   }
   .filtros-wrapper::before {
     left: 0;
-    background: linear-gradient(to right, #1a1a1a, transparent);
+    background: linear-gradient(to right, #0a0a0a, transparent);
   }
   .filtros-wrapper::after {
     right: 0;
-    background: linear-gradient(to left, #1a1a1a, transparent);
+    background: linear-gradient(to left, #0a0a0a, transparent);
   }
 
   .filtros-scroll {
@@ -419,11 +405,11 @@ const iconoCategoria: Record<string, string> = {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(26, 26, 26, 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    width: 30px;
+    height: 30px;
+    border-radius: 0px;
+    background: #0a0a0a;
+    border: 1px solid #262626;
     color: rgba(255, 255, 255, 0.7);
     display: flex;
     align-items: center;
@@ -433,13 +419,12 @@ const iconoCategoria: Record<string, string> = {
     transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    box-shadow: none;
   }
   .scroll-arrow:hover {
-    background: #ba8f57;
-    color: #000;
+    background: rgba(186,143,87,0.06);
+    color: #ba8f57;
     border-color: #ba8f57;
-    box-shadow: 0 4px 14px rgba(186,143,87,0.4);
   }
   .scroll-arrow.visible {
     opacity: 1;
@@ -451,7 +436,60 @@ const iconoCategoria: Record<string, string> = {
   .scroll-arrow.right-arrow {
     right: -12px;
   }
+
+  /* Tarjetas en lista de una sola columna */
+  .negocio-card {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 0px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .negocio-card:hover {
+    border-color: #404040;
+  }
+  .negocio-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+  .negocio-cta {
+    flex-shrink: 0;
+  }
+  .cta-btn-link {
+    display: block;
+    background: #ba8f57;
+    color: #000;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: 900;
+    font-size: 0.78rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0px;
+    text-align: center;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .cta-btn-link:hover {
+    background: #fff;
+  }
+  @media (max-width: 640px) {
+    .negocio-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1.25rem;
+    }
+    .cta-btn-link {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
 </style>
-
-
-
