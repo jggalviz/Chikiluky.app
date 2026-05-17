@@ -22,6 +22,14 @@ export default function ClientDashboard({ clientUser, clientPerfil }) {
   const [profilePhone, setProfilePhone] = useState(clientPerfil?.telefono || '');
   const [profileEmail, setProfileEmail] = useState(clientUser?.email || '');
 
+  // Cambio de contraseña
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+
+  // Eliminar cuenta
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmationText, setDeleteConfirmationText] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState({ type: '', text: '' });
   const messagesEndRef = useRef(null);
@@ -184,6 +192,85 @@ export default function ClientDashboard({ clientUser, clientPerfil }) {
       console.error('[ClientDashboard] Error al actualizar perfil:', err.message);
       setStatusMsg({ type: 'error', text: 'No se pudo guardar la información del perfil.' });
     } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cambiar Contraseña
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (!oldPassword || !newPassword) {
+      setStatusMsg({ type: 'error', text: 'Por favor complete todos los campos de contraseña.' });
+      return;
+    }
+
+    setLoading(true);
+    setStatusMsg({ type: '', text: '' });
+
+    try {
+      // Re-autenticar con contraseña anterior para verificarla
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: profileEmail,
+        password: oldPassword
+      });
+
+      if (signInError) {
+        throw new Error('La contraseña anterior es incorrecta.');
+      }
+
+      // Si todo bien, actualizar a la nueva contraseña
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      setStatusMsg({ type: 'success', text: 'Tu contraseña ha sido cambiada con éxito.' });
+      setOldPassword('');
+      setNewPassword('');
+    } catch (err) {
+      console.error('[ClientDashboard] Error al cambiar contraseña:', err.message);
+      setStatusMsg({ type: 'error', text: err.message || 'Error al cambiar la contraseña.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Eliminar Cuenta
+  const handleDeleteAccount = async (e) => {
+    e.preventDefault();
+    if (deleteConfirmationText.trim().toUpperCase() !== 'ELIMINAR MI CUENTA') {
+      setStatusMsg({ type: 'error', text: 'Por favor escribe exactamente "ELIMINAR MI CUENTA" para proceder.' });
+      return;
+    }
+
+    setLoading(true);
+    setStatusMsg({ type: '', text: '' });
+
+    try {
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(result.error || 'Error al eliminar la cuenta.');
+      }
+
+      setStatusMsg({ type: 'success', text: 'Tu cuenta ha sido eliminada permanentemente. Redirigiendo...' });
+      
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
+    } catch (err) {
+      console.error('[ClientDashboard] Error al eliminar cuenta:', err.message);
+      setStatusMsg({ type: 'error', text: err.message || 'Error al eliminar la cuenta.' });
       setLoading(false);
     }
   };
@@ -498,6 +585,154 @@ export default function ClientDashboard({ clientUser, clientPerfil }) {
                 {loading ? 'Guardando...' : 'Guardar Información'}
               </button>
             </form>
+
+            {/* ── CAMBIAR CONTRASEÑA ── */}
+            <div style={{ marginTop: '3.5rem', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '2.5rem' }}>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.35rem', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.02em', margin: '0 0 1.25rem' }}>Cambiar Contraseña</h3>
+              
+              <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '500px' }}>
+                <div>
+                  <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#888', marginBottom: '0.4rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.02em' }}>Contraseña Anterior</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={oldPassword}
+                    onInput={(e) => setOldPassword(e.target.value)}
+                    style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.75rem 1rem', color: '#fff', fontSize: '0.88rem', outline: 'none' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#888', marginBottom: '0.4rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.02em' }}>Nueva Contraseña</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="Mínimo 6 caracteres"
+                    value={newPassword}
+                    onInput={(e) => setNewPassword(e.target.value)}
+                    style={{ width: '100%', background: '#121212', border: '1px solid rgba(186,143,87,0.25)', borderRadius: '0px', padding: '0.75rem 1rem', color: '#fff', fontSize: '0.88rem', outline: 'none' }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    background: 'transparent',
+                    color: '#ba8f57',
+                    border: '1px solid rgba(186,143,87,0.3)',
+                    padding: '0.9rem',
+                    fontFamily: "'Urbanist', sans-serif",
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    borderRadius: '0px',
+                    marginTop: '0.5rem',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => { if(!loading) e.target.style.background = 'rgba(186,143,87,0.06)'; }}
+                  onMouseOut={(e) => { if(!loading) e.target.style.background = 'transparent'; }}
+                >
+                  {loading ? 'Procesando...' : 'Actualizar Contraseña'}
+                </button>
+              </form>
+            </div>
+
+            {/* ── ZONA DE PELIGRO: ELIMINAR CUENTA ── */}
+            <div style={{ marginTop: '4rem', borderTop: '1px solid rgba(239,68,68,0.15)', paddingTop: '2.5rem' }}>
+              <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.35rem', color: '#ef4444', textTransform: 'uppercase', letterSpacing: '0.02em', margin: '0 0 0.85rem' }}>Zona de Peligro</h3>
+              <p style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.85rem', color: '#888', lineHeight: '1.5', margin: '0 0 1.5rem', maxWidth: '600px' }}>
+                Al eliminar tu cuenta se borrará permanentemente todo tu historial de reservas, chats y datos personales. Esta acción no se puede deshacer.
+              </p>
+
+              {!showDeleteConfirm ? (
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  style={{
+                    background: 'rgba(239,68,68,0.06)',
+                    color: '#ef4444',
+                    border: '1px solid rgba(239,68,68,0.25)',
+                    padding: '0.9rem 1.8rem',
+                    fontFamily: "'Urbanist', sans-serif",
+                    fontWeight: 800,
+                    fontSize: '0.82rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    cursor: 'pointer',
+                    borderRadius: '0px',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = 'rgba(239,68,68,0.12)'}
+                  onMouseOut={(e) => e.target.style.background = 'rgba(239,68,68,0.06)'}
+                >
+                  Eliminar Cuenta
+                </button>
+              ) : (
+                <div style={{ background: '#120d0d', border: '1px solid rgba(239,68,68,0.2)', padding: '1.5rem', maxWidth: '500px', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <p style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: 700, fontSize: '0.88rem', color: '#fff', margin: 0 }}>
+                    ¿Confirmas que deseas eliminar tu cuenta permanentemente?
+                  </p>
+                  <div>
+                    <label style={{ display: 'block', fontFamily: "'Lato', sans-serif", fontSize: '0.72rem', color: '#999', marginBottom: '0.4rem' }}>
+                      Escribe exactamente <strong>ELIMINAR MI CUENTA</strong> para proceder:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="ELIMINAR MI CUENTA"
+                      value={deleteConfirmationText}
+                      onInput={(e) => setDeleteConfirmationText(e.target.value)}
+                      style={{ width: '100%', background: '#0a0a0a', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '0px', padding: '0.75rem 1rem', color: '#fff', fontSize: '0.88rem', outline: 'none' }}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button
+                      onClick={handleDeleteAccount}
+                      disabled={loading || deleteConfirmationText.trim().toUpperCase() !== 'ELIMINAR MI CUENTA'}
+                      style={{
+                        flex: 1,
+                        background: '#ef4444',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '0.85rem',
+                        fontFamily: "'Urbanist', sans-serif",
+                        fontWeight: 800,
+                        fontSize: '0.8rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        cursor: (loading || deleteConfirmationText.trim().toUpperCase() !== 'ELIMINAR MI CUENTA') ? 'not-allowed' : 'pointer',
+                        borderRadius: '0px',
+                        opacity: (deleteConfirmationText.trim().toUpperCase() !== 'ELIMINAR MI CUENTA') ? 0.5 : 1
+                      }}
+                    >
+                      {loading ? 'Eliminando...' : 'Sí, Eliminar Cuenta'}
+                    </button>
+                    <button
+                      onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmationText(''); }}
+                      disabled={loading}
+                      style={{
+                        flex: 1,
+                        background: 'transparent',
+                        color: '#aaa',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        padding: '0.85rem',
+                        fontFamily: "'Urbanist', sans-serif",
+                        fontWeight: 800,
+                        fontSize: '0.8rem',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        cursor: 'pointer',
+                        borderRadius: '0px'
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
