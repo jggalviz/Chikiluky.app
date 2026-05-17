@@ -110,7 +110,7 @@ CREATE POLICY "Permitir inserción de mensajes" ON public.mensajes_chat
                 s.cliente_id = auth.uid() OR 
                 s.profesional_id = auth.uid() OR
                 s.anonimo_session_id IS NOT NULL OR
-                NEW.sender_type = 'soporte' OR
+                sender_type = 'soporte' OR
                 EXISTS (
                     SELECT 1 FROM public.perfiles 
                     WHERE perfiles.id = auth.uid() AND perfiles.role IN ('soporte', 'administrador')
