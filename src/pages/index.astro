@@ -4,14 +4,14 @@ import LayoutBase from '../layouts/LayoutBase.astro';
 <LayoutBase title="CHIKILUKY — El Ecosistema Digital de Belleza" description="Reserva tu cita de belleza en Caracas. Sin WhatsApp, sin esperas.">
 
   <!-- NAV -->
-  <nav style="position:fixed;top:0;left:0;width:100%;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:1.25rem 5%;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(186,143,87,0.2)">
-    <a href="/" style="display:flex;align-items:center;gap:0.75rem;text-decoration:none">
-      <img src="/logo.svg" alt="CHIKILUKY" decoding="async" fetchpriority="high" width="38" height="38" style="height:38px;width:38px;object-fit:contain"/>
-      <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.35rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
+  <nav class="nav-container">
+    <a href="/" class="logo-link">
+      <img src="/logo.svg" alt="CHIKILUKY" decoding="async" fetchpriority="high" width="38" height="38" class="logo-img"/>
+      <span class="logo-text">CHIKILUKY</span>
     </a>
-    <div style="display:flex;gap:0.75rem">
-      <button onclick="abrirModal();showTab('login')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.5rem 1.25rem;border:1px solid #BA8F57;color:#fff;background:transparent;cursor:pointer" onmouseover="this.style.background='#BA8F57';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.color='#fff'">INICIAR SESION</button>
-      <button onclick="abrirModal();showTab('registro')" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;padding:0.5rem 1.25rem;border:1px solid #BA8F57;color:#000;background:#BA8F57;cursor:pointer" onmouseover="this.style.background='transparent';this.style.color='#BA8F57'" onmouseout="this.style.background='#BA8F57';this.style.color='#000'">REGISTRARSE</button>
+    <div class="nav-actions">
+      <button onclick="abrirModal();showTab('login')" class="nav-btn btn-login">Iniciar Sesión</button>
+      <button onclick="abrirModal();showTab('registro')" class="nav-btn btn-register">Registrarse</button>
     </div>
   </nav>
 
@@ -517,6 +517,107 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     }
     .scroll-arrow.right-arrow {
       right: -12px;
+    }
+
+    /* ── Barra de Navegación Responsiva Premium ── */
+    .nav-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 5%;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(186, 143, 87, 0.2);
+      box-sizing: border-box;
+    }
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+    .logo-img {
+      height: 38px;
+      width: 38px;
+      object-fit: contain;
+    }
+    .logo-text {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      color: #BA8F57;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .nav-btn {
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid #BA8F57;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .btn-login {
+      color: #fff;
+      background: transparent;
+    }
+    .btn-login:hover {
+      background: #BA8F57;
+      color: #000;
+    }
+    .btn-register {
+      color: #000;
+      background: #BA8F57;
+    }
+    .btn-register:hover {
+      background: transparent;
+      color: #BA8F57;
+    }
+
+    /* Pantallas Móviles medianas a pequeñas (max-width: 480px) */
+    @media (max-width: 480px) {
+      .nav-container {
+        padding: 0.9rem 4%;
+      }
+      .logo-img {
+        height: 28px;
+        width: 28px;
+      }
+      .logo-text {
+        font-size: 1.15rem;
+        letter-spacing: 0.04em;
+      }
+      .nav-actions {
+        gap: 0.4rem;
+      }
+      .nav-btn {
+        font-size: 10px;
+        padding: 0.4rem 0.75rem;
+        letter-spacing: 0.02em;
+      }
+    }
+
+    /* Pantallas Móviles extremadamente pequeñas (max-width: 360px) */
+    @media (max-width: 360px) {
+      .logo-text {
+        display: none; /* Solución ultra-limpia: oculta el texto largo de la marca y deja el isotipo elegante en dorado */
+      }
+      .logo-link {
+        gap: 0;
+      }
     }
   </style>
 
