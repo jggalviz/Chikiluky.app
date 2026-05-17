@@ -35,15 +35,6 @@ RETURNS TRIGGER AS $$
 DECLARE
     v_sala_type VARCHAR(50);
     v_cliente_id UUID;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Implementación segura de la validación
-CREATE OR REPLACE FUNCTION public.check_profesional_message_restriction()
-RETURNS TRIGGER AS $$
-DECLARE
-    v_sala_type VARCHAR(50);
-    v_cliente_id UUID;
 BEGIN
     -- Obtener información de la sala relacionada
     SELECT sala_type, cliente_id INTO v_sala_type, v_cliente_id
@@ -77,13 +68,20 @@ CREATE POLICY "Permitir lectura de salas" ON public.salas_chat
     FOR SELECT USING (
         auth.uid() = cliente_id OR 
         auth.uid() = profesional_id OR 
-        anonimo_session_id IS NOT NULL
+        anonimo_session_id IS NOT NULL OR
+        EXISTS (
+            SELECT 1 FROM public.perfiles 
+            WHERE perfiles.id = auth.uid() AND perfiles.role IN ('soporte', 'administrador')
+        )
     );
 
 CREATE POLICY "Permitir inserción de salas" ON public.salas_chat
     FOR INSERT WITH CHECK (
         (sala_type = 'cliente_profesional' AND auth.uid() = cliente_id) OR
-        (sala_type = 'soporte' AND (auth.uid() = cliente_id OR auth.uid() = profesional_id)) OR
+        (sala_type = 'soporte' AND (auth.uid() = cliente_id OR auth.uid() = profesional_id OR EXISTS (
+            SELECT 1 FROM public.perfiles 
+            WHERE perfiles.id = auth.uid() AND perfiles.role IN ('soporte', 'administrador')
+        ))) OR
         (sala_type = 'soporte_anonimo' AND anonimo_session_id IS NOT NULL)
     );
 
@@ -95,7 +93,11 @@ CREATE POLICY "Permitir lectura de mensajes" ON public.mensajes_chat
             WHERE s.id = mensajes_chat.sala_id AND (
                 s.cliente_id = auth.uid() OR 
                 s.profesional_id = auth.uid() OR
-                s.anonimo_session_id IS NOT NULL
+                s.anonimo_session_id IS NOT NULL OR
+                EXISTS (
+                    SELECT 1 FROM public.perfiles 
+                    WHERE perfiles.id = auth.uid() AND perfiles.role IN ('soporte', 'administrador')
+                )
             )
         )
     );
@@ -107,7 +109,12 @@ CREATE POLICY "Permitir inserción de mensajes" ON public.mensajes_chat
             WHERE s.id = mensajes_chat.sala_id AND (
                 s.cliente_id = auth.uid() OR 
                 s.profesional_id = auth.uid() OR
-                s.anonimo_session_id IS NOT NULL
+                s.anonimo_session_id IS NOT NULL OR
+                NEW.sender_type = 'soporte' OR
+                EXISTS (
+                    SELECT 1 FROM public.perfiles 
+                    WHERE perfiles.id = auth.uid() AND perfiles.role IN ('soporte', 'administrador')
+                )
             )
         )
     );
