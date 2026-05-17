@@ -28,7 +28,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       </div>
 
       {/* ── FORMULARIO: INICIAR SESIÓN ── */}
-      <form id="form-login" style="display:flex;flex-direction:column;gap:1.25rem">
+      <form id="form-login" action="/api/auth/login" method="POST" style="display:flex;flex-direction:column;gap:1.25rem">
         <div style="display:flex;flex-direction:column;gap:0.4rem">
           <label style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;color:#BA8F57;text-transform:uppercase">Email Corporativo</label>
           <input type="email" name="email" required placeholder="correo@soporte.chikiluky.app" style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.2);border-radius:8px;padding:0.85rem 1rem;color:#fff;font-size:13.5px;outline:none;transition:border-color 0.2s" class="input-glow"/>
@@ -50,7 +50,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   </main>
 
   {/* Estilos e Interacciones Dinámicas */}
-  <script is:inline>
+  <script>
     function showStatus(msg, isError = true) {
       const container = document.getElementById('status-container');
       if (!container) return;
