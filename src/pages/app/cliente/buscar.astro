@@ -290,13 +290,25 @@ const iconoCategoria: Record<string, string> = {
       }
     };
 
+    let tickingBuscar = false;
     function updateBuscarArrows() {
       const scrollCont = document.getElementById('filtros-cat');
       const arrowL = document.getElementById('buscar-arrow-left');
       const arrowR = document.getElementById('buscar-arrow-right');
-      if (scrollCont && arrowL && arrowR) {
-        const leftVisible = scrollCont.scrollLeft > 5;
-        const rightVisible = scrollCont.scrollLeft < (scrollCont.scrollWidth - scrollCont.clientWidth - 5);
+      if (!scrollCont || !arrowL || !arrowR) {
+        tickingBuscar = false;
+        return;
+      }
+
+      // 1. Fase de Lectura (segura y libre de DOM invalidado)
+      const scrollLeft = scrollCont.scrollLeft;
+      const scrollWidth = scrollCont.scrollWidth;
+      const clientWidth = scrollCont.clientWidth;
+
+      // 2. Fase de Escritura diferida en requestAnimationFrame para evitar "Forced Reflow"
+      requestAnimationFrame(() => {
+        const leftVisible = scrollLeft > 5;
+        const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
         
         if (leftVisible) {
           arrowL.classList.add('visible');
@@ -309,15 +321,23 @@ const iconoCategoria: Record<string, string> = {
         } else {
           arrowR.classList.remove('visible');
         }
+        tickingBuscar = false;
+      });
+    }
+
+    function handleBuscarScroll() {
+      if (!tickingBuscar) {
+        requestAnimationFrame(updateBuscarArrows);
+        tickingBuscar = true;
       }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       const scrollCont = document.getElementById('filtros-cat');
       if (scrollCont) {
-        scrollCont.addEventListener('scroll', updateBuscarArrows);
+        scrollCont.addEventListener('scroll', handleBuscarScroll, { passive: true });
         setTimeout(updateBuscarArrows, 150);
-        window.addEventListener('resize', updateBuscarArrows);
+        window.addEventListener('resize', handleBuscarScroll, { passive: true });
       }
     });
   </script>
