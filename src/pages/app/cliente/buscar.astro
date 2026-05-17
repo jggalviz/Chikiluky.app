@@ -118,7 +118,7 @@ const categorias = [
   <!-- ═══════════════════════════════════════
        LISTA DE NEGOCIOS (SSR) - UNA SOLA COLUMNA
   ════════════════════════════════════════ -->
-  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;flex:1">
+  <main style="padding:2.5rem 1.5rem 5rem;background:#ffffff;flex:1">
     <div class="max-w-6xl mx-auto">
 
       {negociosError && (
@@ -128,15 +128,15 @@ const categorias = [
       )}
 
       {(!negocios || negocios.length === 0) && !negociosError && (
-        <div style="text-align:center;padding:5rem 1rem;border:1px solid #1a1a1a;background:#0a0a0a;border-radius:0px;max-width:800px;margin:0 auto">
+        <div style="text-align:center;padding:5rem 1rem;border:1px solid #e5e5e5;background:#f9f9f9;border-radius:0px;max-width:800px;margin:0 auto">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#737373" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1.25rem;display:block">
             <rect x="2" y="7" width="20" height="14" rx="0" ry="0"></rect>
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
           </svg>
-          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#fff;margin:0 0 0.35rem 0;text-transform:uppercase;letter-spacing:0.04em">
+          <p style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#171717;margin:0 0 0.35rem 0;text-transform:uppercase;letter-spacing:0.04em">
             Aún no hay salones registrados
           </p>
-          <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#555;margin:0">
+          <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#737373;margin:0">
             ¿Tienes un negocio? <a href="/" style="color:#ba8f57;text-decoration:none;font-weight:bold">Regístralo aquí</a>
           </p>
         </div>
@@ -169,7 +169,7 @@ const categorias = [
                 ">
                   {negocio.categoria ?? 'Salón'}
                 </span>
-                <span style="font-size:0.72rem;color:#525252;font-family:'Lato',sans-serif;display:inline-flex;align-items:center;gap:0.25rem">
+                <span style="font-size:0.72rem;color:#737373;font-family:'Lato',sans-serif;display:inline-flex;align-items:center;gap:0.25rem">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                     <circle cx="12" cy="10" r="3"></circle>
@@ -179,20 +179,20 @@ const categorias = [
               </div>
 
               <!-- Nombre -->
-              <h2 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.15rem;color:#fff;line-height:1.2;margin:0.25rem 0 0.15rem 0;text-transform:uppercase;letter-spacing:0.02em">
+              <h2 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.15rem;color:#171717;line-height:1.2;margin:0.25rem 0 0.15rem 0;text-transform:uppercase;letter-spacing:0.02em">
                 {negocio.name}
               </h2>
 
               <!-- Descripción -->
               {negocio.descripcion && (
-                <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#737373;line-height:1.5;margin:0">
+                <p style="font-family:'Lato',sans-serif;font-size:0.83rem;color:#525252;line-height:1.5;margin:0">
                   {negocio.descripcion}
                 </p>
               )}
 
               <!-- Dirección -->
               {negocio.address && (
-                <p style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#525252;margin:0.2rem 0 0 0;display:flex;align-items:center;gap:0.3rem">
+                <p style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#737373;margin:0.2rem 0 0 0;display:flex;align-items:center;gap:0.3rem">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#ba8f57">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -217,7 +217,7 @@ const categorias = [
       </div>
 
       <!-- Mensaje sin resultados de búsqueda (JS) -->
-      <p id="sin-resultados" style="display:none;text-align:center;color:#555;font-family:'Lato',sans-serif;font-size:0.9rem;padding:3rem">
+      <p id="sin-resultados" style="display:none;text-align:center;color:#737373;font-family:'Lato',sans-serif;font-size:0.9rem;padding:3rem">
         No se encontraron salones con ese criterio.
       </p>
     </div>
@@ -439,8 +439,8 @@ const categorias = [
 
   /* Tarjetas en lista de una sola columna */
   .negocio-card {
-    background: #0a0a0a;
-    border: 1px solid #1a1a1a;
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
     border-radius: 0px;
     padding: 1.5rem;
     display: flex;
@@ -448,10 +448,12 @@ const categorias = [
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    transition: border-color 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
   }
   .negocio-card:hover {
-    border-color: #404040;
+    border-color: #ba8f57;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
   }
   .negocio-info {
     flex: 1;
