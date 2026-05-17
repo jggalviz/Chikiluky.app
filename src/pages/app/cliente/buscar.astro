@@ -61,6 +61,9 @@ const iconoCategoria: Record<string, string> = {
     </a>
 
     <nav style="display:flex;align-items:center;gap:0.5rem">
+      {perfil && ['experto','administrador'].includes(perfil.role) && (
+        <a href="/pro/dashboard" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.7rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Panel Pro</a>
+      )}
       <a href="/app/cliente/buscar" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.7rem;border-radius:0.4rem;background:rgba(186,143,87,0.08)">Buscar</a>
       <span style="color:#2a2a2a">|</span>
       <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>

@@ -62,6 +62,9 @@ const iconoCategoria: Record<string, string> = {
   <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.5rem;background:rgba(17,17,17,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(186,143,87,0.15)">
     <a href="/app/cliente/buscar" style="text-decoration:none"><span class="brand-text" style="font-size:1.1rem;color:#ba8f57">CHIKILUKY</span> <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:normal;font-size:0.6rem;color:#666;letter-spacing:0.12em;text-transform:uppercase">.app</span></a>
     <nav style="display:flex;align-items:center;gap:0.5rem">
+      {perfil && ['experto','administrador'].includes(perfil.role) && (
+        <a href="/pro/dashboard" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:700;color:#ba8f57;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">Panel Pro</a>
+      )}
       <a href="/app/cliente/buscar" style="font-family:'Urbanist',sans-serif;font-size:0.8rem;font-weight:600;color:#555;text-decoration:none;padding:0.3rem 0.6rem" onmouseover="this.style.color='#ba8f57'" onmouseout="this.style.color='#555'">← Buscar</a>
       <span style="color:#2a2a2a">|</span>
       <a href="/api/auth/logout" style="font-family:'Urbanist',sans-serif;font-size:0.78rem;font-weight:700;color:#ba8f57;border:1px solid rgba(186,143,87,0.35);padding:0.35rem 0.9rem;border-radius:9999px;text-decoration:none" onmouseover="this.style.background='rgba(186,143,87,0.1)'" onmouseout="this.style.background='transparent'">Salir</a>

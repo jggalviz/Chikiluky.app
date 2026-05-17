@@ -1,6 +1,10 @@
 ---
 import LayoutBase from '../layouts/LayoutBase.astro';
 import SoporteFlotante from '../islands/SoporteFlotante';
+import { getSession } from '../lib/session.js';
+
+const { user, perfil } = await getSession(Astro.request);
+const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
 ---
 <LayoutBase title="CHIKILUKY — El Ecosistema Digital de Belleza" description="Reserva tu cita de belleza en Caracas. Sin WhatsApp, sin esperas.">
 
@@ -11,8 +15,23 @@ import SoporteFlotante from '../islands/SoporteFlotante';
       <span class="logo-text">CHIKILUKY</span>
     </a>
     <div class="nav-actions">
-      <button onclick="abrirModal();showTab('login')" class="nav-btn btn-login">Iniciar Sesión</button>
-      <button onclick="abrirModal();showTab('registro')" class="nav-btn btn-register">Registrarse</button>
+      {user ? (
+        <>
+          {isPro && (
+            <a href="/pro/dashboard" class="nav-btn btn-login" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
+              Panel Pro
+            </a>
+          )}
+          <a href="/app/cliente/buscar" class="nav-btn btn-register" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
+            Entrar a la App
+          </a>
+        </>
+      ) : (
+        <>
+          <button onclick="abrirModal();showTab('login')" class="nav-btn btn-login">Iniciar Sesión</button>
+          <button onclick="abrirModal();showTab('registro')" class="nav-btn btn-register">Registrarse</button>
+        </>
+      )}
     </div>
   </nav>
 
