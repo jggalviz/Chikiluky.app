@@ -285,13 +285,17 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
         }
 
         try {
-          // GET al endpoint de sincronización
-          const res = await fetch('/api/sync-bcv', { method: 'GET' });
+          // GET al endpoint del scraper oficial del BCV
+          const res = await fetch('/api/update-bcv', { method: 'GET' });
           const data = await res.json();
 
-          if (res.ok && data.ok) {
-            // Recargar la página con éxito
-            alert(`✅ ¡Tasa sincronizada con éxito!\n\nTasa anterior: ${data.tasa_anterior ? data.tasa_anterior.toFixed(2) : 'N/A'} Bs\nNueva tasa oficial: ${data.tasa_nueva.toFixed(2)} Bs`);
+          if (res.ok && (data.ok || data.tasa_actual)) {
+            const tasaNuevaVal = data.tasa_nueva || data.tasa_actual;
+            if (data.ok) {
+              alert(`✅ ¡Tasa oficial sincronizada con éxito!\n\nTasa anterior: ${data.tasa_anterior ? parseFloat(data.tasa_anterior).toFixed(2) : 'N/A'} Bs\nNueva tasa oficial (bcv.org.ve): ${parseFloat(tasaNuevaVal).toFixed(2)} Bs`);
+            } else {
+              alert(`⚠️ El sitio del BCV no respondió.\n\nSe mantuvo el último valor de respaldo: ${parseFloat(tasaNuevaVal).toFixed(2)} Bs`);
+            }
             window.location.reload();
           } else {
             throw new Error(data.error || 'Error al procesar la sincronización.');

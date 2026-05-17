@@ -2,14 +2,14 @@ import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
 export const GET: APIRoute = async (context) => {
-  return handleSync(context);
+  return handleUpdate(context);
 };
 
 export const POST: APIRoute = async (context) => {
-  return handleSync(context);
+  return handleUpdate(context);
 };
 
-async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
+async function handleUpdate({ request, url }: Parameters<APIRoute>[0]) {
   try {
     const supabaseUrl = import.meta.env.SUPABASE_URL ?? import.meta.env.PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = import.meta.env.SUPABASE_ANON_KEY ?? import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
@@ -22,7 +22,7 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
       );
     }
 
-    // 1. Lógica de Autenticación
+    // 1. Lógica de Autenticación de Seguridad (Dual: Token y Sesión de Usuario)
     let isAuthorized = false;
     let authMethod = '';
 
@@ -38,8 +38,6 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
     // Método B: Validar por Sesión de Usuario (Cookie sb-access-token)
     const authHeader = request.headers.get('cookie') ?? '';
     const token = authHeader.match(/sb-access-token=([^;]+)/)?.[1];
-    let userRole = '';
-    let userId = '';
 
     const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
       auth: { persistSession: false }
@@ -50,7 +48,6 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
       const { data: { user } } = await supabaseUser.auth.getUser();
 
       if (user) {
-        userId = user.id;
         const { data: perfil } = await supabaseUser
           .from('perfiles')
           .select('role')
@@ -59,7 +56,6 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
 
         if (perfil && ['administrador', 'experto', 'soporte'].includes(perfil.role)) {
           isAuthorized = true;
-          userRole = perfil.role;
           authMethod = `usuario_autenticado (${perfil.role})`;
         }
       }
@@ -67,35 +63,81 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
 
     if (!isAuthorized) {
       return new Response(
-        JSON.stringify({ error: 'No autorizado para sincronizar la tasa.' }),
+        JSON.stringify({ error: 'No autorizado para actualizar la tasa.' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // 2. Fetch de datos desde DolarApi.com
-    const res = await fetch('https://ve.dolarapi.com/v1/dolares');
-    if (!res.ok) {
-      throw new Error(`DolarApi devolvió estado HTTP ${res.status}`);
-    }
-    
-    const data = await res.json();
-    if (!Array.isArray(data)) {
-      throw new Error('Formato de datos de DolarApi inválido (se esperaba un array).');
-    }
+    // 2. SCRAPER NATIVO DEL BCV (bcv.org.ve)
+    let nuevaTasa = 0;
+    try {
+      // Evitar rechazo de certificados TLS auto-firmados o con problemas en el BCV
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-    const dolarOficial = data.find((item: any) => item.fuente === 'oficial');
-    if (!dolarOficial || !dolarOficial.promedio) {
-      throw new Error('No se encontró la cotización oficial en el feed de DolarApi.');
-    }
+      const res = await fetch('https://www.bcv.org.ve/', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
 
-    const nuevaTasa = parseFloat(dolarOficial.promedio);
-    if (isNaN(nuevaTasa) || nuevaTasa <= 0) {
-      throw new Error(`Valor de tasa obtenido inválido: ${dolarOficial.promedio}`);
+      if (!res.ok) {
+        throw new Error(`El sitio del BCV devolvió estado HTTP ${res.status}`);
+      }
+
+      const html = await res.text();
+      const index = html.indexOf('id="dolar"');
+      
+      if (index === -1) {
+        throw new Error('No se encontró el contenedor id="dolar" en el HTML del BCV.');
+      }
+
+      // Tomamos un fragmento de HTML alrededor del bloque del dólar
+      const slice = html.slice(index, index + 1000);
+      const match = slice.match(/<strong[^>]*?>\s*([\d.,]+)\s*<\/strong>/i);
+
+      if (!match) {
+        throw new Error('No se encontró la etiqueta strong con el valor del dólar en el bloque del BCV.');
+      }
+
+      const rawVal = match[1].trim();
+      nuevaTasa = parseFloat(rawVal.replace(',', '.'));
+
+      if (isNaN(nuevaTasa) || nuevaTasa <= 0) {
+        throw new Error(`El valor de la tasa obtenido del BCV es inválido: ${rawVal}`);
+      }
+
+    } catch (scraperErr: any) {
+      // CONTROL DE ERRORES: Si la página del BCV está caída o bloquea la petición, se registra el error
+      console.error('Error al ejecutar el Web Scraper de bcv.org.ve:', scraperErr);
+      
+      // Recuperar la última tasa de la base de datos como respaldo de seguridad
+      const { data: configActual } = await supabaseUser
+        .from('configuracion_sistema')
+        .select('tasa_bcv')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (configActual?.tasa_bcv) {
+        nuevaTasa = parseFloat(configActual.tasa_bcv);
+        return new Response(
+          JSON.stringify({
+            ok: false,
+            error: 'La web oficial del BCV no está respondiendo. Se mantuvo la última tasa guardada como respaldo de seguridad.',
+            tasa_actual: nuevaTasa,
+            detalles: scraperErr?.message ?? String(scraperErr)
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } }
+        );
+      } else {
+        throw new Error(`El scraper falló y no hay una tasa previa para respaldo: ${scraperErr?.message}`);
+      }
     }
 
     // 3. Inicializar Cliente Supabase con privilegios adecuados para escribir
-    // Si el rol es experto y no es admin, o si es un cron, requerimos service_role
-    // para sobrepasar RLS si el usuario no tiene permisos directos de escritura.
     let supabaseEscritura = supabaseUser;
     let usingAdminClient = false;
 
@@ -106,7 +148,7 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
       usingAdminClient = true;
     }
 
-    // Obtener tasa actual en base de datos para comparar
+    // Obtener tasa actual para contrastar
     const { data: configActual } = await supabaseUser
       .from('configuracion_sistema')
       .select('tasa_bcv')
@@ -125,11 +167,10 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
       .eq('id', 1);
 
     if (updateError) {
-      // Si falló por políticas RLS y no se definió service_role, devolver una advertencia útil
       if (updateError.code === '42501' && !usingAdminClient) {
         return new Response(
           JSON.stringify({
-            error: 'Error de permisos de base de datos (RLS). Para permitir que los expertos sincronicen la tasa, debes configurar la variable de entorno SUPABASE_SERVICE_ROLE_KEY en tu servidor.',
+            error: 'Error de permisos de base de datos (RLS). Para permitir escritura manual configura SUPABASE_SERVICE_ROLE_KEY.',
             detalles: updateError.message
           }),
           { status: 403, headers: { 'Content-Type': 'application/json' } }
@@ -141,8 +182,8 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
     return new Response(
       JSON.stringify({
         ok: true,
-        mensaje: 'Tasa BCV sincronizada con éxito.',
-        fuente: 'DolarApi.com (Oficial)',
+        mensaje: 'Tasa BCV actualizada directamente del sitio oficial con éxito.',
+        fuente: 'Banco Central de Venezuela (bcv.org.ve)',
         tasa_anterior: tasaAnterior,
         tasa_nueva: nuevaTasa,
         metodo_autenticacion: authMethod,
@@ -153,10 +194,10 @@ async function handleSync({ request, url }: Parameters<APIRoute>[0]) {
     );
 
   } catch (err: any) {
-    console.error('Error en /api/sync-bcv:', err);
+    console.error('Error en /api/update-bcv:', err);
     return new Response(
       JSON.stringify({
-        error: 'Error interno al sincronizar la tasa BCV.',
+        error: 'Error interno al procesar el scraper del BCV.',
         detalles: err?.message ?? String(err)
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
