@@ -1,7 +1,7 @@
 ---
 import LayoutBase from '../../../layouts/LayoutBase.astro';
 import { supabase } from '../../../lib/supabase.js';
-import CalendarioReservas from '../../../islands/CalendarioReservas.jsx';
+import BookingFlow from '../../../islands/BookingFlow.jsx';
 
 // ── Validación de sesión ──────────────────────────────────────────────────────
 const authHeader = Astro.request.headers.get('cookie') ?? '';
@@ -102,7 +102,7 @@ const iconoCategoria: Record<string, string> = {
   ════════════════════════════════════════ -->
   <main style="padding:1.5rem;background:#1a1a1a;flex:1">
     <div style="max-width:680px;margin:0 auto">
-      <CalendarioReservas
+      <BookingFlow
         client:load
         negocioId={negocioId}
         clienteId={user.id}
