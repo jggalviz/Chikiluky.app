@@ -99,8 +99,14 @@ const iconoCategoria: Record<string, string> = {
         />
       </div>
 
-      <!-- Filtros de categoría minimalista — scroll horizontal suave -->
+      <!-- Filtros de categoría minimalista — scroll horizontal suave con flechas de navegación -->
       <div class="filtros-wrapper">
+        <button class="scroll-arrow left-arrow" id="buscar-arrow-left" onclick="scrollBuscarMenu(-200)" aria-label="Desplazar izquierda">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
         <div id="filtros-cat" class="filtros-scroll">
           {categorias.map((cat) => (
             <button
@@ -112,6 +118,12 @@ const iconoCategoria: Record<string, string> = {
             </button>
           ))}
         </div>
+
+        <button class="scroll-arrow right-arrow" id="buscar-arrow-right" onclick="scrollBuscarMenu(200)" aria-label="Desplazar derecha">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>
@@ -269,6 +281,45 @@ const iconoCategoria: Record<string, string> = {
         }
       }
     });
+
+    // ── Funciones de Desplazamiento de Categorías con Flechas ──
+    window.scrollBuscarMenu = function(val) {
+      const scrollCont = document.getElementById('filtros-cat');
+      if (scrollCont) {
+        scrollCont.scrollBy({ left: val, behavior: 'smooth' });
+      }
+    };
+
+    function updateBuscarArrows() {
+      const scrollCont = document.getElementById('filtros-cat');
+      const arrowL = document.getElementById('buscar-arrow-left');
+      const arrowR = document.getElementById('buscar-arrow-right');
+      if (scrollCont && arrowL && arrowR) {
+        const leftVisible = scrollCont.scrollLeft > 5;
+        const rightVisible = scrollCont.scrollLeft < (scrollCont.scrollWidth - scrollCont.clientWidth - 5);
+        
+        if (leftVisible) {
+          arrowL.classList.add('visible');
+        } else {
+          arrowL.classList.remove('visible');
+        }
+        
+        if (rightVisible) {
+          arrowR.classList.add('visible');
+        } else {
+          arrowR.classList.remove('visible');
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const scrollCont = document.getElementById('filtros-cat');
+      if (scrollCont) {
+        scrollCont.addEventListener('scroll', updateBuscarArrows);
+        setTimeout(updateBuscarArrows, 150);
+        window.addEventListener('resize', updateBuscarArrows);
+      }
+    });
   </script>
 
 </LayoutBase>
@@ -340,6 +391,44 @@ const iconoCategoria: Record<string, string> = {
     color: #ffffff;
     border-bottom-color: #ba8f57;
     font-weight: 600;
+  }
+
+  /* Flechas de desplazamiento lateral ultra premium */
+  .scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(26, 26, 26, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .scroll-arrow:hover {
+    background: #ba8f57;
+    color: #000;
+    border-color: #ba8f57;
+    box-shadow: 0 4px 14px rgba(186,143,87,0.4);
+  }
+  .scroll-arrow.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .scroll-arrow.left-arrow {
+    left: -12px;
+  }
+  .scroll-arrow.right-arrow {
+    right: -12px;
   }
 </style>
 

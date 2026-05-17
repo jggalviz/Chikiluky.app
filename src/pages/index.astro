@@ -213,9 +213,15 @@ import LayoutBase from '../layouts/LayoutBase.astro';
         <div style="height:3px;width:60px;background:#BA8F57;margin:1.25rem auto 0"></div>
       </div>
       
-      <!-- Filtros de categoría minimalista — scroll horizontal suave -->
+      <!-- Filtros de categoría minimalista — scroll horizontal suave con flechas de navegación -->
       <div class="filtros-wrapper">
-        <div class="filtros-scroll">
+        <button class="scroll-arrow left-arrow" id="arrow-left" onclick="scrollCategorias(-200)" aria-label="Desplazar izquierda">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <div class="filtros-scroll" id="menu-scroll">
           <a href="/app/cliente/buscar" class="cat-btn active">Todos</a>
           <a href="/app/cliente/buscar?cat=Peluquería" class="cat-btn">Peluquería</a>
           <a href="/app/cliente/buscar?cat=Barbería" class="cat-btn">Barbería</a>
@@ -227,6 +233,12 @@ import LayoutBase from '../layouts/LayoutBase.astro';
           <a href="/app/cliente/buscar?cat=Depilación" class="cat-btn">Depilación</a>
           <a href="/app/cliente/buscar?cat=Podología" class="cat-btn">Podología</a>
         </div>
+
+        <button class="scroll-arrow right-arrow" id="arrow-right" onclick="scrollCategorias(200)" aria-label="Desplazar derecha">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   </section>
@@ -307,6 +319,45 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       showError('form-registro', 'Cuenta creada. Revisa tu email e inicia sesion.');
       e.target.reset(); setTimeout(function() { window.showTab('login'); }, 2200); setLoading(b, false);
     });
+
+    // ── Funciones de Desplazamiento de Categorías con Flechas ──
+    window.scrollCategorias = function(val) {
+      const scrollCont = document.getElementById('menu-scroll');
+      if (scrollCont) {
+        scrollCont.scrollBy({ left: val, behavior: 'smooth' });
+      }
+    };
+
+    function updateArrows() {
+      const scrollCont = document.getElementById('menu-scroll');
+      const arrowL = document.getElementById('arrow-left');
+      const arrowR = document.getElementById('arrow-right');
+      if (scrollCont && arrowL && arrowR) {
+        const leftVisible = scrollCont.scrollLeft > 5;
+        const rightVisible = scrollCont.scrollLeft < (scrollCont.scrollWidth - scrollCont.clientWidth - 5);
+        
+        if (leftVisible) {
+          arrowL.classList.add('visible');
+        } else {
+          arrowL.classList.remove('visible');
+        }
+        
+        if (rightVisible) {
+          arrowR.classList.add('visible');
+        } else {
+          arrowR.classList.remove('visible');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const scrollCont = document.getElementById('menu-scroll');
+      if (scrollCont) {
+        scrollCont.addEventListener('scroll', updateArrows);
+        setTimeout(updateArrows, 150);
+        window.addEventListener('resize', updateArrows);
+      }
+    });
   </script>
 
   <style>
@@ -383,6 +434,44 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       color: #ffffff;
       border-bottom-color: #ba8f57;
       font-weight: 600;
+    }
+
+    /* Flechas de desplazamiento lateral ultra premium */
+    .scroll-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(17, 17, 17, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .scroll-arrow:hover {
+      background: #ba8f57;
+      color: #000;
+      border-color: #ba8f57;
+      box-shadow: 0 4px 14px rgba(186,143,87,0.4);
+    }
+    .scroll-arrow.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .scroll-arrow.left-arrow {
+      left: -12px;
+    }
+    .scroll-arrow.right-arrow {
+      right: -12px;
     }
   </style>
 
