@@ -574,11 +574,18 @@ import LayoutBase from '../layouts/LayoutBase.astro';
       object-fit: contain;
     }
     .logo-text {
+      display: inline-block;
+      
+      /* ── OPCIÓN 1: Elegante Script (Descomenta para activar) ── */
+      /* font-family: 'Playball', cursive; font-size: 1.85rem; font-weight: 400; text-transform: none; letter-spacing: 0.02em; */
+      
+      /* ── OPCIÓN 2: Inclinada Dinámica (Fast & Premium) [ACTIVA] ── */
       font-family: 'Oswald', sans-serif;
-      font-weight: 700;
-      font-size: 1.35rem;
+      font-style: italic;
+      font-weight: 800;
+      font-size: 1.45rem;
       color: #BA8F57;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
     .nav-actions {
