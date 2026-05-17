@@ -81,7 +81,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
             <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:6px;box-sizing:border-box">
               <div style="display:flex;align-items:center;gap:6px">
                 <img src="/logo.svg" alt="CHIKILUKY" width="20" height="20" style="width:20px;height:20px;object-fit:contain"/>
-                <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:0.75rem;color:#BA8F57;letter-spacing:0.04em">CHIKILUKY</span>
+                <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:italic;font-size:0.75rem;color:#BA8F57;letter-spacing:0.12em;text-transform:uppercase">CHIKILUKY</span>
               </div>
               <div style="width:6px;height:6px;background:#10b981;border-radius:50%;box-shadow:0 0 6px #10b981"></div>
             </div>
@@ -309,7 +309,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   <footer style="width:100%;padding:3rem 5%;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:2rem;background:#000;border-top:1px solid #BA8F57">
     <div style="display:flex;align-items:center;gap:0.75rem">
       <img src="/logo.svg" alt="CHIKILUKY" loading="lazy" decoding="async" width="40" height="40" style="height:40px;width:40px;object-fit:contain"/>
-      <span style="font-family:'Oswald',sans-serif;font-weight:700;font-size:1.1rem;color:#BA8F57;letter-spacing:0.06em">CHIKILUKY</span>
+      <span style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:italic;font-size:1.1rem;color:#BA8F57;letter-spacing:0.15em;text-transform:uppercase">CHIKILUKY</span>
     </div>
     <p style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;color:rgba(255,255,255,0.65)">&copy; {new Date().getFullYear()} CHIKILUKY. Caracas, Venezuela.</p>
   </footer>
@@ -318,7 +318,7 @@ import LayoutBase from '../layouts/LayoutBase.astro';
   <div id="modal-acceso" style="display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)" onclick="if(event.target===this)cerrarModal()">
     <div style="background:#111;border:1px solid rgba(186,143,87,0.4);padding:2.5rem;width:100%;max-width:420px;position:relative">
       <button onclick="cerrarModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer" aria-label="Cerrar">&times;</button>
-      <p style="font-family:'Oswald',sans-serif;color:#BA8F57;font-size:1.4rem;text-align:center;margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.06em">CHIKILUKY</p>
+      <p style="font-family:'Montserrat',sans-serif;font-weight:300;font-style:italic;color:#BA8F57;font-size:1.4rem;text-align:center;margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.15em">CHIKILUKY</p>
       <p style="font-family:'Plus Jakarta Sans',sans-serif;color:#666;text-align:center;margin-bottom:2rem;font-size:0.85rem">Accede o crea tu cuenta</p>
       <div style="display:flex;border-bottom:1px solid rgba(186,143,87,0.2);margin-bottom:1.5rem">
         <button id="tab-login" onclick="showTab('login')" style="flex:1;padding:0.6rem;background:none;border:none;cursor:pointer;color:#BA8F57;border-bottom:2px solid #BA8F57;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.08em">INICIAR SESION</button>
@@ -575,14 +575,6 @@ import LayoutBase from '../layouts/LayoutBase.astro';
     }
     .logo-text {
       display: inline-block;
-      
-      /* ── OPCIÓN 1: Elegante Script (Descomenta para activar) ── */
-      /* font-family: 'Playball', cursive; font-size: 1.85rem; font-weight: 400; text-transform: none; letter-spacing: 0.02em; */
-      
-      /* ── OPCIÓN 2: Inclinada Dinámica (Fast & Premium) (Descomenta para activar) ── */
-      /* font-family: 'Oswald', sans-serif; font-style: italic; font-weight: 800; font-size: 1.45rem; letter-spacing: 0.08em; text-transform: uppercase; */
-      
-      /* ── OPCIÓN 3: Montserrat Light 300 Italic (Minimalist & Premium) [ACTIVA] ── */
       font-family: 'Montserrat', sans-serif;
       font-style: italic;
       font-weight: 300;
