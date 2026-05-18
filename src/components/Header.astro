@@ -1,0 +1,227 @@
+---
+interface Props {
+  user: any;
+  perfil: any;
+}
+
+const { user, perfil } = Astro.props;
+const pathname = Astro.url.pathname;
+
+const esCliente = pathname.includes('/app/cliente/');
+const esExperto = pathname.includes('/app/experto/');
+---
+
+<style>
+  /* ── Reset base ── */
+  .header-root * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* ── Contenedor raíz ── */
+  .header-root {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.5rem;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid #262626;
+    font-family: 'Urbanist', 'Montserrat', sans-serif;
+  }
+
+  /* ── Brand ── */
+  .brand-link {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.15rem;
+  }
+  .brand-name {
+    font-size: 1.1rem;
+    color: #ba8f57;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .brand-suffix {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: 0.6rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── Barra de acciones (derecha) ── */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── Dropdown trigger ── */
+  .dropdown-root {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0px;
+    cursor: pointer;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 0.76rem;
+    color: #eee;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+  }
+  .dropdown-trigger:hover {
+    background: rgba(186, 143, 87, 0.08) !important;
+    border-color: rgba(186, 143, 87, 0.2) !important;
+  }
+  .dropdown-dot {
+    width: 6px;
+    height: 6px;
+    background: #ba8f57;
+    border-radius: 50%;
+    box-shadow: 0 0 4px #ba8f57;
+    flex-shrink: 0;
+  }
+  .dropdown-arrow {
+    font-size: 0.6rem;
+    color: #666;
+    margin-left: 0.2rem;
+    transition: transform 0.2s ease;
+  }
+  .dropdown-arrow.open {
+    transform: rotate(180deg);
+  }
+
+  /* ── Menú desplegable ── */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: rgba(10, 10, 10, 0.98);
+    border: 1px solid #262626;
+    min-width: 210px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+    z-index: 50;
+    border-radius: 0px;
+    margin-top: 2px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .dropdown-menu.open {
+    display: block;
+  }
+
+  .dropdown-item {
+    color: #a3a3a3;
+    padding: 0.7rem 1.1rem;
+    text-decoration: none;
+    display: block;
+    font-family: 'Urbanist', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    cursor: pointer;
+  }
+  .dropdown-item:hover {
+    background: rgba(186, 143, 87, 0.06);
+    color: #ba8f57;
+  }
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  .dropdown-item-salir {
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: #ba8f57 !important;
+  }
+</style>
+
+<header class="header-root">
+  <!-- Brand -->
+  <a href="/" class="brand-link">
+    <span class="brand-name">CHIKILUKY</span>
+    <span class="brand-suffix">{esExperto ? '.pro' : '.app'}</span>
+  </a>
+
+  <!-- Acciones -->
+  <div class="header-actions">
+    <!-- Dropdown usuario -->
+    <div class="dropdown-root">
+      <button id="dropdown-trigger" class="dropdown-trigger">
+        <span class="dropdown-dot"></span>
+        <span>{perfil?.full_name || 'Usuario'}</span>
+        <span id="dropdown-arrow" class="dropdown-arrow">▼</span>
+      </button>
+
+      <div id="dropdown-menu" class="dropdown-menu">
+        {esCliente && (
+          <div>
+            <a href="/app/cliente/reservar" class="dropdown-item">Mis Reservas</a>
+            <a href="/app/cliente/escritorio" class="dropdown-item">Mensajes / Chats 💬</a>
+            <a href="/app/cliente/buscar" class="dropdown-item">Mi Perfil 👤</a>
+          </div>
+        )}
+        {esExperto && (
+          <div>
+            <a href="/app/experto/escritorio" class="dropdown-item">Escritorio Pro</a>
+            <a href="/app/experto/servicios" class="dropdown-item">Administrar Mis Servicios</a>
+            <a href="/app/experto/pagos" class="dropdown-item">Administrar Mis Métodos de Cobro</a>
+            <a href="/app/experto/agenda" class="dropdown-item">Agenda</a>
+          </div>
+        )}
+        <!-- Salir (siempre visible) -->
+        <a href="/api/auth/logout" class="dropdown-item dropdown-item-salir">Salir</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  (function () {
+    'use strict';
+
+    var trigger = document.getElementById('dropdown-trigger');
+    var menu    = document.getElementById('dropdown-menu');
+    var arrow   = document.getElementById('dropdown-arrow');
+
+    /* ── Dropdown: toggle ── */
+    if (trigger && menu) {
+      trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        menu!.classList.toggle('open');
+        if (arrow) {
+          arrow.classList.toggle('open');
+        }
+      });
+    }
+
+    /* ── Cerrar dropdown al hacer clic fuera ── */
+    document.addEventListener('click', function () {
+      if (menu) {
+        menu.classList.remove('open');
+      }
+      if (arrow) {
+        arrow.classList.remove('open');
+      }
+    });
+  })();
+</script>

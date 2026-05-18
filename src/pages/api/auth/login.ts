@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
 
 const REDIRECT_BY_ROLE: Record<string, string> = {
-  cliente:       '/app/cliente/buscar',
+  cliente:       '/app/cliente/escritorio',
   experto:       '/app/experto/escritorio',
   administrador: '/app/soporte/escritorio',
   soporte:       '/app/soporte/escritorio',
@@ -18,10 +18,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const form     = await request.formData();
   const email    = String(form.get('email')    ?? '').trim();
   const password = String(form.get('password') ?? '');
+  const role     = String(form.get('role')     ?? '').trim();
 
   if (!email || !password) {
     return new Response(
       JSON.stringify({ error: 'Email y contraseña son requeridos.' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  if (!role || !['cliente', 'experto'].includes(role)) {
+    return new Response(
+      JSON.stringify({ error: 'Debes seleccionar un rol (Cliente o Profesional).' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }
@@ -43,7 +51,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     .eq('id', authData.user.id)
     .single();
 
-  const redirectTo = REDIRECT_BY_ROLE[perfil?.role ?? 'cliente'] ?? '/app/cliente/buscar';
+  // Use the role selected by the user in the form to determine redirect,
+  // falling back to the DB role if the submitted role is not recognized
+  const redirectTo = REDIRECT_BY_ROLE[role] ?? REDIRECT_BY_ROLE[perfil?.role ?? 'cliente'] ?? '/app/cliente/buscar';
   const { access_token, refresh_token } = authData.session;
 
   cookies.set('sb-access-token', access_token, {
@@ -60,7 +70,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   });
 
   return new Response(
-    JSON.stringify({ ok: true, rol: perfil?.role, redirectTo }),
+    JSON.stringify({ ok: true, rol: role, redirectTo }),
     { status: 200, headers: { 'Content-Type': 'application/json' } }
   );
 };

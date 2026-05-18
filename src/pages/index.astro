@@ -1,6 +1,5 @@
 ---
 import LayoutBase from '../layouts/LayoutBase.astro';
-import SoporteFlotante from '../islands/SoporteFlotante';
 import { getSession } from '../lib/session.js';
 
 const { user, perfil, token } = await getSession(Astro.request);
@@ -201,7 +200,7 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
               <!-- Tarjeta 1 -->
               <div style="background:#18181b;border:1px solid rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box">
                 <div style="height:70px;position:relative;background:#27272a">
-                  <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&q=15&fm=webp" alt="Salón" style="width:100%;height:100%;object-fit:cover"/>
+                  <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&q=15&fm=webp" alt="Salón" style="width:100%;height:100%;object-fit:cover" loading="lazy" decoding="async" />
                   <span style="position:absolute;top:4px;right:4px;background:#BA8F57;color:#000;font-family:'Oswald',sans-serif;font-size:0.55rem;font-weight:700;padding:2px 4px;border-radius:3px">4.9 ★</span>
                 </div>
                 <div style="padding:8px">
@@ -217,7 +216,7 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
               <!-- Tarjeta 2 -->
               <div style="background:#18181b;border:1px solid rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;opacity:0.65;box-sizing:border-box">
                 <div style="height:70px;position:relative;background:#27272a">
-                  <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&q=15&fm=webp" alt="Salón 2" style="width:100%;height:100%;object-fit:cover"/>
+                  <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&q=15&fm=webp" alt="Salón 2" style="width:100%;height:100%;object-fit:cover" loading="lazy" decoding="async" />
                   <span style="position:absolute;top:4px;right:4px;background:#BA8F57;color:#000;font-family:'Oswald',sans-serif;font-size:0.55rem;font-weight:700;padding:2px 4px;border-radius:3px">4.8 ★</span>
                 </div>
                 <div style="padding:8px">
@@ -364,6 +363,7 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
         </button>
 
         <div class="filtros-scroll" id="menu-scroll">
+          <div id="sentinel-start" style="width: 1px; flex-shrink: 0;"></div>
           <a href="/app/cliente/buscar" class="cat-btn active">Todos</a>
           <a href="/app/cliente/buscar?cat=Peluquería" class="cat-btn">Peluquería</a>
           <a href="/app/cliente/buscar?cat=Barbería" class="cat-btn">Barbería</a>
@@ -374,6 +374,7 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
           <a href="/app/cliente/buscar?cat=Tatuajes" class="cat-btn">Tatuajes</a>
           <a href="/app/cliente/buscar?cat=Depilación" class="cat-btn">Depilación</a>
           <a href="/app/cliente/buscar?cat=Podología" class="cat-btn">Podología</a>
+          <div id="sentinel-end" style="width: 1px; flex-shrink: 0;"></div>
         </div>
 
         <button class="scroll-arrow right-arrow" id="arrow-right" onclick="scrollCategorias(200)" aria-label="Desplazar derecha">
@@ -588,6 +589,19 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
       <form id="form-login" action="/api/auth/login" method="POST" style="display:flex;flex-direction:column;gap:1rem">
         <input type="email" name="email" placeholder="Correo electronico" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
         <input type="password" name="password" placeholder="Contrasena" required style="background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);padding:0.65rem 0.9rem;color:#fff;width:100%;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#BA8F57'" onblur="this.style.borderColor='rgba(186,143,87,0.25)'"/>
+        <div style="display:flex;flex-direction:column;gap:0.35rem">
+          <label style="font-family:'Hanken Grotesk',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#888">Entrar como:</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+            <label style="display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.55rem 0.5rem;background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);cursor:pointer;transition:all 0.2s;font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#fff;border-radius:0px" id="role-label-cliente">
+              <input type="radio" name="role" value="cliente" required checked onchange="document.querySelectorAll('.role-tab').forEach(el=>el.style.borderColor='rgba(186,143,87,0.25)');this.parentElement.style.borderColor='#BA8F57'" style="accent-color:#BA8F57;margin:0"/>
+              Cliente
+            </label>
+            <label style="display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.55rem 0.5rem;background:#0a0a0a;border:1px solid rgba(186,143,87,0.25);cursor:pointer;transition:all 0.2s;font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#fff;border-radius:0px" id="role-label-profesional" class="role-tab">
+              <input type="radio" name="role" value="experto" required onchange="document.querySelectorAll('.role-tab').forEach(el=>el.style.borderColor='rgba(186,143,87,0.25)');this.parentElement.style.borderColor='#BA8F57'" style="accent-color:#BA8F57;margin:0"/>
+              Profesional
+            </label>
+          </div>
+        </div>
         <button type="submit" style="background:#BA8F57;color:#000;border:none;padding:0.8rem;font-family:'Hanken Grotesk',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;cursor:pointer">ENTRAR</button>
       </form>
       <form id="form-registro" action="/api/auth/registro" method="POST" style="display:none;flex-direction:column;gap:1rem">
@@ -641,52 +655,38 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
       }
     };
 
-    let ticking = false;
-    function updateArrows() {
+    document.addEventListener('DOMContentLoaded', () => {
       const scrollCont = document.getElementById('menu-scroll');
       const arrowL = document.getElementById('arrow-left');
       const arrowR = document.getElementById('arrow-right');
-      if (!scrollCont || !arrowL || !arrowR) {
-        ticking = false;
-        return;
-      }
-      
-      // 1. Fase de Lectura (segura y libre de DOM invalidado)
-      const scrollLeft = scrollCont.scrollLeft;
-      const scrollWidth = scrollCont.scrollWidth;
-      const clientWidth = scrollCont.clientWidth;
-      
-      // 2. Fase de Escritura (inmediata en el mismo frame para evitar invalidación cruzada)
-      const leftVisible = scrollLeft > 5;
-      const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
-      
-      if (leftVisible) {
-        arrowL.classList.add('visible');
-      } else {
-        arrowL.classList.remove('visible');
-      }
-      
-      if (rightVisible) {
-        arrowR.classList.add('visible');
-      } else {
-        arrowR.classList.remove('visible');
-      }
-      ticking = false;
-    }
+      const sentinelStart = document.getElementById('sentinel-start');
+      const sentinelEnd = document.getElementById('sentinel-end');
 
-    function handleScroll() {
-      if (!ticking) {
-        requestAnimationFrame(updateArrows);
-        ticking = true;
-      }
-    }
+      if (scrollCont && arrowL && arrowR && sentinelStart && sentinelEnd) {
+        // Observer para la izquierda (oculta flecha si el sentinel de inicio es visible)
+        const observerStart = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              arrowL.classList.remove('visible');
+            } else {
+              arrowL.classList.add('visible');
+            }
+          });
+        }, { root: scrollCont, threshold: 0.1 });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const scrollCont = document.getElementById('menu-scroll');
-      if (scrollCont) {
-        scrollCont.addEventListener('scroll', handleScroll, { passive: true });
-        setTimeout(updateArrows, 150);
-        window.addEventListener('resize', handleScroll, { passive: true });
+        // Observer para la derecha (oculta flecha si el sentinel del final es visible)
+        const observerEnd = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              arrowR.classList.remove('visible');
+            } else {
+              arrowR.classList.add('visible');
+            }
+          });
+        }, { root: scrollCont, threshold: 0.1 });
+
+        observerStart.observe(sentinelStart);
+        observerEnd.observe(sentinelEnd);
       }
     });
   </script>
@@ -1173,9 +1173,66 @@ const isPro = perfil && ['experto', 'administrador'].includes(perfil.role);
     .compare-val-cross {
       color: rgba(255, 255, 255, 0.25);
     }
+    
+    @keyframes soportePulse {
+      0% { box-shadow: 0 0 10px rgba(186,143,87,0.25); }
+      100% { box-shadow: 0 0 25px rgba(186,143,87,0.55); }
+    }
   </style>
 
-  <!-- WIDGET DE SOPORTE FLOTANTE REALTIME -->
-  <SoporteFlotante client:only="preact" token={token} />
+  <!-- WIDGET DE SOPORTE FLOTANTE REALTIME (CARGA DIFERIDA DE MÁXIMA VELOCIDAD) -->
+  <div id="soporte-container" style="position: fixed; right: 24px; bottom: 24px; z-index: 100;">
+    <!-- Botón estático inicial para evitar cargar JS en la ruta crítica -->
+    <button
+      id="btn-soporte-estatico"
+      aria-label="Abrir chat de soporte"
+      style="width: 60px; height: 60px; border-radius: 50%; background: #111; border: 2px solid #BA8F57; color: #BA8F57; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 8px 30px rgba(186,143,87,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); animation: soportePulse 3s infinite alternate;"
+      onmouseover="this.style.transform='scale(1.08) rotate(5deg)'; this.style.background='#BA8F57'; this.style.color='#000'; this.style.borderColor='#fff';"
+      onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.background='#111'; this.style.color='#BA8F57'; this.style.borderColor='#BA8F57';"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+      </svg>
+    </button>
+  </div>
+
+  <script define:vars={{ token }}>
+    const btn = document.getElementById('btn-soporte-estatico');
+    let loaded = false;
+
+    async function loadChat(openImmediately = false) {
+      if (loaded) return;
+      loaded = true;
+      
+      try {
+        // Importar dinámicamente Preact y el componente de SoporteFlotante
+        const { h, render } = await import('preact');
+        const { default: SoporteFlotante } = await import('../islands/SoporteFlotante');
+        
+        const container = document.getElementById('soporte-container');
+        if (container) {
+          container.innerHTML = '';
+          render(h(SoporteFlotante, { token, isOpenInitial: openImmediately }), container);
+        }
+      } catch (err) {
+        console.error('Error al cargar dinámicamente el chat de soporte:', err);
+      }
+    }
+
+    if (btn) {
+      btn.addEventListener('click', () => loadChat(true), { once: true });
+      btn.addEventListener('mouseenter', () => loadChat(false), { once: true });
+      btn.addEventListener('touchstart', () => loadChat(false), { once: true, passive: true });
+    }
+
+    // Carga en segundo plano tras 4s de inactividad inicial
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => {
+        setTimeout(() => loadChat(false), 4000);
+      });
+    } else {
+      setTimeout(() => loadChat(false), 5000);
+    }
+  </script>
 
 </LayoutBase>

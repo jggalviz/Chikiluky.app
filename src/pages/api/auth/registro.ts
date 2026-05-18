@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const password = String(form.get('password')  ?? '');
   const nombre   = String(form.get('full_name') ?? '').trim();
   const telefono = String(form.get('telefono')  ?? '').trim();
-  const rol      = String(form.get('role')      ?? 'cliente');
+  const rol      = 'cliente'; // Registro unificado como cliente por defecto
 
   if (!email || !password || !nombre) {
     return new Response(
@@ -26,13 +26,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   if (password.length < 6) {
     return new Response(
       JSON.stringify({ error: 'La contraseña debe tener mínimo 6 caracteres.' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
-  if (!['cliente', 'experto', 'soporte', 'administrador'].includes(rol)) {
-    return new Response(
-      JSON.stringify({ error: 'Rol inválido.' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
     );
   }
@@ -79,9 +72,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       sameSite: 'lax',
       maxAge: 604800,
     });
-    const redirectTo = rol === 'soporte' || rol === 'administrador'
-      ? '/app/soporte/escritorio'
-      : (rol === 'experto' ? '/app/experto/agenda' : '/app/cliente/buscar');
+    const redirectTo = '/app/cliente/escritorio';
     return new Response(
       JSON.stringify({ ok: true, autoLogin: true, redirectTo }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }

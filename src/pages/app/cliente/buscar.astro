@@ -169,6 +169,7 @@ const categorias = [
         </button>
 
         <div id="filtros-cat" class="filtros-scroll">
+          <div id="sentinel-start-buscar" style="width: 1px; flex-shrink: 0;"></div>
           {categorias.map((cat) => (
             <button
               data-cat={cat}
@@ -178,6 +179,7 @@ const categorias = [
               {cat}
             </button>
           ))}
+          <div id="sentinel-end-buscar" style="width: 1px; flex-shrink: 0;"></div>
         </div>
 
         <button class="scroll-arrow right-arrow" id="buscar-arrow-right" onclick="scrollBuscarMenu(200)" aria-label="Desplazar derecha">
@@ -353,52 +355,38 @@ const categorias = [
       }
     };
 
-    let tickingBuscar = false;
-    function updateBuscarArrows() {
+    window.addEventListener('DOMContentLoaded', () => {
       const scrollCont = document.getElementById('filtros-cat');
       const arrowL = document.getElementById('buscar-arrow-left');
       const arrowR = document.getElementById('buscar-arrow-right');
-      if (!scrollCont || !arrowL || !arrowR) {
-        tickingBuscar = false;
-        return;
-      }
+      const sentinelStart = document.getElementById('sentinel-start-buscar');
+      const sentinelEnd = document.getElementById('sentinel-end-buscar');
 
-      // 1. Fase de Lectura
-      const scrollLeft = scrollCont.scrollLeft;
-      const scrollWidth = scrollCont.scrollWidth;
-      const clientWidth = scrollCont.clientWidth;
+      if (scrollCont && arrowL && arrowR && sentinelStart && sentinelEnd) {
+        // Observer para la izquierda (oculta flecha si el sentinel de inicio es visible)
+        const observerStart = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              arrowL.classList.remove('visible');
+            } else {
+              arrowL.classList.add('visible');
+            }
+          });
+        }, { root: scrollCont, threshold: 0.1 });
 
-      // 2. Fase de Escritura
-      const leftVisible = scrollLeft > 5;
-      const rightVisible = scrollLeft < (scrollWidth - clientWidth - 5);
-      
-      if (leftVisible) {
-        arrowL.classList.add('visible');
-      } else {
-        arrowL.classList.remove('visible');
-      }
-      
-      if (rightVisible) {
-        arrowR.classList.add('visible');
-      } else {
-        arrowR.classList.remove('visible');
-      }
-      tickingBuscar = false;
-    }
+        // Observer para la derecha (oculta flecha si el sentinel del final es visible)
+        const observerEnd = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              arrowR.classList.remove('visible');
+            } else {
+              arrowR.classList.add('visible');
+            }
+          });
+        }, { root: scrollCont, threshold: 0.1 });
 
-    function handleBuscarScroll() {
-      if (!tickingBuscar) {
-        requestAnimationFrame(updateBuscarArrows);
-        tickingBuscar = true;
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const scrollCont = document.getElementById('filtros-cat');
-      if (scrollCont) {
-        scrollCont.addEventListener('scroll', handleBuscarScroll, { passive: true });
-        setTimeout(updateBuscarArrows, 150);
-        window.addEventListener('resize', handleBuscarScroll, { passive: true });
+        observerStart.observe(sentinelStart);
+        observerEnd.observe(sentinelEnd);
       }
     });
   </script>
