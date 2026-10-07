@@ -1,0 +1,62 @@
+{
+  "id": "/",
+  "name": "CHIKILUKY — Belleza y Cuidado Personal",
+  "short_name": "CHIKILUKY",
+  "description": "El ecosistema digital de cuidado personal en Venezuela. Encuentra peluquerías, barberías, estudios de uñas, tatuajes y estética, y reserva tu cita en segundos.",
+  "lang": "es-VE",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "categories": ["lifestyle", "beauty", "shopping"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buscar salón",
+      "short_name": "Buscar",
+      "url": "/app/cliente/buscar",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Mis reservas",
+      "short_name": "Reservas",
+      "url": "/app/cliente/reservar",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Escritorio Pro",
+      "short_name": "Pro",
+      "url": "/app/experto/escritorio",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}
