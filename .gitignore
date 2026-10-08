@@ -23,3 +23,30 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# --- TWA / Android (Bubblewrap) ---
+# NEVER commit signing keys or build artifacts
+*.keystore
+*.jks
+*.aab
+*.apk
+# Generated Android project (regenerable via `bubblewrap update` from twa-manifest.json)
+/app/
+/build/
+/.gradle/
+/gradle/
+/gradlew
+/gradlew.bat
+/build.gradle
+/settings.gradle
+/gradle.properties
+/local.properties
+/manifest-checksum.txt
+
+# --- scratch (logs de build / JDK local) ---
+/scratch/jdk21/
+/scratch/jdk21.zip
+/scratch/*.log
+/scratch/bw-answers.txt
+/scratch/build-aab.cmd
+/scratch/getjdk.ps1
