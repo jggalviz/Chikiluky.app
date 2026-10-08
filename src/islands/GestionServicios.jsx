@@ -2,8 +2,9 @@ import { useState, useEffect } from 'preact/hooks';
 import { supabase } from '../lib/supabase';
 import { convertirRefABs } from '../utils/currency';
 
-export default function GestionServicios({ serviciosIniciales = [], tasaBcvInicial = 40.00, negocioName = '' }) {
+export default function GestionServicios({ serviciosIniciales = [], tasaBcvInicial = 40.00, negocioName = '', plan = 'gratis' }) {
   const [servicios, setServicios] = useState(serviciosIniciales);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [editingService, setEditingService] = useState(null);
 
   // Campos del formulario
@@ -144,7 +145,8 @@ export default function GestionServicios({ serviciosIniciales = [], tasaBcvInici
           alignItems: 'center',
           gap: '0.6rem',
           textTransform: 'uppercase',
-          letterSpacing: '0.04em'
+          letterSpacing: '0.04em',
+          width: '100%'
         }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ba8f57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             {editingService ? (
@@ -156,10 +158,48 @@ export default function GestionServicios({ serviciosIniciales = [], tasaBcvInici
               </>
             )}
           </svg>
-          {editingService ? `Editar servicio: ${editingService.nombre}` : 'Añadir nuevo servicio'}
+          <span style={{ flex: 1 }}>
+            {editingService ? `Editar servicio: ${editingService.nombre}` : 'Añadir nuevo servicio'}
+          </span>
+
+          {plan === 'gratis' && (
+            <button 
+              type="button"
+              onClick={() => setShowUpgradeModal(true)} 
+              style={{
+                fontSize: '0.68rem',
+                color: '#ba8f57',
+                background: 'rgba(186,143,87,0.06)',
+                border: '1px solid rgba(186,143,87,0.2)',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '0px',
+                fontWeight: '800',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.2rem',
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.background = '#ba8f57'; e.currentTarget.style.color = '#000'; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(186,143,87,0.06)'; e.currentTarget.style.color = '#ba8f57'; }}
+            >
+              ⚡ Mejora tu plan
+            </button>
+          )}
         </h2>
 
-        <form method="POST" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form 
+          method="POST" 
+          onSubmit={(e) => {
+            if (!editingService && plan === 'gratis' && servicios.length >= 3) {
+              e.preventDefault();
+              setShowUpgradeModal(true);
+            }
+          }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+        >
           <input type="hidden" name="_accion" value={editingService ? 'editar' : 'crear'} />
           {editingService && <input type="hidden" name="servicio_id" value={editingService.id} />}
           <input type="hidden" name="precio_bs" value={precioBsCalculado} />
@@ -454,8 +494,35 @@ export default function GestionServicios({ serviciosIniciales = [], tasaBcvInici
           letterSpacing: '0.04em'
         }}>
           Servicios publicados
-          <span style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.78rem', fontWeight: '400', color: '#555', textTransform: 'none', letterSpacing: '0' }}>
+          <span style={{ fontFamily: "'Lato', sans-serif", fontSize: '0.78rem', fontWeight: '400', color: '#555', textTransform: 'none', letterSpacing: '0', display: 'flex', alignItems: 'center' }}>
             {servicios.length} en total
+            {plan === 'gratis' && (
+              <button 
+                type="button" 
+                onClick={() => setShowUpgradeModal(true)} 
+                style={{
+                  marginLeft: '0.75rem',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#ba8f57',
+                  fontFamily: "'Urbanist', sans-serif",
+                  fontSize: '0.72rem',
+                  fontWeight: '800',
+                  cursor: 'pointer',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.2rem',
+                  padding: 0,
+                  transition: 'all 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+                onMouseOut={(e) => e.currentTarget.style.color = '#ba8f57'}
+              >
+                ⚡ Mejora tu plan
+              </button>
+            )}
           </span>
         </h2>
 
@@ -598,12 +665,324 @@ export default function GestionServicios({ serviciosIniciales = [], tasaBcvInici
         )}
       </section>
 
+      {/* ════════════════════════════════════
+           MODAL DE MEJORA DE PLAN (UPGRADE)
+      ═════════════════════════════════════ */}
+      {showUpgradeModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(3, 3, 3, 0.93)',
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 99999,
+          padding: '1.5rem',
+          overflowY: 'auto'
+        }}>
+          <div style={{
+            background: '#0a0a0a',
+            border: '1px solid #262626',
+            borderRadius: '0px',
+            width: '100%',
+            maxWidth: '750px',
+            padding: '2.25rem',
+            position: 'relative',
+            boxShadow: '0 30px 60px -15px rgba(0,0,0,0.8)'
+          }}>
+            {/* Botón Cerrar */}
+            <button
+              onClick={() => setShowUpgradeModal(false)}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'transparent',
+                border: 'none',
+                color: '#737373',
+                fontSize: '1.25rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s',
+                padding: '0.2rem'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.color = '#fff'}
+              onMouseOut={(e) => e.currentTarget.style.color = '#737373'}
+            >
+              ✕
+            </button>
+
+            {/* Encabezado */}
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <span style={{
+                background: 'rgba(186, 143, 87, 0.08)',
+                color: '#ba8f57',
+                fontFamily: "'Urbanist', sans-serif",
+                fontSize: '10px',
+                fontWeight: '900',
+                letterSpacing: '0.12em',
+                padding: '0.3rem 0.8rem',
+                borderRadius: '0px',
+                textTransform: 'uppercase',
+                display: 'inline-block',
+                marginBottom: '0.6rem'
+              }}>
+                Mejora tu Plan de Negocios
+              </span>
+              <h3 style={{
+                fontFamily: "'Urbanist', sans-serif",
+                fontWeight: '900',
+                fontSize: '1.5rem',
+                color: '#fff',
+                margin: 0,
+                textTransform: 'uppercase',
+                letterSpacing: '-0.01em'
+              }}>
+                Eleva tu potencial en CHIKILUKY
+              </h3>
+              <p style={{
+                fontFamily: "'Lato', sans-serif",
+                fontSize: '0.8rem',
+                color: '#737373',
+                marginTop: '0.4rem',
+                maxWidth: '480px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                lineHeight: '1.4'
+              }}>
+                Has alcanzado el límite de tu plan. Elige la suscripción que mejor se adapte a tu salón y desbloquea el crecimiento real hoy mismo.
+              </p>
+            </div>
+
+            {/* Grid de Planes */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1rem'
+            }} class="plans-grid-responsive">
+              
+              {/* PLAN GRATIS */}
+              <div style={{
+                background: '#0d0d0d',
+                border: '1px solid #1a1a1a',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                opacity: 0.55
+              }}>
+                <h4 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '0.8rem', color: '#737373', margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>GRATIS</h4>
+                <div style={{ margin: '0.5rem 0 1rem' }}>
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '1.75rem', color: '#fff' }}>$0</span>
+                  <span style={{ color: '#737373', fontSize: '0.78rem', fontFamily: "'Lato', sans-serif" }}> / siempre</span>
+                </div>
+                <div style={{
+                  borderTop: '1px solid #222',
+                  paddingTop: '1rem',
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.78rem',
+                  fontFamily: "'Lato', sans-serif",
+                  color: '#737373',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span>✓</span> Máx 3 servicios
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span>✓</span> Máx 1 especialista
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span>✓</span> Agenda digital básica
+                  </div>
+                </div>
+                <button
+                  disabled
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: '#161616',
+                    color: '#555',
+                    border: 'none',
+                    fontSize: '10px',
+                    fontWeight: '900',
+                    fontFamily: "'Urbanist', sans-serif",
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    cursor: 'not-allowed'
+                  }}
+                >
+                  Plan activo
+                </button>
+              </div>
+
+              {/* PLAN PLATA */}
+              <div style={{
+                background: '#0e0e0e',
+                border: '1px solid #ba8f57',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                boxShadow: '0 10px 30px rgba(186,143,87,0.04)'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  background: '#ba8f57',
+                  color: '#000',
+                  fontSize: '8px',
+                  fontWeight: '900',
+                  fontFamily: "'Urbanist', sans-serif",
+                  padding: '0.2rem 0.6rem',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase'
+                }}>
+                  Más Popular
+                </div>
+                <h4 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '0.8rem', color: '#ba8f57', margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>PLATA</h4>
+                <div style={{ margin: '0.5rem 0 1rem' }}>
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '1.75rem', color: '#fff' }}>$15</span>
+                  <span style={{ color: '#737373', fontSize: '0.78rem', fontFamily: "'Lato', sans-serif" }}> / 30 días</span>
+                </div>
+                <div style={{
+                  borderTop: '1px solid rgba(186,143,87,0.2)',
+                  paddingTop: '1rem',
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.78rem',
+                  fontFamily: "'Lato', sans-serif",
+                  color: '#cccccc',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Servicios <strong style={{ color: '#fff' }}>ILIMITADOS</strong>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Máximo 3 especialistas
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Pago Móvil activo ilimitado
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Soporte prioritario
+                  </div>
+                </div>
+                <a
+                  href="/app/experto/pagar?plan=plata"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: 'rgba(186, 143, 87, 0.1)',
+                    border: '1px solid #ba8f57',
+                    color: '#ba8f57',
+                    fontSize: '10px',
+                    fontWeight: '900',
+                    fontFamily: "'Urbanist', sans-serif",
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                    boxSizing: 'border-box'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#ba8f57'; e.currentTarget.style.color = '#000'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(186, 143, 87, 0.1)'; e.currentTarget.style.color = '#ba8f57'; }}
+                >
+                  Contratar por 30 días
+                </a>
+              </div>
+
+              {/* PLAN ORO */}
+              <div style={{
+                background: '#0d0d0d',
+                border: '1px solid #262626',
+                padding: '1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative'
+              }}>
+                <h4 style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '0.8rem', color: '#fff', margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '0.04em' }}>ORO</h4>
+                <div style={{ margin: '0.5rem 0 1rem' }}>
+                  <span style={{ fontFamily: "'Urbanist', sans-serif", fontWeight: '900', fontSize: '1.75rem', color: '#fff' }}>$30</span>
+                  <span style={{ color: '#737373', fontSize: '0.78rem', fontFamily: "'Lato', sans-serif" }}> / 30 días</span>
+                </div>
+                <div style={{
+                  borderTop: '1px solid #222',
+                  paddingTop: '1rem',
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  fontSize: '0.78rem',
+                  fontFamily: "'Lato', sans-serif",
+                  color: '#a3a3a3',
+                  marginBottom: '1.5rem'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Todo <strong style={{ color: '#fff' }}>ILIMITADO</strong>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Especialistas ilimitados
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#fff' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Módulo financiero completo
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ color: '#ba8f57', fontWeight: 'bold' }}>✓</span> Soporte VIP exclusivo
+                  </div>
+                </div>
+                <a
+                  href="/app/experto/pagar?plan=oro"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: '#fff',
+                    color: '#000',
+                    border: 'none',
+                    fontSize: '10px',
+                    fontWeight: '900',
+                    fontFamily: "'Urbanist', sans-serif",
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                    boxSizing: 'border-box'
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#ba8f57'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = '#fff'; }}
+                >
+                  Contratar por 30 días
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Estilos e inyecciones de CSS Responsivo */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media (max-width: 580px) {
           .form-row-responsive {
             grid-template-columns: 1fr !important;
             gap: 1.25rem !important;
+          }
+          .plans-grid-responsive {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
           }
         }
         .service-card-hover:hover {

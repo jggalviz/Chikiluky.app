@@ -1,0 +1,367 @@
+---
+import LayoutBase from '../../../layouts/LayoutBase.astro';
+import Header from '../../../components/Header.astro';
+import { supabase } from '../../../lib/supabase.js';
+import { getSession } from '../../../lib/session.js';
+
+// ── Validación de sesión y rol ────────────────────────────────────────────────
+const { user, perfil } = await getSession(Astro.request);
+if (!user) return Astro.redirect('/');
+
+if (!perfil || !['experto', 'administrador'].includes(perfil.role)) {
+  return Astro.redirect('/app/cliente/buscar');
+}
+
+// ── Obtener plan de la URL y calcular montos ──────────────────────────────────
+const planParam = Astro.url.searchParams.get('plan') ?? 'plata';
+const planNormalized = planParam.toLowerCase() === 'oro' ? 'oro' : 'plata';
+
+// Obtener tasa BCV oficial
+const { data: configData } = await supabase
+  .from('configuracion_sistema')
+  .select('tasa_bcv')
+  .eq('id', 1)
+  .maybeSingle();
+const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
+
+// Calcular importes
+const precioUsd = planNormalized === 'oro' ? 30.00 : 15.00;
+const precioBs = Math.round(precioUsd * tasaBcv * 100) / 100;
+
+// Detalles estéticos del plan
+const planDetails = planNormalized === 'oro' ? {
+  title: 'PLAN ORO — SUSCRIPCIÓN COMPLETA',
+  desc: 'Servicios e especialistas ilimitados, módulo financiero, soporte prioritario VIP 24/7.',
+  duration: '30 días de activación'
+} : {
+  title: 'PLAN PLATA — SUSCRIPCIÓN ESTÁNDAR',
+  desc: 'Servicios ilimitados, hasta 3 especialistas y soporte vía WhatsApp.',
+  duration: '30 días de activación'
+};
+
+// ── Procesar POST para registrar el pago ──────────────────────────────────────
+let formError = '';
+let formSuccess = false;
+let referenciaSubmitida = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const referencia = String(form.get('referencia') ?? '').trim();
+  const banco_emisor = String(form.get('banco_emisor') ?? '').trim();
+  const telefono_pagador = String(form.get('telefono_pagador') ?? '').trim();
+
+  if (!referencia || !banco_emisor) {
+    formError = 'El número de referencia y el banco emisor son obligatorios.';
+  } else if (!/^\d{4,12}$/.test(referencia)) {
+    formError = 'El número de referencia debe contener entre 4 y 12 dígitos numéricos.';
+  } else {
+    try {
+      const { error } = await supabase
+        .from('pagos_pendientes')
+        .insert({
+          user_id: user.id,
+          plan: planNormalized,
+          monto_usd: precioUsd,
+          monto_bs: precioBs,
+          referencia,
+          banco_emisor,
+          telefono_pagador: telefono_pagador || null,
+          estado: 'pendiente'
+        });
+
+      if (error) {
+        if (error.code === '23505') {
+          formError = 'Este número de referencia ya ha sido registrado previamente.';
+        } else {
+          formError = error.message || 'Error al guardar el reporte en base de datos.';
+        }
+      } else {
+        formSuccess = true;
+        referenciaSubmitida = referencia;
+      }
+    } catch (err: any) {
+      console.error('Error al insertar reporte de pago:', err);
+      formError = 'Ocurrió un error inesperado al procesar tu solicitud.';
+    }
+  }
+}
+---
+
+<LayoutBase
+  title="Realizar Pago Móvil — CHIKILUKY Pro"
+  description="Realiza la transferencia en bolívares a tasa BCV y reporta tu pago para activar tu plan."
+>
+
+  <Header user={user} perfil={perfil} />
+
+  <main style="padding:2.5rem 1.5rem 5rem;background:#050505;flex:1;display:flex;align-items:center;justify-content:center">
+    <div style="width:100%;max-width:540px;margin:0 auto">
+
+      {formSuccess ? (
+        /* PANTALLA DE ÉXITO */
+        <div style="background:#0a0a0a;border:1px solid #ba8f57;padding:3rem 2rem;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.5)">
+          <div style="
+            width: 50px;
+            height: 50px;
+            background: rgba(186, 143, 87, 0.1);
+            border: 1px solid #ba8f57;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justifyContent: center;
+            margin: 0 auto 1.5rem;
+            color: #ba8f57;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            ✓
+          </div>
+          <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;color:#fff;font-size:1.35rem;text-transform:uppercase;letter-spacing:0.04em;margin:0 0 0.75rem 0">
+            ¡Pago Reportado Exitosamente!
+          </h1>
+          <p style="font-family:'Lato',sans-serif;font-size:0.85rem;color:#a3a3a3;line-height:1.5;margin-bottom:1.5rem">
+            Hemos recibido tu reporte de Pago Móvil con referencia <strong style="color:#fff">#{referenciaSubmitida}</strong>. 
+            Nuestro equipo verificará la transacción en las próximas horas y tu cuenta será actualizada automáticamente al <strong style="color:#ba8f57;text-transform:uppercase">Plan {planNormalized}</strong>.
+          </p>
+          
+          <div style="background:rgba(255,255,255,0.02);border:1px solid #1c1c1c;padding:1rem;margin-bottom:2rem;text-align:left">
+            <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'bold', display: 'block', marginBottom: '0.2rem' }}>
+              Resumen de solicitud
+            </span>
+            <div style="display:flex;justify-content:between;font-size:11px;font-family:'Urbanist',sans-serif;color:#a3a3a3;margin-top:0.4rem">
+              <span style="flex:1">Plan Solicitado:</span>
+              <strong style="color:#fff;text-transform:uppercase">{planNormalized}</strong>
+            </div>
+            <div style="display:flex;justify-content:between;font-size:11px;font-family:'Urbanist',sans-serif;color:#a3a3a3;margin-top:0.3rem">
+              <span style="flex:1">Monto de validación:</span>
+              <strong style="color:#fff">{precioUsd.toFixed(2)} USD / {precioBs.toFixed(2)} Bs</strong>
+            </div>
+          </div>
+
+          <a 
+            href="/app/experto/escritorio"
+            style="
+              display: block;
+              background: #ba8f57;
+              color: #000;
+              text-align: center;
+              font-family: 'Urbanist', sans-serif;
+              font-weight: 900;
+              font-size: 11px;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              padding: 0.9rem;
+              text-decoration: none;
+              transition: all 0.2s;
+            "
+            onmouseover="this.style.background='#fff'"
+            onmouseout="this.style.background='#ba8f57'"
+          >
+            Volver al Escritorio Pro
+          </a>
+        </div>
+      ) : (
+        /* PANTALLA DE FORMULARIO DE PAGO */
+        <div>
+          <div style="margin-bottom:1.5rem">
+            <a 
+              href="/app/experto/servicios" 
+              style="font-family:'Urbanist',sans-serif;font-size:10px;font-weight:900;color:#ba8f57;text-decoration:none;text-transform:uppercase;letter-spacing:0.06em;display:flex;align-items:center;gap:0.3rem;margin-bottom:0.75rem"
+              onmouseover="this.style.color='#fff'"
+              onmouseout="this.style.color='#ba8f57'"
+            >
+              ← Cancelar e ir atrás
+            </a>
+            <h1 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1.6rem;color:#fff;margin:0;letter-spacing:-0.01em;text-transform:uppercase">
+              Pago Móvil Local
+            </h1>
+            <p style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#737373;margin-top:0.25rem">
+              Transfiere de forma rápida en Bolívares usando Pago Móvil y reporta tu referencia para activación manual.
+            </p>
+          </div>
+
+          {/* TARJETA DETALLE DE PLAN */}
+          <div style="background:#0a0a0a;border:1px solid #ba8f57;padding:1.5rem;margin-bottom:1.5rem">
+            <span style="font-family:'Urbanist',sans-serif;font-size:8px;font-weight:900;color:#ba8f57;letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:0.4rem">
+              Suscripción Elegida
+            </span>
+            <h3 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:1rem;color:#fff;margin:0;letter-spacing:0.02em">
+              {planDetails.title}
+            </h3>
+            <p style="font-family:'Lato',sans-serif;font-size:0.76rem;color:#737373;margin:0.2rem 0 0.8rem;line-height:1.3">
+              {planDetails.desc}
+            </p>
+            
+            <div style="border-top:1px dashed #262626;padding-top:0.8rem;display:flex;align-items:center;justify-content:between">
+              <div>
+                <span style="font-family:'Lato',sans-serif;font-size:10px;color:#ba8f57;display:block">
+                  Total a Transferir:
+                </span>
+                <span style="font-family:'Urbanist',sans-serif;font-size:1.35rem;font-weight:900;color:#fff;letter-spacing:0.02em">
+                  {precioBs.toFixed(2)} Bs
+                </span>
+              </div>
+              <div style="text-align:right;margin-left:auto">
+                <span style="font-family:'Lato',sans-serif;font-size:9px;color:#525252;display:block">
+                  Valor de Referencia:
+                </span>
+                <span style="font-family:'Urbanist',sans-serif;font-size:0.82rem;font-weight:700;color:#888">
+                  ${precioUsd.toFixed(2)} USD (Tasa BCV: {tasaBcv.toFixed(2)})
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* DATOS DE PAGO MÓVIL (COPIABLES) */}
+          <div style="background:#0a0a0a;border:1px solid #1a1a1a;padding:1.5rem;margin-bottom:1.5rem">
+            <h4 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.82rem;color:#fff;margin:0 0 1rem 0;text-transform:uppercase;letter-spacing:0.04em">
+              Datos para la Transferencia
+            </h4>
+            
+            <div style="display:flex;flex-direction:column;gap:0.6rem">
+              {/* BANCO */}
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.01);padding:0.6rem 0.8rem;border:1px solid #161616">
+                <div>
+                  <span style="font-family:'Lato',sans-serif;font-size:9px;color:#525252;display:block;text-transform:uppercase">Banco</span>
+                  <span style="font-family:'Urbanist',sans-serif;font-size:0.82rem;font-weight:800;color:#fff">BANCO DE VENEZUELA (0102)</span>
+                </div>
+              </div>
+
+              {/* TELÉFONO */}
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.01);padding:0.6rem 0.8rem;border:1px solid #161616">
+                <div>
+                  <span style="font-family:'Lato',sans-serif;font-size:9px;color:#525252;display:block;text-transform:uppercase">Teléfono</span>
+                  <span id="tel-pago" style="font-family:'Urbanist',sans-serif;font-size:0.82rem;font-weight:800;color:#fff">04125551234</span>
+                </div>
+                <button 
+                  type="button"
+                  onclick="navigator.clipboard.writeText('04125551234'); alert('¡Teléfono copiado al portapapeles!');"
+                  style="background:transparent;border:1px solid rgba(186,143,87,0.3);color:#ba8f57;font-family:'Urbanist',sans-serif;font-size:9px;font-weight:bold;padding:0.2rem 0.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em"
+                  onmouseover="this.style.background='rgba(186,143,87,0.06)'"
+                  onmouseout="this.style.background='transparent'"
+                >
+                  Copiar
+                </button>
+              </div>
+
+              {/* CÉDULA / RIF */}
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.01);padding:0.6rem 0.8rem;border:1px solid #161616">
+                <div>
+                  <span style="font-family:'Lato',sans-serif;font-size:9px;color:#525252;display:block;text-transform:uppercase">Cédula / RIF</span>
+                  <span id="rif-pago" style="font-family:'Urbanist',sans-serif;font-size:0.82rem;font-weight:800;color:#fff">V-12345678</span>
+                </div>
+                <button 
+                  type="button"
+                  onclick="navigator.clipboard.writeText('12345678'); alert('¡Cédula copiada al portapapeles!');"
+                  style="background:transparent;border:1px solid rgba(186,143,87,0.3);color:#ba8f57;font-family:'Urbanist',sans-serif;font-size:9px;font-weight:bold;padding:0.2rem 0.5rem;cursor:pointer;text-transform:uppercase;letter-spacing:0.04em"
+                  onmouseover="this.style.background='rgba(186,143,87,0.06)'"
+                  onmouseout="this.style.background='transparent'"
+                >
+                  Copiar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* FORMULARIO DE REPORTE */}
+          <section style="background:#0a0a0a;border:1px solid #1a1a1a;padding:1.75rem">
+            <h4 style="font-family:'Urbanist',sans-serif;font-weight:900;font-size:0.82rem;color:#fff;margin:0 0 1.25rem 0;text-transform:uppercase;letter-spacing:0.04em">
+              Reportar Pago Realizado
+            </h4>
+
+            {formError && (
+              <p style="font-family:'Lato',sans-serif;font-size:0.8rem;color:#ef4444;margin-bottom:1.25rem;padding:0.75rem 0.9rem;background:rgba(239,68,68,0.05);border-left:2px solid #ef4444">
+                {formError}
+              </p>
+            )}
+
+            <form method="POST" style="display:flex;flex-direction:column;gap:1.25rem">
+              
+              {/* Banco Emisor */}
+              <div>
+                <label style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:10px;color:#ba8f57;display:block;margin-bottom:0.45rem;letter-spacing:0.08em;text-transform:uppercase">
+                  Banco desde el que realizaste el Pago Móvil *
+                </label>
+                <select
+                  name="banco_emisor"
+                  required
+                  style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.8rem 1rem;color:#fff;fontSize:13.5px;outline:none;cursor:pointer;box-sizing:border-box"
+                >
+                  <option value="">Selecciona...</option>
+                  <option value="Banco de Venezuela">Banco de Venezuela</option>
+                  <option value="Banesco">Banesco</option>
+                  <option value="Banco Mercantil">Banco Mercantil</option>
+                  <option value="BBVA Provincial">BBVA Provincial</option>
+                  <option value="Bancamiga">Bancamiga</option>
+                  <option value="Banco Nacional de Crédito">Banco Nacional de Crédito</option>
+                  <option value="Banco Exterior">Banco Exterior</option>
+                  <option value="Banco Activo">Banco Activo</option>
+                  <option value="Bancaribe">Bancaribe</option>
+                  <option value="Otros">Otro Banco</option>
+                </select>
+              </div>
+
+              {/* Referencia */}
+              <div>
+                <label style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:10px;color:#ba8f57;display:block;margin-bottom:0.45rem;letter-spacing:0.08em;text-transform:uppercase">
+                  Número de Referencia (Últimos 4 a 8 dígitos) *
+                </label>
+                <input
+                  type="text"
+                  name="referencia"
+                  required
+                  placeholder="Ej: 549302 (Solo números)"
+                  pattern="\d{4,12}"
+                  title="Ingresa únicamente dígitos numéricos (entre 4 y 12 caracteres)."
+                  style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.8rem 1rem;color:#fff;fontSize:13.5px;outline:none;box-sizing:border-box"
+                />
+              </div>
+
+              {/* Teléfono Pagador */}
+              <div>
+                <label style="font-family:'Urbanist',sans-serif;font-weight:700;font-size:10px;color:#ba8f57;display:block;margin-bottom:0.45rem;letter-spacing:0.08em;text-transform:uppercase">
+                  Teléfono emisor del Pago Móvil (Opcional)
+                </label>
+                <input
+                  type="text"
+                  name="telefono_pagador"
+                  placeholder="Ej: 04241234567"
+                  style="width:100%;background:#0d0d0d;border:1px solid #262626;border-radius:0px;padding:0.8rem 1rem;color:#fff;fontSize:13.5px;outline:none;box-sizing:border-box"
+                />
+              </div>
+
+              <button
+                type="submit"
+                style="
+                  width: 100%;
+                  background: #ba8f57;
+                  color: #000;
+                  font-family: 'Urbanist', sans-serif;
+                  font-weight: 900;
+                  font-size: 11px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  padding: 1rem;
+                  border: none;
+                  cursor: pointer;
+                  transition: all 0.2s;
+                  margin-top: 0.5rem;
+                "
+                onmouseover="this.style.background='#fff'"
+                onmouseout="this.style.background='#ba8f57'"
+              >
+                Confirmar Reporte de Pago
+              </button>
+
+            </form>
+          </section>
+        </div>
+      )}
+
+    </div>
+  </main>
+
+</LayoutBase>

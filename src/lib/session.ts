@@ -9,6 +9,7 @@ export interface Perfil {
   full_name: string;
   role: 'cliente' | 'experto' | 'administrador';
   telefono?: string | null;
+  plan?: 'gratis' | 'plata' | 'oro' | null;
 }
 
 export interface Session {
@@ -48,7 +49,7 @@ export async function getSession(request: Request): Promise<Session> {
   // Consultar perfil usando el cliente autenticado para cumplir con las políticas RLS
   const { data: perfil, error: pError } = await supabaseClient
     .from('perfiles')
-    .select('full_name, role, telefono')
+    .select('full_name, role, telefono, plan')
     .eq('id', user.id)
     .single();
 

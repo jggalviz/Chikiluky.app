@@ -37,15 +37,23 @@ if (Astro.request.method === 'POST' && negocio) {
     if (!nombre || !categoria || isNaN(precio_usd) || precio_usd <= 0) {
       formError = 'Nombre, categoría y precio en USD son requeridos.';
     } else {
-      const { error } = await supabase.from('servicios').insert({
-        negocio_id:   negocio.id,
-        nombre,
-        categoria,
-        duracion_min: isNaN(duracion) ? 60 : duracion,
-        precio_usd,
-        precio_bs:    isNaN(precio_bs) ? 0 : precio_bs,
-      });
-      if (error) formError = error.message;
+      // Validar límite en backend según el plan
+      const planActual = perfil?.plan ?? 'gratis';
+      const countServicios = servicios?.length ?? 0;
+      
+      if (planActual === 'gratis' && countServicios >= 3) {
+        formError = 'Bloqueo de Plan: Tu plan Gratis ($0) está limitado a un máximo de 3 servicios. Mejora tu plan para añadir más.';
+      } else {
+        const { error } = await supabase.from('servicios').insert({
+          negocio_id:   negocio.id,
+          nombre,
+          categoria,
+          duracion_min: isNaN(duracion) ? 60 : duracion,
+          precio_usd,
+          precio_bs:    isNaN(precio_bs) ? 0 : precio_bs,
+        });
+        if (error) formError = error.message;
+      }
     }
   }
 
@@ -161,7 +169,7 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
               transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             "
             onmouseover="this.style.background='rgba(186,143,87,0.06)';this.style.borderColor='#ba8f57'"
-            onmouseout="this.style.background='transparent';this.style.borderColor='rgba(186,143,87,0.4)'"
+            onmouseout="this.style.background='transparent';this.style.borderColor='rgba(186, 143, 87, 0.4)'"
           >
             <span id="sync-icon" style="display:inline-block;transition:transform 0.5s ease">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -198,6 +206,7 @@ const tasaBcv = configData?.tasa_bcv ? parseFloat(configData.tasa_bcv) : 40.00;
             serviciosIniciales={servicios ?? []} 
             tasaBcvInicial={tasaBcv}
             negocioName={negocio.name}
+            plan={perfil?.plan ?? 'gratis'}
           />
         </>
       )}

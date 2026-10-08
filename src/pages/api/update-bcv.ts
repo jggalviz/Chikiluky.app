@@ -28,9 +28,11 @@ async function handleUpdate({ request, url }: Parameters<APIRoute>[0]) {
 
     // Método A: Validar por Token Secreto (Cron / Automatización)
     const secretParam = url.searchParams.get('secret');
-    const cronSecret = import.meta.env.CRON_SECRET ?? 'chikiluky-sync-secret-123';
+    // El secreto se lee EXCLUSIVAMENTE de las variables de entorno: sin valor
+    // por defecto, para no embeber un secreto duro en el repositorio.
+    const cronSecret = import.meta.env.CRON_SECRET;
     
-    if (secretParam && secretParam === cronSecret) {
+    if (cronSecret && secretParam && secretParam === cronSecret) {
       isAuthorized = true;
       authMethod = 'token_secreto';
     }
@@ -71,9 +73,11 @@ async function handleUpdate({ request, url }: Parameters<APIRoute>[0]) {
     // 2. SCRAPER NATIVO DEL BCV (bcv.org.ve)
     let nuevaTasa = 0;
     try {
-      // Evitar rechazo de certificados TLS auto-firmados o con problemas en el BCV
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
+      // Nota de seguridad: se mantiene la verificación TLS por defecto.
+      // NO se desactiva con NODE_TLS_REJECT_UNAUTHORIZED = '0' porque eso
+      // degradaría TODAS las conexiones salientes del runtime (no solo el
+      // BCV). Si bcv.org.ve presenta problemas de certificado, el error se
+      // registra y se conserva la última tasa guardada (ver bloque catch).
       const res = await fetch('https://www.bcv.org.ve/', {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',

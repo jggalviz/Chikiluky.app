@@ -1,0 +1,315 @@
+---
+import LayoutBase from '../layouts/LayoutBase.astro';
+
+const actualizado = '6 de octubre de 2026';
+const contacto = 'soporte@chikiluky.app';
+---
+
+<LayoutBase
+  title="Política de Privacidad"
+  description="Política de Privacidad de CHIKILUKY: qué datos tratamos (cuenta, perfil, agenda, reservas y comunicaciones por WhatsApp o chat), con qué finalidad y cómo los protegemos."
+>
+  <main class="legal">
+    <header class="legal-hero">
+      <p class="legal-kicker">Información legal</p>
+      <h1>Política de Privacidad</h1>
+      <p class="legal-updated">Última actualización: {actualizado}</p>
+    </header>
+
+    <p class="lead">
+      En <strong>CHIKILUKY</strong> («la Plataforma», disponible en <span class="hl">chikiluky.app</span>
+      y como aplicación instalable en tu teléfono) tu privacidad es una prioridad.
+      Esta política explica qué datos personales tratamos, con qué finalidad, con quién
+      los compartimos y qué derechos tienes. Aplica a la web, a la aplicación instalable
+      (PWA) y a la versión distribuida en Google Play mediante Tecnología Web (TWA).
+    </p>
+
+    <nav class="legal-index" aria-label="Índice de la política">
+      <a href="#responsable">1. Responsable</a>
+      <a href="#datos">2. Datos que tratamos</a>
+      <a href="#finalidad">3. Finalidad y base legal</a>
+      <a href="#whatsapp">4. WhatsApp y notificaciones</a>
+      <a href="#pwa">5. App instalable (PWA) y almacenamiento</a>
+      <a href="#terceros">6. Con quién compartimos</a>
+      <a href="#seguridad">7. Seguridad</a>
+      <a href="#conservacion">8. Conservación</a>
+      <a href="#derechos">9. Tus derechos</a>
+      <a href="#menores">10. Menores</a>
+      <a href="#cambios">11. Cambios</a>
+      <a href="#contacto">12. Contacto</a>
+    </nav>
+
+    <section id="responsable">
+      <h2>1. Responsable del tratamiento</h2>
+      <p>
+        El responsable del tratamiento de tus datos es <strong>CHIKILUKY</strong>, con
+        domicilio en Caracas, Venezuela. Para cualquier consulta relacionada con esta
+        política o con tus datos personales puedes escribirnos a
+        <a href={`mailto:${contacto}`}>{contacto}</a>.
+      </p>
+    </section>
+
+    <section id="datos">
+      <h2>2. Datos que tratamos</h2>
+      <ul>
+        <li>
+          <strong>Datos de cuenta:</strong> nombre completo, correo electrónico, número
+          de teléfono, contraseña (almacenada de forma cifrada) y rol (cliente, experto
+          o soporte).
+        </li>
+        <li>
+          <strong>Datos de perfil profesional:</strong> nombre comercial del salón,
+          categoría, servicios ofrecidos, especialistas, duración y precio de servicios,
+          horarios de atención y dirección.
+        </li>
+        <li>
+          <strong>Datos de agenda y reservas:</strong> servicios reservados, fecha, hora,
+          estado de la cita, profesional asignado e historial de citas.
+        </li>
+        <li>
+          <strong>Comunicaciones:</strong> mensajes que intercambias en el chat interno
+          (cliente ↔ profesional) y con el equipo de soporte.
+        </li>
+        <li>
+          <strong>Datos de cobro referenciales:</strong> los métodos de pago que un
+          profesional publica para verificar pagos (por ejemplo, Zelle o Pago Móvil) y
+          las referencias que el profesional adjunta. <strong>No</strong> almacenamos
+          números completos de tarjetas ni credenciales bancarias.
+        </li>
+        <li>
+          <strong>Datos técnicos:</strong> dirección IP, tipo de dispositivo y navegador,
+          cookies de sesión y registros de errores necesarios para operar y proteger el
+          servicio.
+        </li>
+      </ul>
+    </section>
+
+    <section id="finalidad">
+      <h2>3. Finalidad y base legal</h2>
+      <p>Tratamos tus datos para:</p>
+      <ul>
+        <li>Crear y gestionar tu cuenta y tu perfil.</li>
+        <li>Permitir la reserva, el recordatorio y la gestión de citas.</li>
+        <li>Facilitar la comunicación entre clientes y profesionales.</li>
+        <li>Verificar pagos y mostrar la tasa de referencia del BCV.</li>
+        <li>Brindar soporte y garantizar la seguridad de la Plataforma.</li>
+        <li>Mejorar el servicio y cumplir obligaciones legales.</li>
+      </ul>
+      <p>
+        La base legal es la <strong>ejecución del contrato</strong> que aceptas al
+        registrarte, tu <strong>consentimiento</strong> (que puedes retirar en cualquier
+        momento) y nuestro <strong>interés legítimo</strong> en prevenir fraudes y abusos.
+      </p>
+    </section>
+
+    <section id="whatsapp">
+      <h2>4. WhatsApp y notificaciones</h2>
+      <p>
+        Usamos tu número de teléfono para contactarte o enviar recordatorios de tus citas.
+        Cuando eliges escribir a un profesional a través de un enlace de WhatsApp
+        (<span class="hl">wa.me</span>), la conversación ocurre dentro de WhatsApp y queda
+        sujeta a las políticas de <strong>Meta/WhatsApp</strong>. CHIKILUKY no controla ni
+        almacena el contenido de esas conversaciones externas: solo ve el número que
+        decides compartir.
+      </p>
+    </section>
+    <section id="pwa">
+      <h2>5. App instalable (PWA) y almacenamiento</h2>
+      <p>
+        CHIKILUKY puede instalarse en tu dispositivo como aplicación (PWA). Para lograrlo
+        usamos un <strong>Service Worker</strong> que guarda en la memoria caché del
+        navegador los recursos estáticos de la interfaz (estilos, tipografías, íconos y
+        una página de aviso sin conexión). Este almacenamiento <strong>no contiene datos
+        sensibles</strong> y sirve únicamente para que la app cargue rápido y funcione
+        sin conexión. Tus datos de sesión se guardan en cookies <span class="hl">HttpOnly</span>
+        y se eliminan al cerrar sesión.
+      </p>
+    </section>
+
+    <section id="terceros">
+      <h2>6. Con quién compartimos tus datos</h2>
+      <p>
+        No vendemos ni alquilamos tus datos. Los compartimos únicamente con proveedores
+        que actúan como encargados del tratamiento y que nos ayudan a operar:
+      </p>
+      <ul>
+        <li><strong>Supabase</strong> — base de datos, autenticación y almacenamiento.</li>
+        <li><strong>Vercel</strong> — alojamiento y entrega del sitio web.</li>
+        <li><strong>Google Play</strong> — distribución de la aplicación en Android (TWA).</li>
+        <li><strong>WhatsApp / Meta</strong> — solo si decides comunicarte por ese canal.</li>
+      </ul>
+      <p>
+        También podremos entregar información cuando una autoridad competente lo requiera
+        conforme a la ley.
+      </p>
+    </section>
+
+    <section id="seguridad">
+      <h2>7. Seguridad</h2>
+      <p>
+        Aplicamos medidas técnicas y organizativas razonables para proteger tus datos:
+        cifrado en tránsito (HTTPS con HSTS), verificación de certificados TLS activa,
+        control de acceso a nivel de fila (RLS) en la base de datos, cookies de sesión
+        <span class="hl">HttpOnly</span> y principio de mínimo privilegio en nuestros
+        accesos internos.
+      </p>
+    </section>
+
+    <section id="conservacion">
+      <h2>8. Conservación</h2>
+      <p>
+        Conservamos tus datos mientras tu cuenta permanezca activa. Al eliminar tu cuenta,
+        procedemos a su supresión o anonimización, salvo aquellos registros que debamos
+        conservar por obligaciones legales, contables o para la resolución de
+        controversias.
+      </p>
+    </section>
+
+    <section id="derechos">
+      <h2>9. Tus derechos</h2>
+      <p>Puedes ejercer en cualquier momento tus derechos de:</p>
+      <ul>
+        <li><strong>Acceso:</strong> saber qué datos tuyos tratamos.</li>
+        <li><strong>Rectificación y actualización:</strong> corregir datos inexactos.</li>
+        <li><strong>Supresión:</strong> solicitar la eliminación de tus datos.</li>
+        <li><strong>Portabilidad y oposición:</strong> solicitar tus datos u oponerte a un tratamiento.</li>
+      </ul>
+      <p>
+        Puedes actualizar muchos datos desde tu propio perfil en la app. Para
+        <strong>eliminar tu cuenta</strong> usa la opción disponible en la aplicación o
+        escríbenos a <a href={`mailto:${contacto}`}>{contacto}</a>. Atenderemos tu
+        solicitud en un plazo razonable que no superará los 30 días.
+      </p>
+    </section>
+
+    <section id="menores">
+      <h2>10. Menores de edad</h2>
+      <p>
+        La Plataforma está dirigida a personas mayores de 18 años. No recopilamos
+        conscientemente datos de menores sin el consentimiento de su representante legal.
+        Si detectas que un menor nos ha proporcionado datos, contáctanos para eliminarlos.
+      </p>
+    </section>
+
+    <section id="cambios">
+      <h2>11. Cambios a esta política</h2>
+      <p>
+        Podemos actualizar esta política para reflejar mejoras del servicio o cambios
+        legales. Publicaremos la versión vigente en esta misma página indicando la fecha
+        de última actualización.
+      </p>
+    </section>
+
+    <section id="contacto">
+      <h2>12. Contacto</h2>
+      <p>
+        Si tienes dudas sobre esta Política de Privacidad o sobre el tratamiento de tus
+        datos, escríbenos a <a href={`mailto:${contacto}`}>{contacto}</a>.
+      </p>
+    </section>
+
+  </main>
+</LayoutBase>
+
+<style>
+  .legal {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 7rem 1.5rem 4rem;
+  }
+  .legal-hero {
+    border-bottom: 1px solid rgba(186, 143, 87, 0.25);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .legal-kicker {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #BA8F57;
+    margin-bottom: 0.75rem;
+  }
+  .legal h1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    color: #fff;
+    margin: 0 0 0.5rem;
+  }
+  .legal-updated {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+  }
+  .lead {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 2.5rem;
+  }
+  .legal-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(17, 17, 17, 0.6);
+    margin-bottom: 3rem;
+  }
+  .legal-index a {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .legal-index a:hover { color: #BA8F57; }
+  .legal section {
+    margin-bottom: 2.5rem;
+    scroll-margin-top: 5rem;
+  }
+  .legal h2 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    color: #BA8F57;
+    margin: 0 0 0.9rem;
+  }
+  .legal p {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0 0 1rem;
+  }
+  .legal ul {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+  }
+  .legal li {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 0.5rem;
+  }
+  .legal a { color: #BA8F57; }
+  .legal strong { color: #fff; }
+  .hl {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 0.85em;
+    color: #d4a96a;
+  }
+</style>
+
